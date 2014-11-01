@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2014-11-01T22:56:10+00:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard.]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[My New Blog in Github Pages + Octopress]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/01/my-new-blog/"/>
+    <updated>2014-11-01T22:19:40+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/01/my-new-blog</id>
+    <content type="html"><![CDATA[<p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
+others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
+instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
+follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
+for real).</p>
+
+<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
+personal set up, because the plugin at my job is definitely more functional.</p>
+
+<p>Now a code snipped. I follow the instructions at Octopress’ website.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">env <span class="nv">x</span><span class="o">=</span><span class="s1">&#39;() { :;}; echo vulnerable&#39;</span> bash -c <span class="s2">&quot;echo this is a test&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Check. Beautiful. Lovin’ it.</p>
+
+<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
+to be able to edit in Latex. The lack of it is a no go. Luckily, I found
+<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
+to do precisely that. Testing:</p>
+
+<script type="math/tex; mode=display">
+\int_a^b f(x) dx = F(b) - F(a)
+</script>
+
+<p>Check. Awesome! Sold!</p>
+
+<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
+by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
+
+<p>Let be it! I am moving to Github Pages + Octopress.</p>
+]]></content>
+  </entry>
+  
+</feed>

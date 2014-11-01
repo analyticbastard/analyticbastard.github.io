@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2014-11-01T22:56:10+00:00</updated>
+  <updated>2014-11-01T23:34:09+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard.]]></name>
@@ -50,6 +50,14 @@ to do precisely that. Testing:</p>
 by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
 
 <p>Let be it! I am moving to Github Pages + Octopress.</p>
+
+<p>Edit: I forgot to test Youtube video insertion. ~Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a>~ 
+This is done by pasting the <em>iframe</em> tag as given by youtube.
+OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
+
+<p>No responsiveness as of yet, but it’s fine for now.</p>
 ]]></content>
   </entry>
   

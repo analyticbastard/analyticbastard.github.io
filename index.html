@@ -9,8 +9,7 @@
   <meta name="author" content="Analytic Bastard.">
 
   
-  <meta name="description" content="Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
-others call a blog for hackers &hellip;">
+  <meta name="description" content="It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,45 @@ others call a blog for hackers &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+
+<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+
+<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+
+<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other that zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+
+<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is Geodesic Analysis on the Gaussian RKHS hypersphere, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (IT IS THE RKHS’ ALGEBRAIC DUAAAAALLLLLL). In fact, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -146,6 +184,10 @@ OK, cloned, copied Ruby files and test (with current time position including <em
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a>

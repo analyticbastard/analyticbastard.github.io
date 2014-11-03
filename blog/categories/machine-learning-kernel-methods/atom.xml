@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Machine Learning - Kernel Methods | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/machine-learning-kernel-methods/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2014-11-02T12:04:15+00:00</updated>
+  <updated>2014-11-03T02:24:45+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Improve the Performance of an SVM With Differential Geometry]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/"/>
+    <updated>2014-11-03T02:19:37+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry</id>
+    <content type="html"><![CDATA[<p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
+
+<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+
+<script type="math/tex; mode=display">
+ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
+</script>
+
+<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
+
+<script type="math/tex; mode=display">
+\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
+</script>
+
+<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
+
+<script type="math/tex; mode=display">
+\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
+</script>
+
+<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
+
+<script type="math/tex; mode=display">
+c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
+</script>
+
+<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
+
+<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
+
+<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Gaussian Kernel Maps Data Onto the Sphere]]></title>
@@ -26,7 +67,7 @@
 
 <p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
 
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (IT IS THE RKHS’ ALGEBRAIC DUAAAAALLLLLL). In fact, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
 
 <p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
 ]]></content>

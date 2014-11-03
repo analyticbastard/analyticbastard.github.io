@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The Gaussian Kernel Maps Data Onto the Sphere - The Analytic Bastard</title>
+  <title>Improve the Performance of an SVM With Differential Geometry - The Analytic Bastard</title>
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS &hellip;">
+  <meta name="description" content="Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere">
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">The Gaussian Kernel Maps Data Onto the Sphere</h1>
+      <h1 class="entry-title">Improve the Performance of an SVM With Differential Geometry</h1>
     
     
       <p class="meta">
@@ -77,24 +77,46 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+<time class='entry-date' datetime='2014-11-03T02:19:37+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:19 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+<div class="entry-content"><p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
 
-<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
 
-<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+<script type="math/tex; mode=display">
+ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
+</script>
 
-<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
 
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+<script type="math/tex; mode=display">
+\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
+</script>
 
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
+
+<script type="math/tex; mode=display">
+\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
+</script>
+
+<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
+
+<script type="math/tex; mode=display">
+c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
+</script>
+
+<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
+
+<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
+
+<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
 </div>
 
 
@@ -110,12 +132,12 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+<time class='entry-date' datetime='2014-11-03T02:19:37+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:19 am</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/machine-learning-kernel-methods/'>machine learning - kernel methods</a>
+    <a class='category' href='/blog/categories/machine-learning-kernel-methods/'>machine learning - kernel methods</a>, <a class='category' href='/blog/categories/machine-learning-svm/'>machine learning - svm</a>, <a class='category' href='/blog/categories/mathematics-differential-geometry/'>mathematics - differential geometry</a>
   
 </span>
 
@@ -124,7 +146,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" >Tweet</a>
   
   
   
@@ -133,10 +155,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/11/01/my-new-blog/" title="Previous Post: My new blog in Github Pages + Octopress">&laquo; My new blog in Github Pages + Octopress</a>
+        <a class="basic-alignment left" href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" title="Previous Post: The Gaussian kernel maps data onto the sphere">&laquo; The Gaussian kernel maps data onto the sphere</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" title="Next Post: Improve the performance of an SVM with differential geometry">Improve the performance of an SVM with differential geometry &raquo;</a>
       
     </p>
   </footer>

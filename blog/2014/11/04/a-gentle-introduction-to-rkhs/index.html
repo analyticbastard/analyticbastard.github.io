@@ -1,24 +1,90 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Machine Learning - Kernel Methods | The Analytic Bastard]]></title>
-  <link href="http://analyticbastard.github.io/blog/categories/machine-learning-kernel-methods/atom.xml" rel="self"/>
-  <link href="http://analyticbastard.github.io/"/>
-  <updated>2014-11-04T22:33:07+00:00</updated>
-  <id>http://analyticbastard.github.io/</id>
-  <author>
-    <name><![CDATA[Analytic Bastard]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>A Gentle Introduction to RKHS and Kernel Methods - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
 
   
-  <entry>
-    <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/"/>
-    <updated>2014-11-04T23:31:32+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs</id>
-    <content type="html"><![CDATA[<p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
+  <meta name="description" content="A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">A Gentle Introduction to RKHS and Kernel Methods</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-04T23:31:32+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:31 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
 <script type="math/tex">
 \delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
 </script>
@@ -94,67 +160,160 @@ with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector 
 k(\mathbf{x}_1-\mathbf{x}_2)=\int_{\mathbb{R}^N}{e^{i\mathbf{\omega}^T (\mathbf{x}_1-\mathbf{x}_2)}d \Lambda(\mathbf{\omega})}
 </script>
 The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^{-i\mathbf{\omega}^T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P_X$, whereas random features proceed independently of $P_X$. This idea has also been used in Gaussian Processes with success.</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Improve the Performance of an SVM With Differential Geometry]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/"/>
-    <updated>2014-11-03T02:19:37+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry</id>
-    <content type="html"><![CDATA[<p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
 
-<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
 
-<script type="math/tex; mode=display">
-ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
-</script>
+      
 
-<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
 
-<script type="math/tex; mode=display">
-\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
-</script>
 
-<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
 
-<script type="math/tex; mode=display">
-\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
-</script>
+<time class='entry-date' datetime='2014-11-04T23:31:32+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:31 pm</span></time>
+      
 
-<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
-
-<script type="math/tex; mode=display">
-c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
-</script>
-
-<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
-
-<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
-
-<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
-]]></content>
-  </entry>
+<span class="categories">
   
-  <entry>
-    <title type="html"><![CDATA[The Gaussian Kernel Maps Data Onto the Sphere]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/"/>
-    <updated>2014-11-02T00:54:39+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere</id>
-    <content type="html"><![CDATA[<p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
-
-<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
-
-<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
-
-<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
-
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
-]]></content>
-  </entry>
+    <a class='category' href='/blog/categories/machine-learning-kernel-methods/'>machine learning - kernel methods</a>, <a class='category' href='/blog/categories/mathematics-analysis/'>mathematics - analysis</a>
   
-</feed>
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" title="Previous Post: Improve the performance of an SVM with differential geometry">&laquo; Improve the performance of an SVM with differential geometry</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/11/04/a-gentle-introduction-to-rkhs/">A Gentle Introduction to RKHS and Kernel Methods</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/">Improve the Performance of an SVM With Differential Geometry</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

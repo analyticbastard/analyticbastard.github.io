@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mathematics - Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/mathematics-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2014-11-04T22:33:07+00:00</updated>
+  <updated>2014-11-10T20:46:30+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,54 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pythagorean Theorem]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/"/>
+    <updated>2014-11-06T16:24:02+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem</id>
+    <content type="html"><![CDATA[<p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
+ such as triangle similarity considerations.</p>
+
+<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
+triangles.</p>
+
+<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
+triangles, such as in the figure below. </p>
+
+<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
+side of the large outer triangle $(a+b)$. In the smaller square,
+let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
+
+<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="‘Pythagorean theorem’ ‘images’" ></p>
+
+<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
+<script type="math/tex">
+L=(a+b)^2=a^2 + b^2 + 2ab
+</script> </p>
+
+<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
+the inner square, whose area is $c^2$. Thus</p>
+
+<script type="math/tex; mode=display">
+L=4 \times \frac{ab}{2} + c^2
+</script>
+
+<p>Equating both expressions, we can arrive at the result of the theorem</p>
+
+<script type="math/tex; mode=display">
+a^2 + b^2 + 2ab = 4 \times \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 2 \times ab + c^2\\
+a^2 + b^2 = c^2
+</script>
+
+<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
+to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
+
+<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
@@ -76,7 +124,7 @@ Where $P$ is a pseudo-differential operator and <script type="math/tex">P^{*}</s
 </script>
 where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p>
 
-<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nystr&#8221;om method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
+<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
 <script type="math/tex">
 \int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) \phi_i(\mathbf{x}_2) dP_X(\mathbf{x}_2) = \lambda_i \phi_i(\mathbf{x}_1)
 </script>

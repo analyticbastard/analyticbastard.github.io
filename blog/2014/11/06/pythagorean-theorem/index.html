@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The Gaussian Kernel Maps Data Onto the Sphere - The Analytic Bastard</title>
+  <title>Pythagorean Theorem - The Analytic Bastard</title>
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS &hellip;">
+  <meta name="description" content="The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere">
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
@@ -70,7 +71,7 @@
   
   <header>
     
-      <h1 class="entry-title">The Gaussian Kernel Maps Data Onto the Sphere</h1>
+      <h1 class="entry-title">Pythagorean Theorem</h1>
     
     
       <p class="meta">
@@ -79,24 +80,53 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+<time class='entry-date' datetime='2014-11-06T16:24:02+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:24 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+<div class="entry-content"><p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
+ such as triangle similarity considerations.</p>
 
-<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
+triangles.</p>
 
-<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
+triangles, such as in the figure below. </p>
 
-<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
+side of the large outer triangle $(a+b)$. In the smaller square,
+let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
 
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="Pythagorean theorem" alt="images" /></p>
 
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
+<script type="math/tex">
+L=(a+b)^2=a^2 + b^2 + 2ab
+</script> </p>
+
+<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
+the inner square, whose area is $c^2$. Thus</p>
+
+<script type="math/tex; mode=display">
+L=4 \times \frac{ab}{2} + c^2
+</script>
+
+<p>Equating both expressions, we can arrive at the result of the theorem</p>
+
+<script type="math/tex; mode=display">
+a^2 + b^2 + 2ab = 4 \times \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 2 \times ab + c^2\\
+a^2 + b^2 = c^2
+</script>
+
+<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
+to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
+
+<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
 </div>
 
 
@@ -112,12 +142,12 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+<time class='entry-date' datetime='2014-11-06T16:24:02+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:24 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/machine-learning-kernel-methods/'>machine learning - kernel methods</a>
+    <a class='category' href='/blog/categories/mathematics-analysis/'>mathematics - analysis</a>, <a class='category' href='/blog/categories/mathematics-geometry/'>mathematics - geometry</a>
   
 </span>
 
@@ -126,7 +156,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/" >Tweet</a>
   
   
   
@@ -135,10 +165,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/11/01/my-new-blog/" title="Previous Post: My new blog in Github Pages + Octopress">&laquo; My new blog in Github Pages + Octopress</a>
+        <a class="basic-alignment left" href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/" title="Previous Post: Naive Bayes implemented with Map/Reduce operations">&laquo; Naive Bayes implemented with Map/Reduce operations</a>
       
       
-        <a class="basic-alignment right" href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" title="Next Post: Improve the performance of an SVM with differential geometry">Improve the performance of an SVM with differential geometry &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2014/11/08/current-computer-langage-market/" title="Next Post: Current computer langage market">Current computer langage market &raquo;</a>
       
     </p>
   </footer>

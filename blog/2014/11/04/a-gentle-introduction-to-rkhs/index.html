@@ -29,6 +29,8 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
 
   
 
@@ -142,7 +144,7 @@ Where $P$ is a pseudo-differential operator and <script type="math/tex">P^{*}</s
 </script>
 where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p>
 
-<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nystr&#8221;om method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
+<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
 <script type="math/tex">
 \int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) \phi_i(\mathbf{x}_2) dP_X(\mathbf{x}_2) = \lambda_i \phi_i(\mathbf{x}_1)
 </script>
@@ -201,6 +203,8 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
         <a class="basic-alignment left" href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" title="Previous Post: Improve the performance of an SVM with differential geometry">&laquo; Improve the performance of an SVM with differential geometry</a>
       
       
+        <a class="basic-alignment right" href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/" title="Next Post: Naive Bayes implemented with Map/Reduce operations">Naive Bayes implemented with Map/Reduce operations &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -214,6 +218,18 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/11/08/current-computer-langage-market/">Current Computer Langage Market</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/">Naive Bayes Implemented With Map/Reduce Operations</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/04/a-gentle-introduction-to-rkhs/">A Gentle Introduction to RKHS and Kernel Methods</a>
       </li>
     
@@ -221,15 +237,21 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
         <a href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/">Improve the Performance of an SVM With Differential Geometry</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a>
-      </li>
-    
   </ul>
+</section>
+<section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
 </section>
 
 <section>

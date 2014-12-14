@@ -9,8 +9,8 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Got the idea of writing this from
-pythonification of a data scientist toolkit Python, IPython, Pandas, Web scraping (beautiful soap, scrappy), &hellip;">
+  <meta name="description" content="For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -25,7 +25,9 @@ pythonification of a data scientist toolkit Python, IPython, Pandas, Web scrapin
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
@@ -87,8 +89,26 @@ pythonification of a data scientist toolkit Python, IPython, Pandas, Web scrapin
   </header>
 
 
-<div class="entry-content"><p>Got the idea of writing this from
-<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a data scientist toolkit</a></p>
+<div class="entry-content"><p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or processing. An easy example is this blog, which is made with 
+<a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control,
+modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar
+to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p>
+
+<p>We find this shift to be a real convergence in the case of data analysis and software development, specifically,
+web software development and scripting with Python. This is almost self evident and has been noted previously, in fact,
+a blog entry talking about
+<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist’s data toolkit</a>
+and thinking about my own data analysis toolkit got me writing about this.</p>
+
+<p>Preiously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs
+(cells are another very useful structure to consider when elements of a set do not share the same dimension or types).
+Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data
+in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general
+case exposes several problems that one normally faces during the data analysis process. For example, one might be
+interested in correlating sells with the social sentiment about our product. This involves scraping candidate web
+pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with
+sells by date. This is an unbearable task to do by moving data blocks in Matlab.</p>
 
 <p>Python, IPython, Pandas, Web scraping (beautiful soap, scrappy), sklearn.</p>
 

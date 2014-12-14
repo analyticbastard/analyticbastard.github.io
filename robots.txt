@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://analyticbastard.github.io/sitemap.xml 

@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis/</loc>
+    <lastmod>2014-12-14T10:47:29+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/</loc>
+    <lastmod>2014-11-27T11:01:19+00:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://analyticbastard.github.io/blog/2014/11/08/current-computer-langage-market/</loc>
     <lastmod>2014-11-08T02:33:09+00:00</lastmod>
     <priority>0.8</priority>
@@ -37,19 +47,19 @@
   </url>
   <url>
     <loc>http://analyticbastard.github.io/blog/archives/</loc>
-    <lastmod>2014-11-10T20:46:30+00:00</lastmod>
+    <lastmod>2014-12-14T11:21:56+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/</loc>
-    <lastmod>2014-11-10T20:46:30+00:00</lastmod>
+    <lastmod>2014-12-14T11:21:56+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/prueba/</loc>
-    <lastmod>2014-11-10T20:46:30+00:00</lastmod>
+    <lastmod>2014-12-14T11:21:56+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mathematics - Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/mathematics-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2014-11-10T20:46:30+00:00</updated>
+  <updated>2014-12-14T11:21:56+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -49,7 +49,7 @@ L=4 \times \frac{ab}{2} + c^2
 <p>Equating both expressions, we can arrive at the result of the theorem</p>
 
 <script type="math/tex; mode=display">
-a^2 + b^2 + 2ab = 4 \times \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 4 \frac{ab}{2} + c^2 \\
 a^2 + b^2 + 2ab = 2 \times ab + c^2\\
 a^2 + b^2 = c^2
 </script>

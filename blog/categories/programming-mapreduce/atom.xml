@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Programming - Mapreduce | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/programming-mapreduce/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2014-12-14T20:43:51+00:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
+    <updated>2014-11-05T11:02:16+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
+    <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
+
+<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+</ul>
+
+<p>We only need to emit the category (attribute value) as the value</p>
+
+<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
+
+<script type="math/tex; mode=display">
+P(X_i=x_{i,0}|y=y_0)
+</script>
+
+<p>for which we emit a triplet</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+  <li>emit the category for this attribute of this example</li>
+</ul>
+
+<p>As value we only need to emit the previous division.</p>
+
+<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
+
+<p>I’ve just implemented this in MyML. </p>
+
+<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
+being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
+information loss in the process.</p>
+
+<p>&#8220;`python
+import numpy as np
+Xd=np.random.random((256,2))
+X=1<em>(Xd&lt;.5)
+y=1</em>(Xd.sum(axis=1)&lt;.5)</p>
+
+<p>from myml.supervised import bayes</p>
+
+<p>reload(bayes)
+nb = bayes.NaiveBayes()
+nb.fit(X, y)
+nb.predict(X[0,:])
+pred=nb.predict(X)</p>
+
+<h1 id="now-we-predict-the-whole-dataset">Now we predict the (whole) dataset</h1>
+<p>1.0<em>np.sum(1.0</em>(pred&gt;.5).reshape((1,len(y)))[0]==y)/len(y) </p>
+
+<p>0.89453125</p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+</feed>

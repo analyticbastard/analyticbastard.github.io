@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Future of Data Analysis Tools: Python, Web Technologies - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">The Future of Data Analysis Tools: Python, Web Technologies</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-27T11:01:19+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:01 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or processing. An easy example is this blog, which is made with 
+<a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control,
+modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar
+to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p>
+
+<p>We find this shift to be a real convergence in the case of data analysis and software development, specifically,
+web software development and scripting with Python. This is almost self evident and has been noted previously, in fact,
+a blog entry talking about
+<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist’s data toolkit</a>
+and thinking about my own data analysis toolkit got me writing about this.</p>
+
+<h2 id="the-past">The past</h2>
+
+<p>Previously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs
+(cells are another very useful structure to consider when elements of a set do not share the same dimension or types).
+Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data
+in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general
+case exposes several problems that one normally faces during the data analysis process. For example, one might be
+interested in correlating sells with the social sentiment about our product. This involves scraping candidate web
+pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with
+sells by date. This is an unbearable task to do by moving data blocks in Matlab.</p>
+
+<p>R, as in <a href="http://www.r-project.org/">GNU R-Project</a> is a more complete framework for data munging, since it seeks to
+replicate the S statistical language in its origins. R, which has the concept of objects, defines a dataframe class
+that specifically considers column as attributes and rows as instances, defines a set of methods that allow us to
+deal with specialized tasks like sorting, filtering or rearranging. Although I have used R in the past, I never came to
+like it despite the hught support by the community. I feel that some piece is missing, and that is maybe the heavily
+typing for a data analysis language, poor language-level support for functional paradigms which are great for data
+munging (map, reduce, filter and the like). Algorithms must be implemented in an imperative setting, which isn’t
+sometimes the best option.</p>
+
+<h2 id="the-present">The present</h2>
+
+<p>Python comes in the middle of it all. It supports functional paradigms such as lambda functions (functions defined
+where they are used), functions as first-class objects, and classical operations on collections. On the other hand,
+Python has increasingly getting more support from the community and the amount of available libraries is astonishing.
+It is true that the support for statistical analysis in Python cannot be compared to that or R yet, but Python is
+steadily catching up, with ever increasing scientists switching in all disciplines. A number of mature projects
+exist in all the areas, ranging from general Statistics to Neuroimaging. Several bridges exist to R packages with no
+native counterpart. This, the language support for advanced features, optimized packages such as
+<a href="www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Golke’s</a> (which include NumPy and SciPy versions statically compiled
+against the highly efficient Intel’s MKL BLAS distributions) and the extra toolset derived from years of using
+Python as a generalist scripting data (including a highly-productive web toolset), makes Python a worthy
+next-generation substitute for R.</p>
+
+<p>Imagine that we collect two time series of stock prices that originated in two different markets. These two markets
+observe different holidays, so the raw time series that we get are unaligned (this is true for Yahoo Finance historical
+data, for example). Our data pre-processing task is to align the data, keeping the last valid price for holidays where
+the other market is open.</p>
+
+<p>Pandas is a Python library that includes much of R functionality and is extremely handy for this kind of data munging
+tasks. By creating DataFrame objects from our raw data, we access the kind of functionality we need. In this case, once
+we have two DataFrame objects, <em>dt1</em> and <em>dt2</em>, where we simulates two weeks of data, by starting on Monday, 1st,
+and ending on Friday, 12th. The first market observes a holiday on Friday the 5th, while the second observes a
+holiday on Monday, 1st. We define the dataframes as follows:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span> <span class="s">&#39;value&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">103</span><span class="p">,</span><span class="mi">104</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">106</span><span class="p">,</span><span class="mi">107</span><span class="p">,</span><span class="mi">108</span><span class="p">]})</span>
+</span><span class="line"><span class="n">dt2</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span> <span class="s">&#39;value&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">103</span><span class="p">,</span><span class="mi">104</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">106</span><span class="p">,</span><span class="mi">107</span><span class="p">,</span><span class="mi">108</span><span class="p">]})</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>To successfully mix the data toether, we can use the merge function on the column date, specifying the <em>outer</em> merging
+method, which keeps data rows coming from both dataframes.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dt2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;outer&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This will output</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">NaN</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">NaN</td>
+      <td style="text-align: right">104</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We notice the dates are unsorted due to using the first dataframe, which skips friday (date 8 would be unsorted if we
+were to use the <em>dt2</em> object). We sort on the <em>date</em> column. However, there is a bigger problem, we see NaNs,
+Not a number values for column of a dataframe not defined in the other, since this is the usual outcome from the
+outer merge. In this case, the <em>fillna</em> method of the DataFrame class with the <em>gap</em> policy will fit our purposes
+(carry over the last valid value).</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dt2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;outer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&#39;pad&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The result of all steps is</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Of course, we have excellent IDEs to work with, ranging from generalist tools and plugins for major IDE frameworks
+such as Eclipse and IntelliJ IDEA, to more specialized editors such as the Matlab-like Spyder, IPython Notebook (embedded
+in the IPython executable, which can be started with the option <code>-notebook</code>). Also, emerging editors such as the
+celebrated Sublime Text and Light Table fully support Python.</p>
+
+<h2 id="data-visualization-past-and-present">Data visualization: past and present</h2>
+
+<p>An often overlooked side is data visualization. As people coming from the engineering side, where doing ugly and
+hard to use things is almost a badge of pride, we never care about how our results look as long as they are correct
+(in a sense that they fulfill their functional requirements). Presentation is not only important from the aesthetic
+point of view, but can also help the experts discover patterns in the data that offer previously unknown clues about
+the nature of our data.</p>
+
+<p>Plotting Matlab graphs and pasting them on a Word document was the normal. R has an impressive set of graphical tools
+that cope with the most exigent user. For the presentations, using PowerPoint was the thing to do in corporate
+environments and the most adventurous could embark on the quest of using Latex Beamer for this purpose. Not any more.</p>
+
+<p>The new normal will be web technologies. Web browsers are the most advanced graphical tool available to any user in the
+world. The dynamic capabilities achieved by both CSS and Javascript make any other technology pale. To easy the burden
+of dealing with raw CSS and Javascript, a number of libraries have been built on top of the browser native support.
+Some of these rise above the others. I must mention <a href="http://d3js.org">D3js</a>, an impressive graphical library with
+anything a data scientist with graphical needs might need. Visit their examples page to get a glance of the
+capabilities.</p>
+
+<p>Lastly, PowerPoint and Latex Beamer users with professional needs will both shift to browser presentation technologies
+such as <a href="http://lab.hakim.se/reveal-js/#/">RevealJS</a>, which can be complemented with Latex renderers to achieve perfect
+results for the mathematical formulae, on top of superior interactions.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>In the future, it is conceivable to use an integrated framework that analyzes data with Python libraries and then
+presents the results via a Python web server to multiple browsers.</p>
+
+<p>As well as Java will never go away in the enterprise software development world, so won’t current data processing
+technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
+existing libraries will need time to be adapted to Python.</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-27T11:01:19+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:01 am</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/08/current-computer-langage-market/" title="Previous Post: Current computer langage market">&laquo; Current computer langage market</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/12/14/ipython-notebook-for-data-analysis/" title="Next Post: IPython Notebook for data analysis">IPython Notebook for data analysis &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/08/current-computer-langage-market/">Current Computer Langage Market</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/">Naive Bayes Implemented With Map/Reduce Operations</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

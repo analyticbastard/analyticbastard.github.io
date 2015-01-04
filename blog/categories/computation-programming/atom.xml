@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Computation - Programming | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/computation-programming/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-01-04T09:44:30+00:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[The Future of Data Analysis Tools: Python, Web Technologies]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/"/>
+    <updated>2014-11-27T11:01:19+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools</id>
+    <content type="html"><![CDATA[<p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or processing. An easy example is this blog, which is made with 
+<a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control,
+modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar
+to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p>
+
+<p>We find this shift to be a real convergence in the case of data analysis and software development, specifically,
+web software development and scripting with Python. This is almost self evident and has been noted previously, in fact,
+a blog entry talking about
+<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist’s data toolkit</a>
+and thinking about my own data analysis toolkit got me writing about this.</p>
+
+<h3 id="the-past">The past</h3>
+
+<p>Previously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs
+(cells are another very useful structure to consider when elements of a set do not share the same dimension or types).
+Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data
+in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general
+case exposes several problems that one normally faces during the data analysis process. For example, one might be
+interested in correlating sells with the social sentiment about our product. This involves scraping candidate web
+pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with
+sells by date. This is an unbearable task to do by moving data blocks in Matlab.</p>
+
+<p>R, as in <a href="http://www.r-project.org/">GNU R-Project</a> is a more complete framework for data munging, since it seeks to
+replicate the S statistical language in its origins. R, which has the concept of objects, defines a dataframe class
+that specifically considers column as attributes and rows as instances, defines a set of methods that allow us to
+deal with specialized tasks like sorting, filtering or rearranging. Although I have used R in the past, I never came to
+like it despite the hught support by the community. I feel that some piece is missing, and that is maybe the heavily
+typing for a data analysis language, poor language-level support for functional paradigms which are great for data
+munging (map, reduce, filter and the like). Algorithms must be implemented in an imperative setting, which isn’t
+sometimes the best option.</p>
+
+<h3 id="the-present">The present</h3>
+
+<p>Python comes in the middle of it all. It supports functional paradigms such as lambda functions (functions defined
+where they are used), functions as first-class objects, and classical operations on collections. On the other hand,
+Python has increasingly getting more support from the community and the amount of available libraries is astonishing.
+It is true that the support for statistical analysis in Python cannot be compared to that or R yet, but Python is
+steadily catching up, with ever increasing scientists switching in all disciplines. A number of mature projects
+exist in all the areas, ranging from general Statistics to Neuroimaging. Several bridges exist to R packages with no
+native counterpart. This, the language support for advanced features, optimized packages such as
+<a href="www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Golke’s</a> (which include NumPy and SciPy versions statically compiled
+against the highly efficient Intel’s MKL BLAS distributions) and the extra toolset derived from years of using
+Python as a generalist scripting data (including a highly-productive web toolset), makes Python a worthy
+next-generation substitute for R.</p>
+
+<p>Imagine that we collect two time series of stock prices that originated in two different markets. These two markets
+observe different holidays, so the raw time series that we get are unaligned (this is true for Yahoo Finance historical
+data, for example). Our data pre-processing task is to align the data, keeping the last valid price for holidays where
+the other market is open.</p>
+
+<p>Pandas is a Python library that includes much of R functionality and is extremely handy for this kind of data munging
+tasks. By creating DataFrame objects from our raw data, we access the kind of functionality we need. In this case, once
+we have two DataFrame objects, <em>dt1</em> and <em>dt2</em>, where we simulates two weeks of data, by starting on Monday, 1st,
+and ending on Friday, 12th. The first market observes a holiday on Friday the 5th, while the second observes a
+holiday on Monday, 1st. We define the dataframes as follows:</p>
+
+<p><code>python
+dt1 = DataFrame({'date' : [1,2,3,4,8,9,10,11,12], 'value' : [100,101,102,103,104,105,106,107,108]})
+dt2 = DataFrame({'date' : [1,2,3,4,5,9,10,11,12], 'value' : [100,101,102,103,104,105,106,107,108]})
+</code></p>
+
+<p>To successfully mix the data toether, we can use the merge function on the column date, specifying the <em>outer</em> merging
+method, which keeps data rows coming from both dataframes.</p>
+
+<p><code>python
+dt1.merge(dt2, on=['date'], how='outer')
+</code></p>
+
+<p>This will output</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">NaN</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">NaN</td>
+      <td style="text-align: right">104</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We notice the dates are unsorted due to using the first dataframe, which skips friday (date 8 would be unsorted if we
+were to use the <em>dt2</em> object). We sort on the <em>date</em> column. However, there is a bigger problem, we see NaNs,
+Not a number values for column of a dataframe not defined in the other, since this is the usual outcome from the
+outer merge. In this case, the <em>fillna</em> method of the DataFrame class with the <em>gap</em> policy will fit our purposes
+(carry over the last valid value).</p>
+
+<p><code>python
+dt1.merge(dt2, on=['date'], how='outer').sort(columns=['date']).fillna(method='pad')
+</code></p>
+
+<p>The result of all steps is</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Of course, we have excellent IDEs to work with, ranging from generalist tools and plugins for major IDE frameworks
+such as Eclipse and IntelliJ IDEA, to more specialized editors such as the Matlab-like Spyder, IPython Notebook (embedded
+in the IPython executable, which can be started with the option <code>-notebook</code>). Also, emerging editors such as the
+celebrated Sublime Text and Light Table fully support Python.</p>
+
+<h3 id="data-visualization-past-and-present">Data visualization: past and present</h3>
+
+<p>An often overlooked side is data visualization. As people coming from the engineering side, where doing ugly and
+hard to use things is almost a badge of pride, we never care about how our results look as long as they are correct
+(in a sense that they fulfill their functional requirements). Presentation is not only important from the aesthetic
+point of view, but can also help the experts discover patterns in the data that offer previously unknown clues about
+the nature of our data.</p>
+
+<p>Plotting Matlab graphs and pasting them on a Word document was the normal. R has an impressive set of graphical tools
+that cope with the most exigent user. For the presentations, using PowerPoint was the thing to do in corporate
+environments and the most adventurous could embark on the quest of using Latex Beamer for this purpose. Not any more.</p>
+
+<p>The new normal will be web technologies. Web browsers are the most advanced graphical tool available to any user in the
+world. The dynamic capabilities achieved by both CSS and Javascript make any other technology pale. To easy the burden
+of dealing with raw CSS and Javascript, a number of libraries have been built on top of the browser native support.
+Some of these rise above the others. I must mention <a href="http://d3js.org">D3js</a>, an impressive graphical library with
+anything a data scientist with graphical needs might need. Visit their examples page to get a glance of the
+capabilities.</p>
+
+<iframe width="720" height="480" marginheight="-500" marginwidth="-300" src="http://mbostock.github.io/d3/talk/20111018/collision.html"></iframe>
+
+<p>Lastly, PowerPoint and Latex Beamer users with professional needs will both shift to browser presentation technologies
+such as <a href="http://lab.hakim.se/reveal-js/#/">RevealJS</a>, which can be complemented with Latex renderers to achieve perfect
+results for the mathematical formulae, on top of superior interactions.</p>
+
+<iframe width="720" height="480" src="http://lab.hakim.se/reveal-js/#/"></iframe>
+
+<h3 id="the-future">The future</h3>
+
+<p>A large shift towards Python can be expected, especially in rapid prototyping. Even though R is not going away soon,
+Python bindings will relegate R to a second class language, so to speak, in the same way as Fortran is today, this is,
+there are many classical algorithms written in Fortran in the 70’s and 80’s still being in production today. This
+includes a huge number of well-known and widely-used linear algebra libraries such as Netlib’s BLAS and LAPACK, which
+are currently interfaced to other languages such as R.</p>
+
+<p>Also, functional programming should play a role in data analysis. Lisps variants have an important advantage over imperative
+paradigms such as working naturally with monads. This makes the use of the monad <em>some</em> very useful for list processing.
+For example, in closure we can write</p>
+
+<p>&#8220;`clojure
+(def data [1 2 3 4])</p>
+
+<p>(some-&gt; data
+        process1
+        process2
+        process3)
+&#8220;`</p>
+
+<p>which prevents us from using a large chain of nested if blocks for this conditional processing. However, Lisp syntax
+is not well suited for rapid prototyping, where data scientists prefer a more imperative approach to define global
+variables for later processing</p>
+
+<p><code>python
+X = np.array([1,2,3,4])
+</code></p>
+
+<p>Functional languages might become, if not a rapid prototyping choice, indeed a data system deployment choice, since
+a lot more data processing and state handling will need to be done. It is worth mentioning
+<a href="http://clojure.github.io/clojure/clojure.zip-api.html">zippers</a>,
+<a href="https://clojure.github.io/clojure/clojure.walk-api.html">walkers</a> and
+<a href="https://github.com/clojure/core.match">match</a>, three libraries that make the programmer’s life easier by orders of
+magnitude when dealing with data processing, but I will devote an article to them.</p>
+
+<p>Regarding data visualization, it will be done primarily with web technologies on the browser, with AJAX data requests
+to the server were the data processing and storage are done. Here, technologies such as D3js will be a must.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>In the future, it is conceivable to use an integrated framework that analyzes data with Python libraries and then
+presents the results via a Python web server to multiple browsers.</p>
+
+<p>As well as Java will not totally go away in the enterprise software development world, neither will current data processing
+technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
+existing libraries will need time to be adapted to Python.</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Current Computer Language Market]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market/"/>
+    <updated>2014-11-08T02:33:09+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market</id>
+    <content type="html"><![CDATA[<p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
+
+<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
+
+<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
+
+<p><blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language’s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft’s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote></p>
+
+<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
+
+<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
+
+<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
+It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
+    <updated>2014-11-05T11:02:16+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
+    <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
+
+<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+</ul>
+
+<p>We only need to emit the category (attribute value) as the value</p>
+
+<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
+
+<script type="math/tex; mode=display">
+P(X_i=x_{i,0}|y=y_0)
+</script>
+
+<p>for which we emit a triplet</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+  <li>emit the category for this attribute of this example</li>
+</ul>
+
+<p>As value we only need to emit the previous division.</p>
+
+<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
+
+<p>I’ve just implemented this in MyML. </p>
+
+<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
+being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
+information loss in the process.</p>
+
+<p>&#8220;`python
+import numpy as np
+Xd=np.random.random((256,2))
+X=1<em>(Xd&lt;.5)
+y=1</em>(Xd.sum(axis=1)&lt;.5)</p>
+
+<p>from myml.supervised import bayes</p>
+
+<p>reload(bayes)
+nb = bayes.NaiveBayes()
+nb.fit(X, y)
+nb.predict(X[0,:])
+pred=nb.predict(X)</p>
+
+<h1 id="now-we-predict-the-whole-dataset">Now we predict the (whole) dataset</h1>
+<p>1.0<em>np.sum(1.0</em>(pred&gt;.5).reshape((1,len(y)))[0]==y)/len(y) </p>
+
+<p>0.89453125</p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+</feed>

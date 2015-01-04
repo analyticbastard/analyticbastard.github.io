@@ -1,0 +1,366 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Equality of Means Statistical Test Made Easy - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Equality of Means Statistical Test Made Easy</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T00:22:01+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:22 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of
+my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe,
+stating the null hypothesis, performing the computations and stating the results in the correct statistical language.
+I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of
+its difficulty.</p>
+
+<p>My little sister could not understand the meaning of (talking about box plots):</p>
+
+<blockquote><p>If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.</p></blockquote>
+
+<p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
+
+<p>I was shocked, and certainly ashamed, I could not even begin to articulate any word. I was naked, I didn’t know anything
+about it. “OK”, I thought, “let’s start from the beginning. What do you <em>really</em> want to do? What you want to do is
+test if the two medians of both populations are equal or not, in a statistical sense”. I located a perniciously hidden
+important constraint: The variables are normally distributed. “OK, that’s it”. Since their distribution is normal, 
+which is symmetrically distributed around the mean, the median turns out to be the mean (and also the mode). The test
+is reduced to an equality of means. Now, what would I do with two averages of two samples taken from two normally
+distributed populations? For that, one must recall the difference between the average and the mathematical expectation
+of a probability distribution (the first moment). The average is an aggregate of the different values of a sample.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} = \frac{1}{N} \sum_{i=1}^N x_i
+</script>
+
+<p>Each of the values come from a distribution, which means that each of them is a random variable that acquires a
+particular value. This means that the aggregate is also normally distributed.</p>
+
+<script type="math/tex; mode=display">
+\bar{X} = \frac{1}{N} \sum_{i=1}^N X_i \sim N(\mu, \sigma)
+</script>
+
+<p>This $\mu$ is the mathematical expectation. Recall that this is a linear operator in the functional analytic sense
+of the word <em>operator</em>, that takes a function (probability density) and spits a number in the field the distribution
+domain is a subset of (we assume it is the real numbers).</p>
+
+<p>If the random variable is discrete, the operator $E[\cdot] : \ell \rightarrow \mathbb{R}$ is defined as</p>
+
+<script type="math/tex; mode=display">
+E[X] = \sum_{i \in \mathbb{I}} x_i p_i
+</script>
+
+<p>If it is otherwise continuous, $E[\cdot] : \mathbb{F} \rightarrow \mathbb{R}$ is:</p>
+
+<script type="math/tex; mode=display">
+E[X] = \int_{\mathbb{X}} x p(x) dx
+</script>
+
+<p>Where $\ell$ (for the lack of a better symbol) is a set of number sequences and $\mathbb{F}$ is a space of functions
+whose analysis lies beyond the purpose of this post (just treat them as sets that contain respectively discrete and
+continuous density functions). And $p$ (and $p_i$) is the probability density function or the density frequencies.</p>
+
+<p>Then, we know by the law of large numbers that the average converges to the mathematical expectation as the number
+of data $N$ tends to infinity.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} \rightarrow E[X] = \mu
+</script>
+
+<p>Now, with two random variables $X$ and $Y$, under the null hypothesis, their mathematical expectation, or population
+means, are the same:</p>
+
+<script type="math/tex; mode=display">
+H_0 : \mu_X = \mu_Y
+</script>
+
+<p>So that $\mu_0 - \mu_1 = 0$. This is, the difference must be zero. Now, this is a technicality: The difference is a new
+random variable $F=X-Y$ with $E[X-Y]=E[X]-E[Y]=0$ because the operator is linear and the variables
+come from the same distribution. <em>This difference is what we use in the test</em>. If we knew more about how it is
+distributed, <em>we could query it for possible values to statistically validate the null hypothesis</em> $H_0$. </p>
+
+<p>It turns out that this new difference random variable is also normally distributed and centered
+around zero. We can then compute te standard deviation and fix the shape of the distribution, and place a confidence
+interval so that the value resulting of the difference of means falls within the 95% of probability density around zero.
+This means that if the sample difference is larger that the percentile enclosing this 95% of probability, we are not
+<em>accepting</em> the null hypothesis (remember, that $\mu_X = \mu_Y$). Note that with probability 0.05, we are going to get a
+sample difference larger than that percentile. For this reason, one does not say <em>reject</em>: There is a chance that the
+population means are truly different, bit there is also a small (0.05 probability) chance that, being the population
+means the same, we got difference of averages larger than the boundary percentile). </p>
+
+<p>To sum up, the statistical test for equality of means is:</p>
+
+<ul>
+  <li>Two samples from two populations.</li>
+  <li>I want to know whether the means are equal.</li>
+  <li>Under the hypothesis that they are equal (constrained to normality of populations and independence of samples):
+    <ul>
+      <li>The difference of means is zero</li>
+      <li>Therefore, the difference between sample averages must be small, and it is a random variable itself that must be
+normally distributed around zero.</li>
+      <li>Once we compute the standard deviation, and hence the shape of this normal distribution of the difference, we
+can select the interval to achieve the desired probability to find the value difference of means in the range,
+say, 95%. If it falls outside, then we do not accept the null hypothesis (that the difference is zero). We do
+this because it should be extremely rare for us to find two samples whose average difference falls ourside the
+range (5%) if the null hypothesis is true.</li>
+      <li>If it falls inside the 95% range, then there is no statistical evidence against the null hypothesis.</li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T00:22:01+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:22 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/statistics/'>statistics</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/14/ipython-notebook-for-data-analysis/" title="Previous Post: IPython Notebook for data analysis">&laquo; IPython Notebook for data analysis</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

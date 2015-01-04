@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mathematics - Analysis | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/mathematics-analysis/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-01-04T09:44:30+00:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Pythagorean Theorem]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/"/>
+    <updated>2014-11-06T16:24:02+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem</id>
+    <content type="html"><![CDATA[<p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
+ such as triangle similarity considerations.</p>
+
+<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
+triangles.</p>
+
+<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
+triangles, such as in the figure below. </p>
+
+<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
+side of the large outer triangle $(a+b)$. In the smaller square,
+let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
+
+<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="‘Pythagorean theorem’ ‘images’" ></p>
+
+<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
+<script type="math/tex">
+L=(a+b)^2=a^2 + b^2 + 2ab
+</script> </p>
+
+<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
+the inner square, whose area is $c^2$. Thus</p>
+
+<script type="math/tex; mode=display">
+L=4 \times \frac{ab}{2} + c^2
+</script>
+
+<p>Equating both expressions, we can arrive at the result of the theorem</p>
+
+<script type="math/tex; mode=display">
+a^2 + b^2 + 2ab = 4 \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 2 \times ab + c^2\\
+a^2 + b^2 = c^2
+</script>
+
+<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
+to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
+
+<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/"/>
+    <updated>2014-11-04T23:31:32+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs</id>
+    <content type="html"><![CDATA[<p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
+<script type="math/tex">
+\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
+</script>
+for a location $x$, and two real (or complex) numbers $\alpha$ and $\beta$.</p>
+
+<p>This theory was originally developed as a functional analytic abstraction to solve a linear differential equations (as were Hilbert and Banach spaces) of positive (or negative) kind, but made their way to data analysis first in the theory of splines and later became the engine of multiple abstract machines, based on more general reproducing kernels.</p>
+
+<p>Let $\mathbf{X}$ be a compact set or a manifold. The linear property of the evaluation functional implies, by the Riesz representation theorem, that it has a representer within the space, in contrast, for example, to the Dirac’s $\delta$ evaluation functional of the Hilbert space of squared-integrable functions (equivalence classes of functions) $L^2(\mathbf{X})$, which is a generalized function and, thus, does not belong to $L^2(\mathbf{X})$. 
+The Riesz representation theorem implies that there is an element <em>within</em> the space of functions that yields the same results when operating it with the rest of the elements of that space than a certain linear functional. Note that this, alone, does not say that all functionals that are evaluation functionals are linear. 
+It is only when they are linear that the Riesz theorem applies and they can be associatited to certain elements within the space, and we find ourselves with a RKHS.</p>
+
+<p>A function $f$ belonging to a RKHS $H_k$ can then be evaluated, at any point $\mathbf{x}$ in the set on which the functions in $H_k$ are defined, with the <em>reproducing property</em>
+<script type="math/tex">
+f(\mathbf{x}) = \delta_{\mathbf{x}} (f) = \langle k_{\mathbf{x}}, f \rangle_{H_k}
+</script>
+where we call $\delta_x$ to the linear evaluation functional at location $\mathbf{x}$ for $H_k$, belonging to $H_k^{*}$, the algebraic dual of $H_k$, whose representer element in $H_k$ is $k_x$. The notation $k_x = k(\cdot, x) \in H_k$ means that we fix the second argument to $\mathbf{x}$ so that $k$ is a function only on the first argument, and then it belongs to the very space $H_k$ it can reproduce pointwise via inner products. We work with real RKHS henceforth.</p>
+
+<p>This function with two arguments, $k:\mathbf{X} \times \mathbf{X} \rightarrow \mathbb{R}$, is the <em>kernel</em> of the positive linear integral operator 
+<script type="math/tex">
+T_k : L_X^2(\mathbf{X}) \rightarrow H_k
+</script>
+such that the bi-linear form
+<script type="math/tex">
+\langle f, T_k f \rangle_{L^2(\mathbf{X})} = \int_{\mathbf{X}} \int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) f(\mathbf{x}_2) dP_X(\mathbf{x}_2) f(\mathbf{x}_1) dP_X(\mathbf{x}_1)
+</script>
+is positive, where $P_X$ is a finite Borel measure endowing $\mathbf{X}$ and $f \in L_{P_X}^2(\mathbf{X})$, the Hilbert space of square-integrable functions under measure $P_X$. Such a kernel is called positive-definite.
+This of this as the infinite-dimensional equivalent of a matrix, which instead of finite dimensional vectors, operates functions in a linear fashion (the kernel itself does not depend on the function it is operated with under the integral sign). This is the functional-analytic way of solving differential equations, since we can invert the linear differential operator with these kind of integral operators, and this get the solution. </p>
+
+<p>A particularly important class of linear operator kernels are positive-definite kernels, and of particular interest is that of Mercer’s kernels. Given a Mercer’s kernel $k$, it holds that
+<script type="math/tex">
+k(\mathbf{x}_1,\mathbf{x}_2)=\Phi(\mathbf{x}_1)^T\Phi(\mathbf{x}_2) = \sum_{j=1}^{\infty} \lambda_j \phi_j(\mathbf{x}_1) \phi_j(\mathbf{x}_2)
+</script>
+where $\lambda_j$ and $\phi_j$ are the eigenvalues and eigenfunctions of the linear integral operator $T_k$, which is compact. This iduces a map $\Phi: \mathbf{X} \rightarrow \ell^2$, the space of square-summable sequences. This map $\Phi = (\sqrt{\lambda_1} \phi_1, \sqrt{\lambda_2} \phi_2, \ldots)^T$ is the so-called <em>kernel embedding</em> and allows the practitioner to map the data to a definite dimension (possibly infinite), where the learning task is likely to become linear. This map, however, needs not be computed explicitly in Kernel Learning methods and is defined, as seen above, by the kernel we are using and, in practice, we are restricted to a finite number of training points. This map can be written as a vector $\mathbf{z} \in \mathbb{R}^D$ for each datum, with a dimension $D \leq N$. The collection for $N$ data can be written as a matrix $\mathbf{Z} \in \mathbb{R}^{N \times D}$ of vectors $\mathbf{z}$ vertically stacked, and the finite version of the Mercer kernel expansion, yields the finite-dimensional embedding $\mathbf{Z}$ and the so-called <em>kernel trick</em>
+<script type="math/tex">
+\mathbf{K} = \mathbf{Z} \mathbf{Z}^T
+</script>
+where $\mathbf{K} \in \mathbb{R}^{N \times N}$ is the Gram matrix of kernel evaluations on the dataset <script type="math/tex">\{\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_N\}</script> built so that each entry of the matrix correspond to the kernel evaluation at two points, $\mathbf{K}_{i,j} = k(\mathbf{x}_i, \mathbf{x}_j)$. This embedding constituted the breakthrough in Machine Learning in the late 90s and early new century. Notice that this feature space is <strong>not</strong> the RKHS, since it is a subspace of $\ell^2$, their elements being sequences, whereas the RKHS is a subspace if $L^2$, its elements being functions.</p>
+
+<p>Let $f,g \in H_k$ be expressed as a linear combination of the eigenfunctions of $T_k$, <script type="math/tex">f = \sum_{j=1}^{\infty} \alpha_j \phi_j</script> and <script type="math/tex">g = \sum_{j=1}^{\infty} \beta_j \phi_j</script>. The inner product in $H_k$ is defined as
+<script type="math/tex">
+\langle f,  g \rangle_{H_k} = \sum_{j=1}^{\infty} \frac{\alpha_j \beta_j}{\lambda_j}
+</script>
+Which is equal to the equation above, i.e., 
+<script type="math/tex">\langle f,  g \rangle_{H_k} = \langle f, T_k g \rangle_{L^2(\mathbf{X})}
+</script>.
+This induces a norm
+<script type="math/tex">
+\|f\|_{H_k}^2 = \langle f,  f \rangle_{H_k} =  \|P f\|_{L^2(\mathbf{X})}^2
+</script>
+Where $P$ is a pseudo-differential operator and <script type="math/tex">P^{*}</script> is its adjoint such that <script type="math/tex">T_k = P^{*} P</script>.</p>
+
+<p>The learning task in kernel methods consist on computing a function that can approximate certain pre-defined data with certain desired properties, namely, that it is “simple” enough, simplicity measured by the norm in the space, the smaller norm, the better, as this requirement tries to overcome the overfitting and noise presence (the less “wiggly” the function, the less it responds to noise). So given a kernel function $k$ and a finite data sample of size $N$, the Representer theorem ensures that the subspace of functions spanned by finite linear combinations of the form $f=\sum_j^{n}{\alpha_j k(\cdot, \mathbf{x}_j)}$ is the solution to a regularization problem of the form
+<script type="math/tex">
+\min_{f \in H_k}  \sum_{j=1}^{n} (y_i - f(\mathbf{x}_i))^2 + \lambda \|f\|_{H_k}^2
+</script>
+where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p>
+
+<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
+<script type="math/tex">
+\int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) \phi_i(\mathbf{x}_2) dP_X(\mathbf{x}_2) = \lambda_i \phi_i(\mathbf{x}_1)
+</script>
+holds, so that uniformly sampling $\mathbf{x}$ from $P_X$, we can make the approximation of the kernel matrix
+<script type="math/tex">
+\mathbf{K} \mathbf{u} = \lambda \mathbf{u}
+</script>
+with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector approximation. Then, one can obtain an approximation to the first eigenvectors of the matrix, which have the following expressions
+<script type="math/tex">
+\phi_i(\mathbf{x}) \approx \sqrt{q} \mathbf{u}_i^{(q)} \quad\quad \lambda_i \approx \frac{\lambda_i^{(q)}}{q}
+</script></p>
+
+<p>Another well-known approximation is the random features technique, this time only for translation invariant kernels (i.e., those which can be written <script type="math/tex">k(\mathbf{x}_1,\mathbf{x}_2)=k(\mathbf{x}_1-\mathbf{x}_2)</script>, abusing notation and writing $k$ for both functions) was developed by Rahimi and Rech. Bochner’s theorem is a result from classical harmonic analysis and applies to the mentioned kernel types. A continuous function <script type="math/tex">k \in L^1(\mathbb{R}^N)</script> is positive definite if and only if it is the Fourier transform of a non-negative measure $\Lambda$.
+<script type="math/tex">
+k(\mathbf{x}_1-\mathbf{x}_2)=\int_{\mathbb{R}^N}{e^{i\mathbf{\omega}^T (\mathbf{x}_1-\mathbf{x}_2)}d \Lambda(\mathbf{\omega})}
+</script>
+The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^{-i\mathbf{\omega}^T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P_X$, whereas random features proceed independently of $P_X$. This idea has also been used in Gaussian Processes with success.</p>
+]]></content>
+  </entry>
+  
+</feed>

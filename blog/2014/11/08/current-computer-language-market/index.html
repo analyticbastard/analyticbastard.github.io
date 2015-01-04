@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Current Computer Language Market - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="There is an interesting series of articles on Dr. Dobb’s essentially about what we can call the computer languages market, where they analyze trends &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Current Computer Language Market</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-08T02:33:09+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
+
+<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
+
+<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
+
+<blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language&#8217;s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft&#8217;s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote>
+
+<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
+
+<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
+
+<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
+It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-11-08T02:33:09+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:33 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/computation-programming/'>computation - programming</a>, <a class='category' href='/blog/categories/computation-theory/'>computation - theory</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/11/06/pythagorean-theorem/" title="Previous Post: Pythagorean theorem">&laquo; Pythagorean theorem</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/11/27/the-future-of-data-analysis-tools/" title="Next Post: The future of data analysis tools: Python, web technologies">The future of data analysis tools: Python, web technologies &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

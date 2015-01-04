@@ -1,0 +1,1247 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T00:22:01+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:22 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of
+my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe,
+stating the null hypothesis, performing the computations and stating the results in the correct statistical language.
+I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of
+its difficulty.</p>
+
+<p>My little sister could not understand the meaning of (talking about box plots):</p>
+
+<blockquote><p>If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.</p></blockquote>
+
+<p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
+
+<p>I was shocked, and certainly ashamed, I could not even begin to articulate any word. I was naked, I didn’t know anything
+about it. “OK”, I thought, “let’s start from the beginning. What do you <em>really</em> want to do? What you want to do is
+test if the two medians of both populations are equal or not, in a statistical sense”. I located a perniciously hidden
+important constraint: The variables are normally distributed. “OK, that’s it”. Since their distribution is normal, 
+which is symmetrically distributed around the mean, the median turns out to be the mean (and also the mode). The test
+is reduced to an equality of means. Now, what would I do with two averages of two samples taken from two normally
+distributed populations? For that, one must recall the difference between the average and the mathematical expectation
+of a probability distribution (the first moment). The average is an aggregate of the different values of a sample.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} = \frac{1}{N} \sum_{i=1}^N x_i
+</script>
+
+<p>Each of the values come from a distribution, which means that each of them is a random variable that acquires a
+particular value. This means that the aggregate is also normally distributed.</p>
+
+<script type="math/tex; mode=display">
+\bar{X} = \frac{1}{N} \sum_{i=1}^N X_i \sim N(\mu, \sigma)
+</script>
+
+<p>This $\mu$ is the mathematical expectation. Recall that this is a linear operator in the functional analytic sense
+of the word <em>operator</em>, that takes a function (probability density) and spits a number in the field the distribution
+domain is a subset of (we assume it is the real numbers).</p>
+
+<p>If the random variable is discrete, the operator $E[\cdot] : \ell \rightarrow \mathbb{R}$ is defined as</p>
+
+<script type="math/tex; mode=display">
+E[X] = \sum_{i \in \mathbb{I}} x_i p_i
+</script>
+
+<p>If it is otherwise continuous, $E[\cdot] : \mathbb{F} \rightarrow \mathbb{R}$ is:</p>
+
+<script type="math/tex; mode=display">
+E[X] = \int_{\mathbb{X}} x p(x) dx
+</script>
+
+<p>Where $\ell$ (for the lack of a better symbol) is a set of number sequences and $\mathbb{F}$ is a space of functions
+whose analysis lies beyond the purpose of this post (just treat them as sets that contain respectively discrete and
+continuous density functions). And $p$ (and $p_i$) is the probability density function or the density frequencies.</p>
+
+<p>Then, we know by the law of large numbers that the average converges to the mathematical expectation as the number
+of data $N$ tends to infinity.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} \rightarrow E[X] = \mu
+</script>
+
+<p>Now, with two random variables $X$ and $Y$, under the null hypothesis, their mathematical expectation, or population
+means, are the same:</p>
+
+<script type="math/tex; mode=display">
+H_0 : \mu_X = \mu_Y
+</script>
+
+<p>So that $\mu_0 - \mu_1 = 0$. This is, the difference must be zero. Now, this is a technicality: The difference is a new
+random variable $F=X-Y$ with $E[X-Y]=E[X]-E[Y]=0$ because the operator is linear and the variables
+come from the same distribution. <em>This difference is what we use in the test</em>. If we knew more about how it is
+distributed, <em>we could query it for possible values to statistically validate the null hypothesis</em> $H_0$. </p>
+
+<p>It turns out that this new difference random variable is also normally distributed and centered
+around zero. We can then compute te standard deviation and fix the shape of the distribution, and place a confidence
+interval so that the value resulting of the difference of means falls within the 95% of probability density around zero.
+This means that if the sample difference is larger that the percentile enclosing this 95% of probability, we are not
+<em>accepting</em> the null hypothesis (remember, that $\mu_X = \mu_Y$). Note that with probability 0.05, we are going to get a
+sample difference larger than that percentile. For this reason, one does not say <em>reject</em>: There is a chance that the
+population means are truly different, bit there is also a small (0.05 probability) chance that, being the population
+means the same, we got difference of averages larger than the boundary percentile). </p>
+
+<p>To sum up, the statistical test for equality of means is:</p>
+
+<ul>
+  <li>Two samples from two populations.</li>
+  <li>I want to know whether the means are equal.</li>
+  <li>Under the hypothesis that they are equal (constrained to normality of populations and independence of samples):
+    <ul>
+      <li>The difference of means is zero</li>
+      <li>Therefore, the difference between sample averages must be small, and it is a random variable itself that must be
+normally distributed around zero.</li>
+      <li>Once we compute the standard deviation, and hence the shape of this normal distribution of the difference, we
+can select the interval to achieve the desired probability to find the value difference of means in the range,
+say, 95%. If it falls outside, then we do not accept the null hypothesis (that the difference is zero). We do
+this because it should be extremely rare for us to find two samples whose average difference falls ourside the
+range (5%) if the null hypothesis is true.</li>
+      <li>If it falls inside the 95% range, then there is no statistical evidence against the null hypothesis.</li>
+    </ul>
+  </li>
+</ul>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-14T10:47:29+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:47 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing
+Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and
+output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages,
+each of one contains data input lines in Python and their corresponding beautified output, which can include images
+and charts generated by <em>Matplotlib</em> or any other library that produces graphical output.</p>
+
+<p>In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using
+general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and
+feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of
+matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to 
+implement your in-house algorithms for data munging, or at least turn you too lazy to look for them 
+(in the spirit of “that’ll only take me half an hour and then I’ll devote my time to productive
+coding”).</p>
+
+<p>I felt picky today, so I opened up my IPython Notebook server. For data munging, as everything else, one must not
+re-invent the wheel, but let oneself use one of the excellent libraries out there. Pandas is an excellent example of
+data munging libraries. Here we are going to align two time series, and the problem is the same than in the previous
+post, i.e., align two time series with different time indices, such as two stock prices belonging to different markets,
+observing different holidays (see the full description and solution in my previous post).</p>
+
+<p>To do that, we concluded that the alignment could be made by merging two Pandas’ DataFrame objects, each containing
+a series data (which can be multidimensional, and whose cells will be mixed), which produces some <em>NA</em>s. Then we could
+apply the <em>gap</em> <em>NA</em> filling policy, which took the last valid value on each series.</p>
+
+<p>The result, prettified by IPy Notebook can be seen in the figure to the right (you can click on it, a pop up will show
+thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bootstrap Image Pop plugin</a>, of which I will
+talk in the following post).</p>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-40" class="imgModal floatRight" href="#imgModal-40" data-toggle="modal">
+  <img src="/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-40" tabindex="-1" role="dialog" aria-labelledby="imgModal-40Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/ipython-notebook.png" width="1366" height="771" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+
+<p>As you can see, this makes it especially adequate for information propagation environments such as board presentations
+of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to
+the teacher’s server and inputting their commands, while the teacher corrects them when they are wrong. To update items
+in real time, IPy Notebook should contemplate using websockets or any kind of server side events, which I believe
+does not so far.</p>
+
+<p>Anyway, it is a great tool to present results in a very neat way.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-27T11:01:19+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:01 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or processing. An easy example is this blog, which is made with 
+<a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control,
+modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar
+to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p>
+
+<p>We find this shift to be a real convergence in the case of data analysis and software development, specifically,
+web software development and scripting with Python. This is almost self evident and has been noted previously, in fact,
+a blog entry talking about
+<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist’s data toolkit</a>
+and thinking about my own data analysis toolkit got me writing about this.</p>
+
+<h3 id="the-past">The past</h3>
+
+<p>Previously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs
+(cells are another very useful structure to consider when elements of a set do not share the same dimension or types).
+Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data
+in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general
+case exposes several problems that one normally faces during the data analysis process. For example, one might be
+interested in correlating sells with the social sentiment about our product. This involves scraping candidate web
+pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with
+sells by date. This is an unbearable task to do by moving data blocks in Matlab.</p>
+
+<p>R, as in <a href="http://www.r-project.org/">GNU R-Project</a> is a more complete framework for data munging, since it seeks to
+replicate the S statistical language in its origins. R, which has the concept of objects, defines a dataframe class
+that specifically considers column as attributes and rows as instances, defines a set of methods that allow us to
+deal with specialized tasks like sorting, filtering or rearranging. Although I have used R in the past, I never came to
+like it despite the hught support by the community. I feel that some piece is missing, and that is maybe the heavily
+typing for a data analysis language, poor language-level support for functional paradigms which are great for data
+munging (map, reduce, filter and the like). Algorithms must be implemented in an imperative setting, which isn’t
+sometimes the best option.</p>
+
+<h3 id="the-present">The present</h3>
+
+<p>Python comes in the middle of it all. It supports functional paradigms such as lambda functions (functions defined
+where they are used), functions as first-class objects, and classical operations on collections. On the other hand,
+Python has increasingly getting more support from the community and the amount of available libraries is astonishing.
+It is true that the support for statistical analysis in Python cannot be compared to that or R yet, but Python is
+steadily catching up, with ever increasing scientists switching in all disciplines. A number of mature projects
+exist in all the areas, ranging from general Statistics to Neuroimaging. Several bridges exist to R packages with no
+native counterpart. This, the language support for advanced features, optimized packages such as
+<a href="www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Golke’s</a> (which include NumPy and SciPy versions statically compiled
+against the highly efficient Intel’s MKL BLAS distributions) and the extra toolset derived from years of using
+Python as a generalist scripting data (including a highly-productive web toolset), makes Python a worthy
+next-generation substitute for R.</p>
+
+<p>Imagine that we collect two time series of stock prices that originated in two different markets. These two markets
+observe different holidays, so the raw time series that we get are unaligned (this is true for Yahoo Finance historical
+data, for example). Our data pre-processing task is to align the data, keeping the last valid price for holidays where
+the other market is open.</p>
+
+<p>Pandas is a Python library that includes much of R functionality and is extremely handy for this kind of data munging
+tasks. By creating DataFrame objects from our raw data, we access the kind of functionality we need. In this case, once
+we have two DataFrame objects, <em>dt1</em> and <em>dt2</em>, where we simulates two weeks of data, by starting on Monday, 1st,
+and ending on Friday, 12th. The first market observes a holiday on Friday the 5th, while the second observes a
+holiday on Monday, 1st. We define the dataframes as follows:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span> <span class="s">&#39;value&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">103</span><span class="p">,</span><span class="mi">104</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">106</span><span class="p">,</span><span class="mi">107</span><span class="p">,</span><span class="mi">108</span><span class="p">]})</span>
+</span><span class="line"><span class="n">dt2</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">],</span> <span class="s">&#39;value&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">101</span><span class="p">,</span><span class="mi">102</span><span class="p">,</span><span class="mi">103</span><span class="p">,</span><span class="mi">104</span><span class="p">,</span><span class="mi">105</span><span class="p">,</span><span class="mi">106</span><span class="p">,</span><span class="mi">107</span><span class="p">,</span><span class="mi">108</span><span class="p">]})</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>To successfully mix the data toether, we can use the merge function on the column date, specifying the <em>outer</em> merging
+method, which keeps data rows coming from both dataframes.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dt2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;outer&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This will output</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">NaN</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">NaN</td>
+      <td style="text-align: right">104</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We notice the dates are unsorted due to using the first dataframe, which skips friday (date 8 would be unsorted if we
+were to use the <em>dt2</em> object). We sort on the <em>date</em> column. However, there is a bigger problem, we see NaNs,
+Not a number values for column of a dataframe not defined in the other, since this is the usual outcome from the
+outer merge. In this case, the <em>fillna</em> method of the DataFrame class with the <em>gap</em> policy will fit our purposes
+(carry over the last valid value).</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">dt1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dt2</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;outer&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s">&#39;pad&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The result of all steps is</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Of course, we have excellent IDEs to work with, ranging from generalist tools and plugins for major IDE frameworks
+such as Eclipse and IntelliJ IDEA, to more specialized editors such as the Matlab-like Spyder, IPython Notebook (embedded
+in the IPython executable, which can be started with the option <code>-notebook</code>). Also, emerging editors such as the
+celebrated Sublime Text and Light Table fully support Python.</p>
+
+<h3 id="data-visualization-past-and-present">Data visualization: past and present</h3>
+
+<p>An often overlooked side is data visualization. As people coming from the engineering side, where doing ugly and
+hard to use things is almost a badge of pride, we never care about how our results look as long as they are correct
+(in a sense that they fulfill their functional requirements). Presentation is not only important from the aesthetic
+point of view, but can also help the experts discover patterns in the data that offer previously unknown clues about
+the nature of our data.</p>
+
+<p>Plotting Matlab graphs and pasting them on a Word document was the normal. R has an impressive set of graphical tools
+that cope with the most exigent user. For the presentations, using PowerPoint was the thing to do in corporate
+environments and the most adventurous could embark on the quest of using Latex Beamer for this purpose. Not any more.</p>
+
+<p>The new normal will be web technologies. Web browsers are the most advanced graphical tool available to any user in the
+world. The dynamic capabilities achieved by both CSS and Javascript make any other technology pale. To easy the burden
+of dealing with raw CSS and Javascript, a number of libraries have been built on top of the browser native support.
+Some of these rise above the others. I must mention <a href="http://d3js.org">D3js</a>, an impressive graphical library with
+anything a data scientist with graphical needs might need. Visit their examples page to get a glance of the
+capabilities.</p>
+
+<iframe width="720" height="480" marginheight="-500" marginwidth="-300" src="http://mbostock.github.io/d3/talk/20111018/collision.html"></iframe>
+
+<p>Lastly, PowerPoint and Latex Beamer users with professional needs will both shift to browser presentation technologies
+such as <a href="http://lab.hakim.se/reveal-js/#/">RevealJS</a>, which can be complemented with Latex renderers to achieve perfect
+results for the mathematical formulae, on top of superior interactions.</p>
+
+<iframe width="720" height="480" src="http://lab.hakim.se/reveal-js/#/"></iframe>
+
+<h3 id="the-future">The future</h3>
+
+<p>A large shift towards Python can be expected, especially in rapid prototyping. Even though R is not going away soon,
+Python bindings will relegate R to a second class language, so to speak, in the same way as Fortran is today, this is,
+there are many classical algorithms written in Fortran in the 70’s and 80’s still being in production today. This
+includes a huge number of well-known and widely-used linear algebra libraries such as Netlib’s BLAS and LAPACK, which
+are currently interfaced to other languages such as R.</p>
+
+<p>Also, functional programming should play a role in data analysis. Lisps variants have an important advantage over imperative
+paradigms such as working naturally with monads. This makes the use of the monad <em>some</em> very useful for list processing.
+For example, in closure we can write</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="clojure"><span class="line"><span class="p">(</span><span class="k">def </span><span class="nv">data</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">])</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="nf">some-&gt;</span> <span class="nv">data</span>
+</span><span class="line">        <span class="nv">process1</span>
+</span><span class="line">        <span class="nv">process2</span>
+</span><span class="line">        <span class="nv">process3</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>which prevents us from using a large chain of nested if blocks for this conditional processing. However, Lisp syntax
+is not well suited for rapid prototyping, where data scientists prefer a more imperative approach to define global
+variables for later processing</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Functional languages might become, if not a rapid prototyping choice, indeed a data system deployment choice, since
+a lot more data processing and state handling will need to be done. It is worth mentioning
+<a href="http://clojure.github.io/clojure/clojure.zip-api.html">zippers</a>,
+<a href="https://clojure.github.io/clojure/clojure.walk-api.html">walkers</a> and
+<a href="https://github.com/clojure/core.match">match</a>, three libraries that make the programmer’s life easier by orders of
+magnitude when dealing with data processing, but I will devote an article to them.</p>
+
+<p>Regarding data visualization, it will be done primarily with web technologies on the browser, with AJAX data requests
+to the server were the data processing and storage are done. Here, technologies such as D3js will be a must.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>In the future, it is conceivable to use an integrated framework that analyzes data with Python libraries and then
+presents the results via a Python web server to multiple browsers.</p>
+
+<p>As well as Java will not totally go away in the enterprise software development world, neither will current data processing
+technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
+existing libraries will need time to be adapted to Python.</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-08T02:33:09+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
+
+<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
+
+<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
+
+<blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language&#8217;s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft&#8217;s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote>
+
+<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
+
+<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
+
+<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
+It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-06T16:24:02+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:24 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
+ such as triangle similarity considerations.</p>
+
+<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
+triangles.</p>
+
+<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
+triangles, such as in the figure below. </p>
+
+<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
+side of the large outer triangle $(a+b)$. In the smaller square,
+let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
+
+<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="Pythagorean theorem" alt="images" /></p>
+
+<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
+<script type="math/tex">
+L=(a+b)^2=a^2 + b^2 + 2ab
+</script> </p>
+
+<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
+the inner square, whose area is $c^2$. Thus</p>
+
+<script type="math/tex; mode=display">
+L=4 \times \frac{ab}{2} + c^2
+</script>
+
+<p>Equating both expressions, we can arrive at the result of the theorem</p>
+
+<script type="math/tex; mode=display">
+a^2 + b^2 + 2ab = 4 \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 2 \times ab + c^2\\
+a^2 + b^2 = c^2
+</script>
+
+<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
+to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
+
+<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/">Naive Bayes Implemented With Map/Reduce Operations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-05T11:02:16+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:02 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
+
+<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+</ul>
+
+<p>We only need to emit the category (attribute value) as the value</p>
+
+<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
+
+<script type="math/tex; mode=display">
+P(X_i=x_{i,0}|y=y_0)
+</script>
+
+<p>for which we emit a triplet</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+  <li>emit the category for this attribute of this example</li>
+</ul>
+
+<p>As value we only need to emit the previous division.</p>
+
+<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
+
+<p>I’ve just implemented this in MyML. </p>
+
+<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
+being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
+information loss in the process.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span><span class="line"><span class="n">Xd</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</span><span class="line"><span class="n">X</span><span class="o">=</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">Xd</span><span class="o">&lt;.</span><span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">Xd</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;.</span><span class="mi">5</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="kn">from</span> <span class="nn">myml.supervised</span> <span class="kn">import</span> <span class="n">bayes</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="nb">reload</span><span class="p">(</span><span class="n">bayes</span><span class="p">)</span>
+</span><span class="line"><span class="n">nb</span> <span class="o">=</span> <span class="n">bayes</span><span class="o">.</span><span class="n">NaiveBayes</span><span class="p">()</span>
+</span><span class="line"><span class="n">nb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span class="line"><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+</span><span class="line"><span class="n">pred</span><span class="o">=</span><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c">#Now we predict the (whole) dataset </span>
+</span><span class="line"><span class="mf">1.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="p">(</span><span class="n">pred</span><span class="o">&gt;.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="mf">0.89453125</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/04/a-gentle-introduction-to-rkhs/">A Gentle Introduction to RKHS and Kernel Methods</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-04T23:31:32+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:31 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
+<script type="math/tex">
+\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
+</script>
+for a location $x$, and two real (or complex) numbers $\alpha$ and $\beta$.</p>
+
+<p>This theory was originally developed as a functional analytic abstraction to solve a linear differential equations (as were Hilbert and Banach spaces) of positive (or negative) kind, but made their way to data analysis first in the theory of splines and later became the engine of multiple abstract machines, based on more general reproducing kernels.</p>
+
+<p>Let $\mathbf{X}$ be a compact set or a manifold. The linear property of the evaluation functional implies, by the Riesz representation theorem, that it has a representer within the space, in contrast, for example, to the Dirac’s $\delta$ evaluation functional of the Hilbert space of squared-integrable functions (equivalence classes of functions) $L^2(\mathbf{X})$, which is a generalized function and, thus, does not belong to $L^2(\mathbf{X})$. 
+The Riesz representation theorem implies that there is an element <em>within</em> the space of functions that yields the same results when operating it with the rest of the elements of that space than a certain linear functional. Note that this, alone, does not say that all functionals that are evaluation functionals are linear. 
+It is only when they are linear that the Riesz theorem applies and they can be associatited to certain elements within the space, and we find ourselves with a RKHS.</p>
+
+<p>A function $f$ belonging to a RKHS $H_k$ can then be evaluated, at any point $\mathbf{x}$ in the set on which the functions in $H_k$ are defined, with the <em>reproducing property</em>
+<script type="math/tex">
+f(\mathbf{x}) = \delta_{\mathbf{x}} (f) = \langle k_{\mathbf{x}}, f \rangle_{H_k}
+</script>
+where we call $\delta_x$ to the linear evaluation functional at location $\mathbf{x}$ for $H_k$, belonging to $H_k^{*}$, the algebraic dual of $H_k$, whose representer element in $H_k$ is $k_x$. The notation $k_x = k(\cdot, x) \in H_k$ means that we fix the second argument to $\mathbf{x}$ so that $k$ is a function only on the first argument, and then it belongs to the very space $H_k$ it can reproduce pointwise via inner products. We work with real RKHS henceforth.</p>
+
+<p>This function with two arguments, $k:\mathbf{X} \times \mathbf{X} \rightarrow \mathbb{R}$, is the <em>kernel</em> of the positive linear integral operator 
+<script type="math/tex">
+T_k : L_X^2(\mathbf{X}) \rightarrow H_k
+</script>
+such that the bi-linear form
+<script type="math/tex">
+\langle f, T_k f \rangle_{L^2(\mathbf{X})} = \int_{\mathbf{X}} \int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) f(\mathbf{x}_2) dP_X(\mathbf{x}_2) f(\mathbf{x}_1) dP_X(\mathbf{x}_1)
+</script>
+is positive, where $P_X$ is a finite Borel measure endowing $\mathbf{X}$ and $f \in L_{P_X}^2(\mathbf{X})$, the Hilbert space of square-integrable functions under measure $P_X$. Such a kernel is called positive-definite.
+This of this as the infinite-dimensional equivalent of a matrix, which instead of finite dimensional vectors, operates functions in a linear fashion (the kernel itself does not depend on the function it is operated with under the integral sign). This is the functional-analytic way of solving differential equations, since we can invert the linear differential operator with these kind of integral operators, and this get the solution. </p>
+
+<p>A particularly important class of linear operator kernels are positive-definite kernels, and of particular interest is that of Mercer’s kernels. Given a Mercer’s kernel $k$, it holds that
+<script type="math/tex">
+k(\mathbf{x}_1,\mathbf{x}_2)=\Phi(\mathbf{x}_1)^T\Phi(\mathbf{x}_2) = \sum_{j=1}^{\infty} \lambda_j \phi_j(\mathbf{x}_1) \phi_j(\mathbf{x}_2)
+</script>
+where $\lambda_j$ and $\phi_j$ are the eigenvalues and eigenfunctions of the linear integral operator $T_k$, which is compact. This iduces a map $\Phi: \mathbf{X} \rightarrow \ell^2$, the space of square-summable sequences. This map $\Phi = (\sqrt{\lambda_1} \phi_1, \sqrt{\lambda_2} \phi_2, \ldots)^T$ is the so-called <em>kernel embedding</em> and allows the practitioner to map the data to a definite dimension (possibly infinite), where the learning task is likely to become linear. This map, however, needs not be computed explicitly in Kernel Learning methods and is defined, as seen above, by the kernel we are using and, in practice, we are restricted to a finite number of training points. This map can be written as a vector $\mathbf{z} \in \mathbb{R}^D$ for each datum, with a dimension $D \leq N$. The collection for $N$ data can be written as a matrix $\mathbf{Z} \in \mathbb{R}^{N \times D}$ of vectors $\mathbf{z}$ vertically stacked, and the finite version of the Mercer kernel expansion, yields the finite-dimensional embedding $\mathbf{Z}$ and the so-called <em>kernel trick</em>
+<script type="math/tex">
+\mathbf{K} = \mathbf{Z} \mathbf{Z}^T
+</script>
+where $\mathbf{K} \in \mathbb{R}^{N \times N}$ is the Gram matrix of kernel evaluations on the dataset <script type="math/tex">\{\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_N\}</script> built so that each entry of the matrix correspond to the kernel evaluation at two points, $\mathbf{K}_{i,j} = k(\mathbf{x}_i, \mathbf{x}_j)$. This embedding constituted the breakthrough in Machine Learning in the late 90s and early new century. Notice that this feature space is <strong>not</strong> the RKHS, since it is a subspace of $\ell^2$, their elements being sequences, whereas the RKHS is a subspace if $L^2$, its elements being functions.</p>
+
+<p>Let $f,g \in H_k$ be expressed as a linear combination of the eigenfunctions of $T_k$, <script type="math/tex">f = \sum_{j=1}^{\infty} \alpha_j \phi_j</script> and <script type="math/tex">g = \sum_{j=1}^{\infty} \beta_j \phi_j</script>. The inner product in $H_k$ is defined as
+<script type="math/tex">
+\langle f,  g \rangle_{H_k} = \sum_{j=1}^{\infty} \frac{\alpha_j \beta_j}{\lambda_j}
+</script>
+Which is equal to the equation above, i.e., 
+<script type="math/tex">\langle f,  g \rangle_{H_k} = \langle f, T_k g \rangle_{L^2(\mathbf{X})}
+</script>.
+This induces a norm
+<script type="math/tex">
+\|f\|_{H_k}^2 = \langle f,  f \rangle_{H_k} =  \|P f\|_{L^2(\mathbf{X})}^2
+</script>
+Where $P$ is a pseudo-differential operator and <script type="math/tex">P^{*}</script> is its adjoint such that <script type="math/tex">T_k = P^{*} P</script>.</p>
+
+<p>The learning task in kernel methods consist on computing a function that can approximate certain pre-defined data with certain desired properties, namely, that it is “simple” enough, simplicity measured by the norm in the space, the smaller norm, the better, as this requirement tries to overcome the overfitting and noise presence (the less “wiggly” the function, the less it responds to noise). So given a kernel function $k$ and a finite data sample of size $N$, the Representer theorem ensures that the subspace of functions spanned by finite linear combinations of the form $f=\sum_j^{n}{\alpha_j k(\cdot, \mathbf{x}_j)}$ is the solution to a regularization problem of the form
+<script type="math/tex">
+\min_{f \in H_k}  \sum_{j=1}^{n} (y_i - f(\mathbf{x}_i))^2 + \lambda \|f\|_{H_k}^2
+</script>
+where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p>
+
+<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
+<script type="math/tex">
+\int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) \phi_i(\mathbf{x}_2) dP_X(\mathbf{x}_2) = \lambda_i \phi_i(\mathbf{x}_1)
+</script>
+holds, so that uniformly sampling $\mathbf{x}$ from $P_X$, we can make the approximation of the kernel matrix
+<script type="math/tex">
+\mathbf{K} \mathbf{u} = \lambda \mathbf{u}
+</script>
+with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector approximation. Then, one can obtain an approximation to the first eigenvectors of the matrix, which have the following expressions
+<script type="math/tex">
+\phi_i(\mathbf{x}) \approx \sqrt{q} \mathbf{u}_i^{(q)} \quad\quad \lambda_i \approx \frac{\lambda_i^{(q)}}{q}
+</script></p>
+
+<p>Another well-known approximation is the random features technique, this time only for translation invariant kernels (i.e., those which can be written <script type="math/tex">k(\mathbf{x}_1,\mathbf{x}_2)=k(\mathbf{x}_1-\mathbf{x}_2)</script>, abusing notation and writing $k$ for both functions) was developed by Rahimi and Rech. Bochner’s theorem is a result from classical harmonic analysis and applies to the mentioned kernel types. A continuous function <script type="math/tex">k \in L^1(\mathbb{R}^N)</script> is positive definite if and only if it is the Fourier transform of a non-negative measure $\Lambda$.
+<script type="math/tex">
+k(\mathbf{x}_1-\mathbf{x}_2)=\int_{\mathbb{R}^N}{e^{i\mathbf{\omega}^T (\mathbf{x}_1-\mathbf{x}_2)}d \Lambda(\mathbf{\omega})}
+</script>
+The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^{-i\mathbf{\omega}^T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P_X$, whereas random features proceed independently of $P_X$. This idea has also been used in Gaussian Processes with success.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/">Improve the Performance of an SVM With Differential Geometry</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-03T02:19:37+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:19 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
+
+<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+
+<script type="math/tex; mode=display">
+ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
+</script>
+
+<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
+
+<script type="math/tex; mode=display">
+\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
+</script>
+
+<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
+
+<script type="math/tex; mode=display">
+\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
+</script>
+
+<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
+
+<script type="math/tex; mode=display">
+c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
+</script>
+
+<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
+
+<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
+
+<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+
+<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+
+<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+
+<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+
+<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-01T22:19:40+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>10:19 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
+others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
+instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
+follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
+for real).</p>
+
+<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
+personal set up, because the plugin at my job is definitely more functional.</p>
+
+<p>Now a code snippet. I follow the instructions at Octopress’ website.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">env <span class="nv">x</span><span class="o">=</span><span class="s1">&#39;() { :;}; echo vulnerable&#39;</span> bash -c <span class="s2">&quot;echo this is a test&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Check. Beautiful. Lovin’ it.</p>
+
+<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
+to be able to edit in Latex. The lack of it is a no go. Luckily, I found
+<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
+to do precisely that. Testing:</p>
+
+<script type="math/tex; mode=display">
+\int_a^b f(x) dx = F(b) - F(a)
+</script>
+
+<p>Check. Awesome! Sold!</p>
+
+<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
+by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
+
+<p>Let be it! I am moving to Github Pages + Octopress.</p>
+
+<p>Edit: I forgot to test Youtube video insertion. <del>Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a></del> 
+This is done by pasting the <em>iframe</em> tag as given by youtube.
+OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
+
+<p>No responsiveness as of yet, but it’s fine for now.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

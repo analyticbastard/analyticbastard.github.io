@@ -9,8 +9,8 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
-until I had to explain it to &hellip;">
+  <meta name="description" content="Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
+input or measured variables so that &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,271 @@ until I had to explain it to &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-01T00:22:01+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>12:22 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
+input or measured variables so that the transformed variables offer a view of the data that maximizes the presented
+“information” about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions
+which provide most of the “information” and be sure that each of the rest of the discarded dimensions contain less
+information than each of the dimensions we have retained.</p>
+
+<p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the
+coefficient vector is of norm one) so that it is of maximum square norm.</p>
+
+<script type="math/tex; mode=display">
+\max_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^2 \\
+\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
+</script>
+
+<p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
+for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-6" class="imgModal floatRight" href="#imgModal-6" data-toggle="modal">
+  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-6" tabindex="-1" role="dialog" aria-labelledby="imgModal-6Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+
+<p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
+
+<p>Since the scalar product induces a norm, $ \mathbf{w}^T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p>
+
+<p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^T \mathbf{X}$ be the covariance matrix.</p>
+
+<script type="math/tex; mode=display">
+\max_{\|\mathbf{w}\|=1}  \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \\
+\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
+</script>
+
+<p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the
+solution. This can be written as the optimization of a Rayleigh quotient.</p>
+
+<script type="math/tex; mode=display">
+\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^2} \\
+\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^T \mathbf{w}} \\
+</script>
+
+<p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector
+corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite). 
+Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^2 = \mathbf{w}^T \mathbf{w} = 1$.
+The same result can be
+computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p>
+
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial \mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) = 0 \\
+\mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0
+</script>
+
+<p>We arrive at</p>
+
+<script type="math/tex; mode=display">
+\mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w}
+</script>
+
+<p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient
+methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest
+eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p>
+
+<p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of
+$\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal,
+I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for
+component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts
+to stacking up the vectors $\mathbf{w}$ in columns).</p>
+
+<script type="math/tex; mode=display">
+\mathbf{W} = \mathbf{U} \mathbf{D}^{\frac{1}{2}}
+</script>
+
+<p>And the transformation of the data is</p>
+
+<script type="math/tex; mode=display">
+\mathbf{Z} = \mathbf{X} \mathbf{W}
+</script>
+
+<h3 id="probabilistic-derivation">Probabilistic derivation</h3>
+
+<p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following
+this approach. The seminal paper is <a href="http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf">“Probabilistic Principal Component Analysis”, by M. E. Tipping and C. M. Bishop</a>,
+published in The Journal of the Royal Statistical Society, Series B.</p>
+
+<p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain
+transformations even in the presence of missing attributes. This, however, has been rarely implemented on software
+packages.  The <a href="http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&amp;d=R_BC">Probabilistic PCA R Package</a>
+supports incomplete data.</p>
+
+<h3 id="playground-with-sklearn-and-r">Playground with Sklearn and R</h3>
+
+<p>In IPython Notebook, open up a new sheet and import the necessary modules</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">matplotlib</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">datetime</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.finance</span> <span class="kn">import</span> <span class="n">quotes_historical_yahoo</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">YearLocator</span><span class="p">,</span> <span class="n">MonthLocator</span><span class="p">,</span> <span class="n">DateFormatter</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Define the date range that we are going to extract prices from</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">date1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2004</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line"><span class="n">date2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Get the historical data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">intc</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;INTC&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
+</span><span class="line"><span class="n">msft</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;MSFT&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Extract the closing price from the data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">cintc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">intc</span><span class="p">])</span>
+</span><span class="line"><span class="n">cmsft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">msft</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Build a data matrix to be fed to the PCA implementation in a suitable format</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cintc</span><span class="p">,</span><span class="n">cmsft</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Plot both closing prices so that we can visually compare them with the transforms</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-7" class="imgModal floatRight" href="#imgModal-7" data-toggle="modal">
+  <img src="/images/pca_intc_msft_stocks.png" width="94" height="63" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-7" tabindex="-1" role="dialog" aria-labelledby="imgModal-7Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/pca_intc_msft_stocks.png" width="376" height="253" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+
+<p>Build the object</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Transform the data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">T</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Let’s examine the variance ratio explained by each of the components. Notice that the first component explains a lot
+of the price movement of both stocks.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</span><span class="line">
+</span><span class="line"><span class="n">array</span><span class="p">([</span> <span class="mf">0.8132162</span><span class="p">,</span>  <span class="mf">0.1867838</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Now we can print out the PCA transformation</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-8" class="imgModal floatRight" href="#imgModal-8" data-toggle="modal">
+  <img src="/images/pca_intc_msft_transform.png" width="96" height="63" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-8" tabindex="-1" role="dialog" aria-labelledby="imgModal-8Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/pca_intc_msft_transform.png" width="384" height="253" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1044,75 +1309,9 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-01T22:19:40+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>10:19 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
-others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
-instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
-follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
-for real).</p>
-
-<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
-personal set up, because the plugin at my job is definitely more functional.</p>
-
-<p>Now a code snippet. I follow the instructions at Octopress’ website.</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">env <span class="nv">x</span><span class="o">=</span><span class="s1">&#39;() { :;}; echo vulnerable&#39;</span> bash -c <span class="s2">&quot;echo this is a test&quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Check. Beautiful. Lovin’ it.</p>
-
-<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
-to be able to edit in Latex. The lack of it is a no go. Luckily, I found
-<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
-to do precisely that. Testing:</p>
-
-<script type="math/tex; mode=display">
-\int_a^b f(x) dx = F(b) - F(a)
-</script>
-
-<p>Check. Awesome! Sold!</p>
-
-<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
-by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
-
-<p>Let be it! I am moving to Github Pages + Octopress.</p>
-
-<p>Edit: I forgot to test Youtube video insertion. <del>Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a></del> 
-This is done by pasting the <em>iframe</em> tag as given by youtube.
-OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
-
-<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
-
-<p>No responsiveness as of yet, but it’s fine for now.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/posts/2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -1123,6 +1322,10 @@ OK, cloned, copied Ruby files and test (with current time position including <em
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
@@ -1140,19 +1343,15 @@ OK, cloned, copied Ruby files and test (with current time position including <em
         <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 120.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

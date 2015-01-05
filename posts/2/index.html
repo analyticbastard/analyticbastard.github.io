@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Prueba - The Analytic Bastard</title>
+  <title>The Analytic Bastard</title>
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Prueba Nov 1st, 2014 7:25 pm Hola, esto es una prueba Nov 1st, 2014 7:25 pm My Blog Tweet Recent Posts Principal Component Analysis Equality of &hellip;">
+  <meta name="description" content="Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
+others call a blog for hackers &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://analyticbastard.github.io/prueba">
+  <link rel="canonical" href="http://analyticbastard.github.io/posts/2">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
@@ -67,57 +68,85 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Prueba</h1>
-    <p class="meta">
-
-
-
-
-<time class='entry-date' datetime='2014-11-01T19:25:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>7:25 pm</span></time></p>
-  </header>
-  
-  <p>Hola, esto es una prueba</p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/01/my-new-blog/">My New Blog in Github Pages + Octopress</a></h1>
+    
+    
       <p class="meta">
         
+
+
+
+
+<time class='entry-date' datetime='2014-11-01T22:19:40+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>10:19 pm</span></time>
         
-
-
-
-
-<time class='entry-date' datetime='2014-11-01T19:25:00+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2014</span></span> <span class='time'>7:25 pm</span></time>
-        
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/my-blog/'>My Blog</a>
-  
-</span>
-
-
       </p>
-      
-        <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/prueba/index.html" data-via="" data-counturl="http://analyticbastard.github.io/prueba/index.html" >Tweet</a>
-  
-  
-  
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
+others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
+instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
+follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
+for real).</p>
+
+<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
+personal set up, because the plugin at my job is definitely more functional.</p>
+
+<p>Now a code snippet. I follow the instructions at Octopress’ website.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">env <span class="nv">x</span><span class="o">=</span><span class="s1">&#39;() { :;}; echo vulnerable&#39;</span> bash -c <span class="s2">&quot;echo this is a test&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Check. Beautiful. Lovin’ it.</p>
+
+<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
+to be able to edit in Latex. The lack of it is a no go. Luckily, I found
+<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
+to do precisely that. Testing:</p>
+
+<script type="math/tex; mode=display">
+\int_a^b f(x) dx = F(b) - F(a)
+</script>
+
+<p>Check. Awesome! Sold!</p>
+
+<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
+by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
+
+<p>Let be it! I am moving to Github Pages + Octopress.</p>
+
+<p>Edit: I forgot to test Youtube video insertion. <del>Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a></del> 
+This is done by pasting the <em>iframe</em> tag as given by youtube.
+OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
+
+<p>No responsiveness as of yet, but it’s fine for now.</p>
 </div>
-
-      
-    </footer>
   
-</article>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/index.html">Newer &rarr;</a>
+    
+  </div>
 </div>
-
 <aside class="sidebar">
   
     <section>
@@ -205,7 +234,6 @@
 
   
 </aside>
-
 
     </div>
   </div>

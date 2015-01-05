@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mathematics - Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/mathematics-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-04T13:45:05+00:00</updated>
+  <updated>2015-01-05T15:07:46+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -32,7 +32,7 @@ triangles, such as in the figure below. </p>
 side of the large outer triangle $(a+b)$. In the smaller square,
 let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
 
-<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="‘Pythagorean theorem’ ‘images’" ></p>
+<p>{% img left /images/pythagorean.png 400 400 ‘Pythagorean theorem’ ‘images’ %}</p>
 
 <p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
 <script type="math/tex">

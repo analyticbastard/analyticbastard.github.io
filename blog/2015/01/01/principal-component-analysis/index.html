@@ -1,0 +1,512 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Principal Component Analysis - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
+input or measured variables so that &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Principal Component Analysis</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-01T00:22:01+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>12:22 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
+input or measured variables so that the transformed variables offer a view of the data that maximizes the presented
+“information” about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions
+which provide most of the “information” and be sure that each of the rest of the discarded dimensions contain less
+information than each of the dimensions we have retained.</p>
+
+<p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the
+coefficient vector is of norm one) so that it is of maximum square norm.</p>
+
+<script type="math/tex; mode=display">
+\max_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^2 \\
+\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
+</script>
+
+<p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
+for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-6" class="imgModal floatRight" href="#imgModal-6" data-toggle="modal">
+  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-6" tabindex="-1" role="dialog" aria-labelledby="imgModal-6Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+
+<p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
+
+<p>Since the scalar product induces a norm, $ \mathbf{w}^T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p>
+
+<p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^T \mathbf{X}$ be the covariance matrix.</p>
+
+<script type="math/tex; mode=display">
+\max_{\|\mathbf{w}\|=1}  \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \\
+\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
+</script>
+
+<p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the
+solution. This can be written as the optimization of a Rayleigh quotient.</p>
+
+<script type="math/tex; mode=display">
+\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^2} \\
+\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^T \mathbf{w}} \\
+</script>
+
+<p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector
+corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite). 
+Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^2 = \mathbf{w}^T \mathbf{w} = 1$.
+The same result can be
+computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p>
+
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial \mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) = 0 \\
+\mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0
+</script>
+
+<p>We arrive at</p>
+
+<script type="math/tex; mode=display">
+\mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w}
+</script>
+
+<p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient
+methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest
+eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p>
+
+<p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of
+$\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal,
+I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for
+component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts
+to stacking up the vectors $\mathbf{w}$ in columns).</p>
+
+<script type="math/tex; mode=display">
+\mathbf{W} = \mathbf{U} \mathbf{D}^{\frac{1}{2}}
+</script>
+
+<p>And the transformation of the data is</p>
+
+<script type="math/tex; mode=display">
+\mathbf{Z} = \mathbf{X} \mathbf{W}
+</script>
+
+<h3 id="probabilistic-derivation">Probabilistic derivation</h3>
+
+<p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following
+this approach. The seminal paper is <a href="http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf">“Probabilistic Principal Component Analysis”, by M. E. Tipping and C. M. Bishop</a>,
+published in The Journal of the Royal Statistical Society, Series B.</p>
+
+<p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain
+transformations even in the presence of missing attributes. This, however, has been rarely implemented on software
+packages.  The <a href="http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&amp;d=R_BC">Probabilistic PCA R Package</a>
+supports incomplete data.</p>
+
+<h3 id="playground-with-sklearn-and-r">Playground with Sklearn and R</h3>
+
+<p>In IPython Notebook, open up a new sheet and import the necessary modules</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">matplotlib</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">datetime</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.finance</span> <span class="kn">import</span> <span class="n">quotes_historical_yahoo</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">YearLocator</span><span class="p">,</span> <span class="n">MonthLocator</span><span class="p">,</span> <span class="n">DateFormatter</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Define the date range that we are going to extract prices from</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">date1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2004</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span class="line"><span class="n">date2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Get the historical data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">intc</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;INTC&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
+</span><span class="line"><span class="n">msft</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;MSFT&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Extract the closing price from the data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">cintc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">intc</span><span class="p">])</span>
+</span><span class="line"><span class="n">cmsft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">msft</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Build a data matrix to be fed to the PCA implementation in a suitable format</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cintc</span><span class="p">,</span><span class="n">cmsft</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Plot both closing prices so that we can visually compare them with the transforms</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-7" class="imgModal floatRight" href="#imgModal-7" data-toggle="modal">
+  <img src="/images/pca_intc_msft_stocks.png" width="94" height="63" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-7" tabindex="-1" role="dialog" aria-labelledby="imgModal-7Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/pca_intc_msft_stocks.png" width="376" height="253" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+
+<p>Build the object</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Transform the data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">T</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Let’s examine the variance ratio explained by each of the components. Notice that the first component explains a lot
+of the price movement of both stocks.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</span><span class="line">
+</span><span class="line"><span class="n">array</span><span class="p">([</span> <span class="mf">0.8132162</span><span class="p">,</span>  <span class="mf">0.1867838</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Now we can print out the PCA transformation</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-8" class="imgModal floatRight" href="#imgModal-8" data-toggle="modal">
+  <img src="/images/pca_intc_msft_transform.png" width="96" height="63" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-8" tabindex="-1" role="dialog" aria-labelledby="imgModal-8Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/pca_intc_msft_transform.png" width="384" height="253" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-01-01T00:22:01+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>12:22 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/data-analysis/'>data analysis</a>, <a class='category' href='/blog/categories/mathematics/'>mathematics</a>, <a class='category' href='/blog/categories/statistics/'>statistics</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/12/30/equality-of-means-statistical-test/" title="Previous Post: Equality of means statistical test made easy">&laquo; Equality of means statistical test made easy</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
+</section>
+<section>
+    <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
+</section><section>
+    <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+</section><section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://hunch.net' feedurl='http://feeds2.feedburner.com/MachineLearningtheory' title = 'Machine Learning, Data Mining'>Hunch.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Statistics | The Analytic Bastard]]></title>
-  <link href="http://analyticbastard.github.io/blog/categories/statistics/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Mathematics | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/mathematics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
   <updated>2015-01-05T15:07:46+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
@@ -181,116 +181,6 @@ plot(T)
 </code></p>
 
 <p>{% imgpopup /images/pca_intc_msft_transform.png 100%  %}</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Equality of Means Statistical Test Made Easy]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test/"/>
-    <updated>2014-12-30T00:22:01+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test</id>
-    <content type="html"><![CDATA[<p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
-until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of
-my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe,
-stating the null hypothesis, performing the computations and stating the results in the correct statistical language.
-I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of
-its difficulty.</p>
-
-<p>My little sister could not understand the meaning of (talking about box plots):</p>
-
-<p>{% blockquote %}
-If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.
-{% endblockquote %}</p>
-
-<p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
-
-<p>I was shocked, and certainly ashamed, I could not even begin to articulate any word. I was naked, I didn’t know anything
-about it. “OK”, I thought, “let’s start from the beginning. What do you <em>really</em> want to do? What you want to do is
-test if the two medians of both populations are equal or not, in a statistical sense”. I located a perniciously hidden
-important constraint: The variables are normally distributed. “OK, that’s it”. Since their distribution is normal, 
-which is symmetrically distributed around the mean, the median turns out to be the mean (and also the mode). The test
-is reduced to an equality of means. Now, what would I do with two averages of two samples taken from two normally
-distributed populations? For that, one must recall the difference between the average and the mathematical expectation
-of a probability distribution (the first moment). The average is an aggregate of the different values of a sample.</p>
-
-<script type="math/tex; mode=display">
-\bar{x} = \frac{1}{N} \sum_{i=1}^N x_i
-</script>
-
-<p>Each of the values come from a distribution, which means that each of them is a random variable that acquires a
-particular value. This means that the aggregate is also normally distributed.</p>
-
-<script type="math/tex; mode=display">
-\bar{X} = \frac{1}{N} \sum_{i=1}^N X_i \sim N(\mu, \sigma)
-</script>
-
-<p>This $\mu$ is the mathematical expectation. Recall that this is a linear operator in the functional analytic sense
-of the word <em>operator</em>, that takes a function (probability density) and spits a number in the field the distribution
-domain is a subset of (we assume it is the real numbers).</p>
-
-<p>If the random variable is discrete, the operator $E[\cdot] : \ell \rightarrow \mathbb{R}$ is defined as</p>
-
-<script type="math/tex; mode=display">
-E[X] = \sum_{i \in \mathbb{I}} x_i p_i
-</script>
-
-<p>If it is otherwise continuous, $E[\cdot] : \mathbb{F} \rightarrow \mathbb{R}$ is:</p>
-
-<script type="math/tex; mode=display">
-E[X] = \int_{\mathbb{X}} x p(x) dx
-</script>
-
-<p>Where $\ell$ (for the lack of a better symbol) is a set of number sequences and $\mathbb{F}$ is a space of functions
-whose analysis lies beyond the purpose of this post (just treat them as sets that contain respectively discrete and
-continuous density functions). And $p$ (and $p_i$) is the probability density function or the density frequencies.</p>
-
-<p>Then, we know by the law of large numbers that the average converges to the mathematical expectation as the number
-of data $N$ tends to infinity.</p>
-
-<script type="math/tex; mode=display">
-\bar{x} \rightarrow E[X] = \mu
-</script>
-
-<p>Now, with two random variables $X$ and $Y$, under the null hypothesis, their mathematical expectation, or population
-means, are the same:</p>
-
-<script type="math/tex; mode=display">
-H_0 : \mu_X = \mu_Y
-</script>
-
-<p>So that $\mu_0 - \mu_1 = 0$. This is, the difference must be zero. Now, this is a technicality: The difference is a new
-random variable $F=X-Y$ with $E[X-Y]=E[X]-E[Y]=0$ because the operator is linear and the variables
-come from the same distribution. <em>This difference is what we use in the test</em>. If we knew more about how it is
-distributed, <em>we could query it for possible values to statistically validate the null hypothesis</em> $H_0$. </p>
-
-<p>It turns out that this new difference random variable is also normally distributed and centered
-around zero. We can then compute te standard deviation and fix the shape of the distribution, and place a confidence
-interval so that the value resulting of the difference of means falls within the 95% of probability density around zero.
-This means that if the sample difference is larger that the percentile enclosing this 95% of probability, we are not
-<em>accepting</em> the null hypothesis (remember, that $\mu_X = \mu_Y$). Note that with probability 0.05, we are going to get a
-sample difference larger than that percentile. For this reason, one does not say <em>reject</em>: There is a chance that the
-population means are truly different, bit there is also a small (0.05 probability) chance that, being the population
-means the same, we got difference of averages larger than the boundary percentile). </p>
-
-<p>To sum up, the statistical test for equality of means is:</p>
-
-<ul>
-  <li>Two samples from two populations.</li>
-  <li>I want to know whether the means are equal.</li>
-  <li>Under the hypothesis that they are equal (constrained to normality of populations and independence of samples):
-    <ul>
-      <li>The difference of means is zero</li>
-      <li>Therefore, the difference between sample averages must be small, and it is a random variable itself that must be
-normally distributed around zero.</li>
-      <li>Once we compute the standard deviation, and hence the shape of this normal distribution of the difference, we
-can select the interval to achieve the desired probability to find the value difference of means in the range,
-say, 95%. If it falls outside, then we do not accept the null hypothesis (that the difference is zero). We do
-this because it should be extremely rare for us to find two samples whose average difference falls ourside the
-range (5%) if the null hypothesis is true.</li>
-      <li>If it falls inside the 95% range, then there is no statistical evidence against the null hypothesis.</li>
-    </ul>
-  </li>
-</ul>
 ]]></content>
   </entry>
   

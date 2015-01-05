@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statistics | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/statistics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-05T15:07:46+00:00</updated>
+  <updated>2015-01-05T15:11:00+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -35,7 +35,28 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 <p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
-<p>{% imgpopup /images/plot_faces_decomposition_002.png 50% right %}</p>
+<p><!-- Image -->
+<a id="img-5" class="imgModal floatRight" href="#imgModal-5" data-toggle="modal">
+  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-5" tabindex="-1" role="dialog" aria-labelledby="imgModal-5Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
 
 <p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
 
@@ -151,7 +172,7 @@ X = np.vstack((cintc,cmsft)).T
 plot(X)
 </code></p>
 
-<p>{% imgpopup /images/pca_intc_msft_stocks.png 100%  %}</p>
+<p><img src="/images/pca_intc_msft_stocks.png"></p>
 
 <p>Build the object</p>
 
@@ -180,7 +201,7 @@ pca.explained_variance_ratio_</p>
 plot(T)
 </code></p>
 
-<p>{% imgpopup /images/pca_intc_msft_transform.png 100%  %}</p>
+<p><img src="/images/pca_intc_msft_transform.png"></p>
 ]]></content>
   </entry>
   
@@ -198,9 +219,7 @@ its difficulty.</p>
 
 <p>My little sister could not understand the meaning of (talking about box plots):</p>
 
-<p>{% blockquote %}
-If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.
-{% endblockquote %}</p>
+<p><blockquote><p>If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.</p></blockquote></p>
 
 <p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
 

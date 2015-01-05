@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-05T14:57:34+00:00</updated>
+  <updated>2015-01-05T15:11:00+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -36,13 +36,13 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
 <div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-6" class="imgModal floatRight" href="#imgModal-6" data-toggle="modal">
+<a id="img-4" class="imgModal floatRight" href="#imgModal-4" data-toggle="modal">
   <img src="http://analyticbastard.github.io/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-6" tabindex="-1" role="dialog" aria-labelledby="imgModal-6Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-4" tabindex="-1" role="dialog" aria-labelledby="imgModal-4Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -181,28 +181,7 @@ supports incomplete data.</p>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-7" class="imgModal floatRight" href="#imgModal-7" data-toggle="modal">
-  <img src="http://analyticbastard.github.io/images/pca_intc_msft_stocks.png" width="94" height="63" title="Click for larger view." />
-</a>
-<div style="float: none;"></div>
-
-<!-- Modal -->
-<div class="modal fade" id="imgModal-7" tabindex="-1" role="dialog" aria-labelledby="imgModal-7Label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img src="http://analyticbastard.github.io/images/pca_intc_msft_stocks.png" width="376" height="253" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></notextile></div>
+<p><img src="http://analyticbastard.github.io/images/pca_intc_msft_stocks.png" /></p>
 
 <p>Build the object</p>
 
@@ -233,28 +212,7 @@ of the price movement of both stocks.</p>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-8" class="imgModal floatRight" href="#imgModal-8" data-toggle="modal">
-  <img src="http://analyticbastard.github.io/images/pca_intc_msft_transform.png" width="96" height="63" title="Click for larger view." />
-</a>
-<div style="float: none;"></div>
-
-<!-- Modal -->
-<div class="modal fade" id="imgModal-8" tabindex="-1" role="dialog" aria-labelledby="imgModal-8Label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img src="http://analyticbastard.github.io/images/pca_intc_msft_transform.png" width="384" height="253" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></notextile></div>
+<p><img src="http://analyticbastard.github.io/images/pca_intc_msft_transform.png" /></p>
 ]]></content>
   </entry>
   

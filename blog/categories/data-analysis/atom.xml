@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Data Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/data-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T13:43:58+00:00</updated>
+  <updated>2015-01-17T17:18:39+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -36,13 +36,13 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
 <p><!-- Image -->
-<a id="img-9" class="imgModal floatRight" href="#imgModal-9" data-toggle="modal">
+<a id="img-46" class="imgModal floatRight" href="#imgModal-46" data-toggle="modal">
   <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-9" tabindex="-1" role="dialog" aria-labelledby="imgModal-9Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-46" tabindex="-1" role="dialog" aria-labelledby="imgModal-46Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

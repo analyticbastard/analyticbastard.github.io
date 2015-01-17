@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Hacking | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/hacking/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-01-17T13:43:58+00:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hackintosh]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/01/06/hackintosh/"/>
+    <updated>2015-01-06T00:24:36+00:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/01/06/hackintosh</id>
+    <content type="html"><![CDATA[<p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being
+able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted
+an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into
+the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p>
+
+<p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations.
+I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I
+wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX
+and have access to Apple’s tools to compile iOS apps for the iPhone.</p>
+
+<p>Well, you must know that surfing the world of Hackintosh is overwhelming. The hacking is so volatile and the dependency
+on each piece of hardware so extreme, that it becomes a pain in the ass for anybody. I don’t know whether to praise or
+take pity of the Hackintosh scene such as Tonymacx86, RehabMan, Niresh, etc.</p>
+
+<p>Well, I had a Mac virtual machine on my other laptop, so I downloaded Yosemite and created an installation USB. First
+problem, my USB is not bootable. I don’t know whether this problem came from creating it from the virtual machine
+(which needs to access the hardware in a non-native way through the host OS), but this was solved by using my Ubuntu
+installation to create a HFS+ bootable partition with gParted (subsequent retries with Apple’s disk utility crashed my OSX VM).
+With a bootable USB HFS+ partition, I could create a Yosemite installation USB with <a href="http://www.tonymacx86.com/445-unibeast-install-os-x-yosemite-any-supported-intel-based-pc.html">Unibeast</a>.
+I must add that I got the Niresh distribution of Mountain Lion and Mavericks, but could not make it work either
+(I don’t remember what the problem was).</p>
+
+<p>Now, booting into the setup, I had some problems with my laptop keyboard and mouse not being recognized, so there was no
+possibility of installing the software. What I did was installing <a href="http://www.tonymacx86.com/multibeast/">Multibeast</a>
+<strong>on the USB drive</strong>, adding PS/2 Mouse and Keyboard support in the Multibeast menu (again from the 
+virtual machine, to the created USB). With a workable-enough USB installation drive, I removed my previous Windows
+partition and installed the vanilla Mac OSX. Then I added the same multibeast support. After booting, my motherboard
+would not show my OSX installation as a boot option. I could only boot with my USB and choosing the installation as
+partition to start from. I decided to use the <a href="http://sourceforge.net/projects/cloverefiboot/">Clover</a> bootloader,
+which allowed my motherboard to show an EFI startup partition. After some more tweaking, this allowed me to boot from
+my Mac OS X installation. Full resolution, no sound. To get sound, I installed VoodooHDA, which created audio feedback.
+To solve this, the iGain setting from the VoodooHDA config panel must be set to low or zero. The configuration does not
+persist, so one might choose to edit the kext <code>Config.plist</code> and set it there (and rebuild the caches!!!) or use
+the VoodooHDA panel config (I don’t quite remember the details of this so you better google it).</p>
+
+<p>I noticed a blinking effect when the computer showed the login screen, and investigating it further revealed that I had
+no graphics acceleration. Injecting the 0x01660003 code in Clover had no effect, nor did using any other boot flag. At
+this point I was desperate. I decided to run Multibeast once again against my OS X installation and install pretty much
+any appealing driver. This (albeit some minor problems with the PS/2 drivers causing a halt in the boot process, solved
+my manually deleting the drivers -and updating the cache!!!) granted me full graphics acceleration.</p>
+
+<p>The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any
+hacker done so. I got hold of an AR5B97 which is compatible, and installing the <a href="http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html">toledaARPT.kext</a>
+with the Kext Helper. It is wonderful now to have Internet conectivity, though the Bluetooth is nowhere to be seen,
+despite this card having it.</p>
+
+<p>This is it, a process that spanned several days summarized in a small post. I hope it provides you with clues if your
+issues are simmilar, but then again, everybody gets different symptoms when dealing with his own Hackintosh.</p>
+
+<p><!-- Image -->
+<a id="img-10" class="imgModal floatRight" href="#imgModal-10" data-toggle="modal">
+  <img src="/images/yosemite.png" width="683" height="384" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-10" tabindex="-1" role="dialog" aria-labelledby="imgModal-10Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/yosemite.png" width="1366" height="768" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
+]]></content>
+  </entry>
+  
+</feed>

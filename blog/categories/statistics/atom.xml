@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statistics | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/statistics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-05T15:11:00+00:00</updated>
+  <updated>2015-01-17T13:43:58+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -36,13 +36,13 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
 <p><!-- Image -->
-<a id="img-5" class="imgModal floatRight" href="#imgModal-5" data-toggle="modal">
+<a id="img-7" class="imgModal floatRight" href="#imgModal-7" data-toggle="modal">
   <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-5" tabindex="-1" role="dialog" aria-labelledby="imgModal-5Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-7" tabindex="-1" role="dialog" aria-labelledby="imgModal-7Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -84,7 +84,7 @@ The same result can be
 computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p>
 
 <script type="math/tex; mode=display">
-\frac{\partial}{\partial \mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) = 0 \\
+\frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) \right) = 0 \\
 \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0
 </script>
 

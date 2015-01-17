@@ -9,8 +9,8 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
-input or measured variables so that &hellip;">
+  <meta name="description" content="In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never,
+NEVER lose files. You can always &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,344 @@ input or measured variables so that &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-10T00:00:55+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never,
+NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little
+more attention on the part of the user than other control version systems. This starts by fixing the basic concepts
+clearly.</p>
+
+<h3 id="concepts">Concepts</h3>
+
+<p>The concepts, from basic qto more complex, and also sorted by the first time you are likely to come across them, is:</p>
+
+<ul>
+  <li><strong>Tracked file</strong>: A file that is under version control. You specifically told Git to track it at some point of its life.</li>
+  <li><strong>Woring directory</strong>: This is the classical concept, your working copy of the project, including the files you
+modify, the ones that are tracked and others that you want to leave untracked (such as IDE files or personal notes).</li>
+  <li><strong>Local repository</strong>: This is <em>the Git repository stored on your local computer</em>. It is <em>not</em> your local working
+directory, but the files stored in the <code>.git</code> directory within your working copy.</li>
+  <li><strong>remote</strong>: A remote is a remote Git server that stores our project. Several remotes can exist for a project and we
+always need to specify the remote to which we are going to send our changes.</li>
+  <li><strong>Remote repository</strong>: The remote repository that stores the version of the project that everybody can see.</li>
+  <li><strong>Branch</strong>: This is the usual concept of branch. Branches of the project may evolve in an independent way from each
+other. All commits are attached to a branch. Local branches may not exist in the remote repository and remote branches
+may have not been updated in your local repository at some point. The default branch is called <em>master</em>.</li>
+  <li><strong>Conflict</strong>: Incompatible changes from a source were incorporated to a dirty copy (meaning that you modify something
+that had been already modified), or you have a commit that modifies something already modified in the source you are
+applying. You will need to resolve this by hand.</li>
+  <li><strong>stash</strong>: Shelve your local changes. In other words, pack your dirty working copy and leave a clean working directory
+that matches the contents of your local repository. This is important if you want to do operations on files that you
+have changed on your working copy, since Git will complain otherwise.</li>
+  <li><strong>unstash</strong>: Get the changes from the stash into your local copy, making it dirty if it was not. If it was not dirty
+or you got changes from another branch or from the remote repository, you are likely to have conflicts and will need
+to resolve them.</li>
+  <li><strong>pull</strong>: Update remote changes in your local repository (and your working copy so you can see them). If you have
+a dirty working copy you will need to stash your local changes.</li>
+  <li><strong>Dirty local copy</strong>: Tracked files in the working directory that have been changed.</li>
+  <li><strong>commit</strong>: A change in a tracked file (dirty local copy) that gets added to the local repository. You commit to a
+branch.</li>
+  <li><strong>push</strong>: The commits (local changes that now form part of your local repository) get sent to the remote repository
+so that everybody can finally access them. This updates the remote branch.</li>
+  <li><strong>merge</strong>: This happens when two members have changed the same tracked files on a branch in the the remote
+repository. The last user in pushing the changes (<em>B</em>) will need to pull the changes that the first one (<em>A</em>) already pushed,
+so that the official history was written firstly by <em>A</em>. The conflicts will most likely need to be resolved by
+hand by <em>B</em>, since Git does not understand any particular language (and is not intelligent to decide on the conflicts
+or have criteria to do so). Once merged, <em>B</em> ends up with a dirty working copy, that he needs to commit and then push.
+This last push will be accepted by the remote repository server (if no one has put new stuff in the meantime).</li>
+  <li><strong>rebase</strong>: This is a especially useful type of merge in which a user has not pulled down changes for a while and there
+are a number of commits in the remote repository. If the user commits, then he can rebase the remote branch onto his,
+so that his commit is merged on top of the remote commits. The user can then push to the remote branch and see his
+changes reflected there. The rebase command is very versatile since it allows us to modify previous commits in our
+repository.</li>
+  <li><strong>reset</strong>: Set your branch to any commit in your repository. At this point a <strong>VERY IMPORTANT NOTE</strong> must be mentioned:
+any repository, including the local one, stores commits. This means that commits <em>ALWAYS</em> survive, they are always
+present, and one can always reset a branch head to a particular commit if the commit hash is available. It does not
+matter that the commit had been “lost” in the branch chain.</li>
+  <li><strong>cherry-pick</strong>: One can also cherry-pick a commit in the repository, given its hash, from any branch and apply it
+to any other branch. Again, it does not matter that the picked commit does not currently appear on any branch, it
+suffices for it to have been stored in the repository at some point.</li>
+  <li><strong>log</strong>: This command is useful since it shows the chain of commits we have on our <em>local</em> repository that end up
+in our current state. This does not show all the commits that once belonged to a branch if the branch was reset and
+then new commits arrived (in a similar way to when we undo something in MS Word and then write new stuff, we cannot
+redo). Useful for rebasing stuff.</li>
+  <li><strong>reflog</strong>: This is <strong>ALL</strong> the repository history, including committed stuff, branch changes, pulled changes, etc.
+You can find <strong>EVERYTHING</strong> here, even commits that were apparently “lost” from a branch. If you feel you have lost
+a commit, just issue <code>git reflog</code> and cherry-pick from there.</li>
+</ul>
+
+<h3 id="my-workflow">My workflow</h3>
+
+<p>When you are developing a new feature for your project, want you want to do is branch the master branch (or any other,
+but it makes sense to pick up the official state of the project and start from there).</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git checkout -b newfeature
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This creates a <strong>local branch</strong>. We are interested in storing our changes remotely so that if something happens to our
+local copy (major Git messup that is easy to just ignore and pull the remote, hard drive issues, computer issues,
+get your stuff done in some other computer, etc), we have our changes in the remote server too.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git push origin newfeature
+</span><span class="line">git branch --set-origin<span class="o">=</span>origin/newfeature
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This creates the <strong>remote branch</strong> and sets the default link to our local branch, so that we can push to it.</p>
+
+<p>After this, we can do our changes. I normally spend some time with a feature and by the time I want to commit to master (when the changes are not enough
+to be peer reviewed in a pull request to the master branch), some other workmate has committed something, which forces
+me to <strong>pull</strong> and <strong>rebase</strong>.</p>
+
+<p>Imagine that I am working on newfeature and I notice that master has changed. It is better to incorporate the remote
+changes sooner so that conflicts are minimal. I first <strong>stash</strong> my local changes, since I will need to change branch
+to pull master (you can do it from newfeature branch, but I like it this way).</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git stash
+</span><span class="line">git checkout master
+</span><span class="line">git pull
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Now we have the remote latest changes. We switch to the newfeature branch</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git checkout newfeature
+</span><span class="line">git rebase -i master
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This tells git to get (local, which was just updated) commits onto the current branch, newfeature. Now newfeature is
+updated with the latest master state. We can keep on working. Get our latest changes, the ones we stashed.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git stash apply
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This applies the top of the stash to the current clean local branch, and does not remove them from the stash. I am
+normally interested in keeping these changes just in case. I can later remove them with <code>git stash drop</code>. I sometimes
+use <code>git stash pop</code> which applies changes <em>and</em> removes them from the stash. If I need to refer to the stash to get
+a change that I know was there but am not sure it is on the top, then I use <code>git stash show --name-only</code>, which
+gives me the names of the changed files.</p>
+
+<p>When I feel I can commit (because I am done or because I want to store remotely)</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git commit -m <span class="s2">&quot;Message&quot;</span>
+</span><span class="line">git push origin newfeature
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Which saves my commits in the remote branch (remote repository).</p>
+
+<p>I sometimes need to modify something that I committed, because I forgot to include it (and we want our master history
+to be clean of mistakes and easy to follow), I prepare my local changes (tracked files) for commit fixup. First I use
+the <code>git add</code> command to add these files to the subsequent commit. This commit will be done in a special manner:
+using the <code>--fixup=</code> modifier, which accepts the hash of the commit to be modified. This is an extremely versatile
+modifier, since it allows us to modify commits buried deep beneath our current head. This creates a new commit chain
+with the fixed commit and all the commits that followed it, with new versions adapted to the changes we have introduced
+(and of course, all with new hashes, since they are all new commits).</p>
+
+<p>I came across a very easy command pipe to do this, since adding files one by one is a time waster:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git status <span class="p">|</span> grep modified <span class="p">|</span> cut -d: -f2 <span class="p">|</span> xargs git add
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The command <code>status</code> gives us the modified files, among other stuff (untracked files, etc). I filter the modified files
+(getting only the file name) and then add them as an argument to <code>git add</code>.</p>
+
+<p>We now fix the particular commit. In this case, I get the commit hash with <code>git log</code>.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git commit --fixup<span class="o">=</span>24ee1df941679953529aabc3d0eef5727a44c094
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This creates a <em>new</em> commit on top of the rest. We need to squash everything so that git creates the new commit chain,
+wich entirely different commits and with the fixing and fixed commits merged into one. If the commit is buried below
+the head, you would use the commit previous to the one being fixed. Imagine this chain</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+</span><span class="line">021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+</span><span class="line">24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+</span><span class="line">7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>When you create the fixup commit, it will appear on top of the chain</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">f36806a856994c8365e199a72501a5461ca99497 fixup! First commit to my-source
+</span><span class="line">c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+</span><span class="line">021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+</span><span class="line">24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+</span><span class="line">7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Then you autosquash the chain, selecting the commit previous to the fix</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git rebase -i --autosquash 7f49807d5c5651baccb6d66c504549713a7ae7d7
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The result is a new chain</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">c927d675189eedd89d972663e2ef0ffe1438f4f7 Categories and other plugin stuff
+</span><span class="line">e08ef8e27b3fd3c15e07a5e032e66a67a533ca3d Remove deploy stuff that got added by mistake
+</span><span class="line">7d94aace9629272848382abfc217282c676f108e First commit to my-source
+</span><span class="line">7abe6b0b66820d9c16c6724a8f15c7d956aea6dd Site updated at 2015-01-05 15:12:45 UTC
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Where the new <code>7d94aace9629272848382abfc217282c676f108e</code> contains the modifications needed.</p>
+
+<p>In case the commit we want to fix is on top of the chain, the autosquash is simpler:</p>
+
+<p><code>git rebase -i --autosquash HEAD~2</code></p>
+
+<h3 id="final-thoughts">Final thoughts</h3>
+
+<p>We can see that we can modify our commit chain (resetting our branch head or fixing commits). Some people say it changes
+the history, but I don’t see it that way). The true history is in the <strong>reflog</strong>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/01/06/hackintosh/">Hackintosh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-01-06T00:24:36+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being
+able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted
+an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into
+the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p>
+
+<p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations.
+I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I
+wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX
+and have access to Apple’s tools to compile iOS apps for the iPhone.</p>
+
+<p>Well, you must know that surfing the world of Hackintosh is overwhelming. The hacking is so volatile and the dependency
+on each piece of hardware so extreme, that it becomes a pain in the ass for anybody. I don’t know whether to praise or
+take pity of the Hackintosh scene such as Tonymacx86, RehabMan, Niresh, etc.</p>
+
+<p>Well, I had a Mac virtual machine on my other laptop, so I downloaded Yosemite and created an installation USB. First
+problem, my USB is not bootable. I don’t know whether this problem came from creating it from the virtual machine
+(which needs to access the hardware in a non-native way through the host OS), but this was solved by using my Ubuntu
+installation to create a HFS+ bootable partition with gParted (subsequent retries with Apple’s disk utility crashed my OSX VM).
+With a bootable USB HFS+ partition, I could create a Yosemite installation USB with <a href="http://www.tonymacx86.com/445-unibeast-install-os-x-yosemite-any-supported-intel-based-pc.html">Unibeast</a>.
+I must add that I got the Niresh distribution of Mountain Lion and Mavericks, but could not make it work either
+(I don’t remember what the problem was).</p>
+
+<p>Now, booting into the setup, I had some problems with my laptop keyboard and mouse not being recognized, so there was no
+possibility of installing the software. What I did was installing <a href="http://www.tonymacx86.com/multibeast/">Multibeast</a>
+<strong>on the USB drive</strong>, adding PS/2 Mouse and Keyboard support in the Multibeast menu (again from the 
+virtual machine, to the created USB). With a workable-enough USB installation drive, I removed my previous Windows
+partition and installed the vanilla Mac OSX. Then I added the same multibeast support. After booting, my motherboard
+would not show my OSX installation as a boot option. I could only boot with my USB and choosing the installation as
+partition to start from. I decided to use the <a href="http://sourceforge.net/projects/cloverefiboot/">Clover</a> bootloader,
+which allowed my motherboard to show an EFI startup partition. After some more tweaking, this allowed me to boot from
+my Mac OS X installation. Full resolution, no sound. To get sound, I installed VoodooHDA, which created audio feedback.
+To solve this, the iGain setting from the VoodooHDA config panel must be set to low or zero. The configuration does not
+persist, so one might choose to edit the kext <code>Config.plist</code> and set it there (and rebuild the caches!!!) or use
+the VoodooHDA panel config (I don’t quite remember the details of this so you better google it).</p>
+
+<p>I noticed a blinking effect when the computer showed the login screen, and investigating it further revealed that I had
+no graphics acceleration. Injecting the 0x01660003 code in Clover had no effect, nor did using any other boot flag. At
+this point I was desperate. I decided to run Multibeast once again against my OS X installation and install pretty much
+any appealing driver. This (albeit some minor problems with the PS/2 drivers causing a halt in the boot process, solved
+my manually deleting the drivers -and updating the cache!!!) granted me full graphics acceleration.</p>
+
+<p>The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any
+hacker done so. I got hold of an AR5B97 which is compatible, and installing the <a href="http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html">toledaARPT.kext</a>
+with the Kext Helper. It is wonderful now to have Internet conectivity, though the Bluetooth is nowhere to be seen,
+despite this card having it.</p>
+
+<p>This is it, a process that spanned several days summarized in a small post. I hope it provides you with clues if your
+issues are simmilar, but then again, everybody gets different symptoms when dealing with his own Hackintosh.</p>
+
+<div class="bogus-wrapper"><notextile><!-- Image -->
+<a id="img-6" class="imgModal floatRight" href="#imgModal-6" data-toggle="modal">
+  <img src="/images/yosemite.png" width="683" height="384" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-6" tabindex="-1" role="dialog" aria-labelledby="imgModal-6Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/yosemite.png" width="1366" height="768" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></notextile></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -158,7 +496,7 @@ The same result can be
 computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p>
 
 <script type="math/tex; mode=display">
-\frac{\partial}{\partial \mathbf{w}} \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) = 0 \\
+\frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) \right) = 0 \\
 \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0
 </script>
 
@@ -1167,106 +1505,6 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/">Improve the Performance of an SVM With Differential Geometry</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-03T02:19:37+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:19 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
-
-<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
-
-<script type="math/tex; mode=display">
-ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
-</script>
-
-<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
-
-<script type="math/tex; mode=display">
-\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
-</script>
-
-<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
-
-<script type="math/tex; mode=display">
-\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
-</script>
-
-<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
-
-<script type="math/tex; mode=display">
-c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
-</script>
-
-<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
-
-<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
-
-<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
-
-<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
-
-<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
-
-<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
-
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1282,6 +1520,14 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/hackintosh/">Hackintosh</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
       </li>
     
@@ -1293,23 +1539,15 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
         <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

@@ -9,8 +9,7 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
-others call a blog for hackers &hellip;">
+  <meta name="description" content="Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +69,106 @@ others call a blog for hackers &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/">Improve the Performance of an SVM With Differential Geometry</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-03T02:19:37+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>2:19 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
+
+<p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+
+<script type="math/tex; mode=display">
+ds^2 = \sum_{i,j} g_{i,j} dx_i dx_j
+</script>
+
+<p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p>
+
+<script type="math/tex; mode=display">
+\tilde{g}_{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g_{i,j} (\mathbf{x})
+</script>
+
+<p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p>
+
+<script type="math/tex; mode=display">
+\tilde{K}(\mathbf{x_1},\mathbf{x_2}) = c(\mathbf{x_1}) c(\mathbf{x_2}) K(\mathbf{x_1},\mathbf{x_2})
+</script>
+
+<p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p>
+
+<script type="math/tex; mode=display">
+c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\tau^2}}
+</script>
+
+<p>where $h_i$ is a parameter of the $i$-th support vector.</p>
+
+<p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p>
+
+<p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian Kernel Maps Data Onto the Sphere</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-02T00:54:39+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>12:54 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+
+<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+
+<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+
+<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+
+<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -154,6 +253,14 @@ OK, cloned, copied Ruby files and test (with current time position including <em
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/06/hackintosh/">Hackintosh</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
       </li>
     
@@ -165,23 +272,15 @@ OK, cloned, copied Ruby files and test (with current time position including <em
         <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/11/27/the-future-of-data-analysis-tools/">The Future of Data Analysis Tools: Python, Web Technologies</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

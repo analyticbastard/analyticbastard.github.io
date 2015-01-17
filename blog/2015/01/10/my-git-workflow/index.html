@@ -287,19 +287,35 @@ the head, you would use the commit previous to the one being fixed. Imagine this
 </pre></td><td class="code"><pre><code class="bash"><span class="line">c927d675189eedd89d972663e2ef0ffe1438f4f7 Categories and other plugin stuff
 </span><span class="line">e08ef8e27b3fd3c15e07a5e032e66a67a533ca3d Remove deploy stuff that got added by mistake
 </span><span class="line">7d94aace9629272848382abfc217282c676f108e First commit to my-source
-</span><span class="line">7abe6b0b66820d9c16c6724a8f15c7d956aea6dd Site updated at 2015-01-05 15:12:45 UTC
+</span><span class="line">7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>Where the new <code>7d94aace9629272848382abfc217282c676f108e</code> contains the modifications needed.</p>
 
 <p>In case the commit we want to fix is on top of the chain, the autosquash is simpler:</p>
 
-<p><code>git rebase -i --autosquash HEAD~2</code></p>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git rebase -i --autosquash HEAD~2
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>If I had pushed my branch to the remote repository, then I would have to force push, since there is no way my local
+branch and the remote one are compatible. To do that, you need to be pretty sure nobody is in the process of
+committing anything to that particular branch (this is not a problem if you are working on this feature on your own),
+and issue</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git push origin newfeature -f
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Where origin is my remote repository name and <code>-f</code> overwrites the remote contents.</p>
 
 <h3 id="final-thoughts">Final thoughts</h3>
 
 <p>We can see that we can modify our commit chain (resetting our branch head or fixing commits). Some people say it changes
 the history, but I don’t see it that way). The true history is in the <strong>reflog</strong>.</p>
+
+<p>Also, people might find it difficult to think of the usefulness of having several remote repositories. For example, this
+blog has a remote which is, obviously, Github pages, and it is where the stuff under <code>_deploy</code> gets sebt.</p>
 </div>
 
 

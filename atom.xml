@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T17:18:39+00:00</updated>
+  <updated>2015-01-17T22:59:26+00:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -216,19 +216,35 @@ the head, you would use the commit previous to the one being fixed. Imagine this
 </pre></td><td class="code"><pre><code class="bash"><span class="line">c927d675189eedd89d972663e2ef0ffe1438f4f7 Categories and other plugin stuff
 </span><span class="line">e08ef8e27b3fd3c15e07a5e032e66a67a533ca3d Remove deploy stuff that got added by mistake
 </span><span class="line">7d94aace9629272848382abfc217282c676f108e First commit to my-source
-</span><span class="line">7abe6b0b66820d9c16c6724a8f15c7d956aea6dd Site updated at 2015-01-05 15:12:45 UTC
+</span><span class="line">7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>Where the new <code>7d94aace9629272848382abfc217282c676f108e</code> contains the modifications needed.</p>
 
 <p>In case the commit we want to fix is on top of the chain, the autosquash is simpler:</p>
 
-<p><code>git rebase -i --autosquash HEAD~2</code></p>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git rebase -i --autosquash HEAD~2
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>If I had pushed my branch to the remote repository, then I would have to force push, since there is no way my local
+branch and the remote one are compatible. To do that, you need to be pretty sure nobody is in the process of
+committing anything to that particular branch (this is not a problem if you are working on this feature on your own),
+and issue</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git push origin newfeature -f
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Where origin is my remote repository name and <code>-f</code> overwrites the remote contents.</p>
 
 <h3 id="final-thoughts">Final thoughts</h3>
 
 <p>We can see that we can modify our commit chain (resetting our branch head or fixing commits). Some people say it changes
 the history, but I don’t see it that way). The true history is in the <strong>reflog</strong>.</p>
+
+<p>Also, people might find it difficult to think of the usefulness of having several remote repositories. For example, this
+blog has a remote which is, obviously, Github pages, and it is where the stuff under <code>_deploy</code> gets sebt.</p>
 ]]></content>
   </entry>
   
@@ -278,19 +294,14 @@ this point I was desperate. I decided to run Multibeast once again against my OS
 any appealing driver. This (albeit some minor problems with the PS/2 drivers causing a halt in the boot process, solved
 my manually deleting the drivers -and updating the cache!!!) granted me full graphics acceleration.</p>
 
-<p>The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any
-hacker done so. I got hold of an AR5B97 which is compatible, and installing the <a href="http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html">toledaARPT.kext</a>
-with the Kext Helper. It is wonderful now to have Internet conectivity, though the Bluetooth is nowhere to be seen,
-despite this card having it.</p>
-
 <div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-43" class="imgModal floatRight" href="#imgModal-43" data-toggle="modal">
+<a id="img-6" class="imgModal floatRight" href="#imgModal-6" data-toggle="modal">
   <img src="http://analyticbastard.github.io/images/yosemite.png" width="342" height="192" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-43" tabindex="-1" role="dialog" aria-labelledby="imgModal-43Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-6" tabindex="-1" role="dialog" aria-labelledby="imgModal-6Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -305,6 +316,11 @@ despite this card having it.</p>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal --></notextile></div>
+
+<p>The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any
+hacker done so. I got hold of an AR5B97 which is compatible, and installing the <a href="http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html">toledaARPT.kext</a>
+with the Kext Helper. It is wonderful now to have Internet conectivity, though the Bluetooth is nowhere to be seen,
+despite this card having it.</p>
 
 <p>This is it, a process that spanned several days summarized in a small post. I hope it provides you with clues if your
 issues are simmilar, but then again, everybody gets different symptoms when dealing with his own Hackintosh.</p>
@@ -334,13 +350,13 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
 <div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-41" class="imgModal floatRight" href="#imgModal-41" data-toggle="modal">
+<a id="img-4" class="imgModal floatRight" href="#imgModal-4" data-toggle="modal">
   <img src="http://analyticbastard.github.io/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-41" tabindex="-1" role="dialog" aria-labelledby="imgModal-41Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-4" tabindex="-1" role="dialog" aria-labelledby="imgModal-4Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -656,13 +672,13 @@ thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bo
 talk in the following post).</p>
 
 <div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-39" class="imgModal floatRight" href="#imgModal-39" data-toggle="modal">
+<a id="img-2" class="imgModal floatRight" href="#imgModal-2" data-toggle="modal">
   <img src="http://analyticbastard.github.io/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-39" tabindex="-1" role="dialog" aria-labelledby="imgModal-39Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-2" tabindex="-1" role="dialog" aria-labelledby="imgModal-2Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

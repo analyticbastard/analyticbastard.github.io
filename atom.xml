@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T22:59:26+00:00</updated>
+  <updated>2015-02-22T23:53:51+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -14,9 +14,50 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Google's Original Page Rank Implementation]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/02/08/google-original-page-rank/"/>
+    <updated>2015-02-08T11:31:03+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/02/08/google-original-page-rank</id>
+    <content type="html"><![CDATA[<p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google’s Page Rank algorithm was
+related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p>
+
+<p>Imagine the graph of web pages visited by Google crawlers, where <script type="math/tex">\mathbf{M}</script> is the adjacency matrix with the outgoing
+links in the columns, where each edge in the web page <script type="math/tex">i</script> pointing to a web page <script type="math/tex">j</script> (which can be the same)
+has a score of <script type="math/tex">\frac{1}{n_i}</script>, where <script type="math/tex">n_i</script> is the number of outgoing links in the webpage <script type="math/tex">i</script>. This matrix might
+present a number of problems with actual graphs, so what Google did was to include page self references and random
+jumps between pages with a small probability given by a parameter <script type="math/tex">\beta</script>.</p>
+
+<script type="math/tex; mode=display">\mathbf{G} = \beta \mathbf{M} + (1-\beta) \frac{\mathbf{1} \mathbf{1}^T}{N}</script>
+
+<p>where <script type="math/tex">N</script> is the total number of web pages in the system and <script type="math/tex">\mathbf{1}</script> is the vector of all ones of size <script type="math/tex">N</script>.</p>
+
+<p><script type="math/tex">\mathbf{G}</script>, being a stochastic matrix, has one as the largest eigenvalue (in module). This can be proved by taking
+<script type="math/tex">\mathbf{G}^T \mathbf{1}=\mathbf{1}</script>, and since <script type="math/tex">\mathbf{G}^T = (\mathbf{P}^{-1})^{-T} \mathbf{D} \mathbf{P}{-T}</script>,
+where <script type="math/tex">\mathbf{P}</script> diagonalizes <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{D}</script> is the resulting diagonal matrix with the eigenvalues
+of both <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{G^{T}}</script>. Thus one is also the largest eigenvalue of <script type="math/tex">\mathbf{G}</script>. Proving that
+this is in fact the largest can be done by applyting the <a href="http://en.wikipedia.org/wiki/Gershgorin_circle_theorem">Gershgoring circle theorem</a>.</p>
+
+<p>Intuitively, applyting <script type="math/tex">\mathbf{G}</script> several times has the effect of building a power matrix <script type="math/tex">\mathbf{G}^M</script> whose
+largest eigenvalue is also one, but the rest are the power of elements less than one, meaning that each power decreases
+all the eigenvalues except the first one. This has the effect of minimizing the component of any vector (the projection)
+in the subspace spanned by the eigenvector corresponding to any eigenvalue except the first one. Eventually, all of them
+reach zero, leaving only the component of the original vector in the subspace of the eigenvector corresponding to the
+largest eigenvalue. This means
+<script type="math/tex">\mathbf{G}^M \mathbf{x} \rightarrow \mathbf{w}</script>, as <script type="math/tex">M</script> tends to infinite, where <script type="math/tex">\mathbf{w}</script> is the dominan
+eigenvector (the one corresponding to the eigenvalue one).</p>
+
+<p>The elements of this vectors are the important for all the pages registered on the database by the crawlers or
+robots.</p>
+
+<p>Obviously this demands a lot of computation since the web is ever changing and this power method would need to be
+performed in batch intermitently, so efficient implementations are needed (based on Map Reduce or not).</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[My Git Workflow]]></title>
     <link href="http://analyticbastard.github.io/blog/2015/01/10/my-git-workflow/"/>
-    <updated>2015-01-10T00:00:55+00:00</updated>
+    <updated>2015-01-10T01:00:55+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2015/01/10/my-git-workflow</id>
     <content type="html"><![CDATA[<p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never,
 NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little
@@ -251,7 +292,7 @@ blog has a remote which is, obviously, Github pages, and it is where the stuff u
   <entry>
     <title type="html"><![CDATA[Hackintosh]]></title>
     <link href="http://analyticbastard.github.io/blog/2015/01/06/hackintosh/"/>
-    <updated>2015-01-06T00:24:36+00:00</updated>
+    <updated>2015-01-06T01:24:36+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2015/01/06/hackintosh</id>
     <content type="html"><![CDATA[<p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being
 able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted
@@ -330,7 +371,7 @@ issues are simmilar, but then again, everybody gets different symptoms when deal
   <entry>
     <title type="html"><![CDATA[Principal Component Analysis]]></title>
     <link href="http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis/"/>
-    <updated>2015-01-01T00:22:01+00:00</updated>
+    <updated>2015-01-01T01:22:01+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis</id>
     <content type="html"><![CDATA[<p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
 input or measured variables so that the transformed variables offer a view of the data that maximizes the presented
@@ -533,7 +574,7 @@ of the price movement of both stocks.</p>
   <entry>
     <title type="html"><![CDATA[Equality of Means Statistical Test Made Easy]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test/"/>
-    <updated>2014-12-30T00:22:01+00:00</updated>
+    <updated>2014-12-30T01:22:01+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/12/30/equality-of-means-statistical-test</id>
     <content type="html"><![CDATA[<p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
 until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of
@@ -641,7 +682,7 @@ range (5%) if the null hypothesis is true.</li>
   <entry>
     <title type="html"><![CDATA[IPython Notebook for Data Analysis]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis/"/>
-    <updated>2014-12-14T10:47:29+00:00</updated>
+    <updated>2014-12-14T11:47:29+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis</id>
     <content type="html"><![CDATA[<p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing
 Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and
@@ -707,7 +748,7 @@ does not so far.</p>
   <entry>
     <title type="html"><![CDATA[The Future of Data Analysis Tools: Python, Web Technologies]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/"/>
-    <updated>2014-11-27T11:01:19+00:00</updated>
+    <updated>2014-11-27T12:01:19+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools</id>
     <content type="html"><![CDATA[<p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
 involving data handling or processing. An easy example is this blog, which is made with 
@@ -1030,7 +1071,7 @@ existing libraries will need time to be adapted to Python.</p>
   <entry>
     <title type="html"><![CDATA[Current Computer Language Market]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market/"/>
-    <updated>2014-11-08T02:33:09+00:00</updated>
+    <updated>2014-11-08T03:33:09+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market</id>
     <content type="html"><![CDATA[<p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
 
@@ -1054,7 +1095,7 @@ It is worth mentioning at this point that there is a new promising contender in 
   <entry>
     <title type="html"><![CDATA[Pythagorean Theorem]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/"/>
-    <updated>2014-11-06T16:24:02+00:00</updated>
+    <updated>2014-11-06T17:24:02+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem</id>
     <content type="html"><![CDATA[<p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
 it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
@@ -1102,7 +1143,7 @@ to establish that a straight line reflects on another straight line with the com
   <entry>
     <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
-    <updated>2014-11-05T11:02:16+00:00</updated>
+    <updated>2014-11-05T12:02:16+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
     <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
 
@@ -1181,9 +1222,9 @@ information loss in the process.</p>
   
   <entry>
     <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/"/>
-    <updated>2014-11-04T23:31:32+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs</id>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs/"/>
+    <updated>2014-11-05T00:31:32+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs</id>
     <content type="html"><![CDATA[<p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
 <script type="math/tex">
 \delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
@@ -1266,7 +1307,7 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
   <entry>
     <title type="html"><![CDATA[Improve the Performance of an SVM With Differential Geometry]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/"/>
-    <updated>2014-11-03T02:19:37+00:00</updated>
+    <updated>2014-11-03T03:19:37+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry</id>
     <content type="html"><![CDATA[<p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
 
@@ -1307,7 +1348,7 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
   <entry>
     <title type="html"><![CDATA[The Gaussian Kernel Maps Data Onto the Sphere]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/"/>
-    <updated>2014-11-02T00:54:39+00:00</updated>
+    <updated>2014-11-02T01:54:39+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere</id>
     <content type="html"><![CDATA[<p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
 
@@ -1326,7 +1367,7 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
   <entry>
     <title type="html"><![CDATA[My New Blog in Github Pages + Octopress]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/01/my-new-blog/"/>
-    <updated>2014-11-01T22:19:40+00:00</updated>
+    <updated>2014-11-01T23:19:40+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/01/my-new-blog</id>
     <content type="html"><![CDATA[<p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
 others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and

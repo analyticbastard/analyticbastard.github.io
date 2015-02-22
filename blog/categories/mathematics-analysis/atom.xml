@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mathematics - Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/mathematics-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T22:59:26+00:00</updated>
+  <updated>2015-02-22T23:53:51+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Pythagorean Theorem]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem/"/>
-    <updated>2014-11-06T16:24:02+00:00</updated>
+    <updated>2014-11-06T17:24:02+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/06/pythagorean-theorem</id>
     <content type="html"><![CDATA[<p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
 it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
@@ -63,9 +63,9 @@ to establish that a straight line reflects on another straight line with the com
   
   <entry>
     <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/"/>
-    <updated>2014-11-04T23:31:32+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs</id>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs/"/>
+    <updated>2014-11-05T00:31:32+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs</id>
     <content type="html"><![CDATA[<p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
 <script type="math/tex">
 \delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)

@@ -9,8 +9,8 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never,
-NEVER lose files. You can always &hellip;">
+  <meta name="description" content="Ever since I took a good course on Matrix Analysis, I have been curious about how Google’s Page Rank algorithm was
+related to Matrix theory, because &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,67 @@ NEVER lose files. You can always &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/02/08/google-original-page-rank/">Google&#8217;s Original Page Rank Implementation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-08T11:31:03+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:31 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google’s Page Rank algorithm was
+related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p>
+
+<p>Imagine the graph of web pages visited by Google crawlers, where <script type="math/tex">\mathbf{M}</script> is the adjacency matrix with the outgoing
+links in the columns, where each edge in the web page <script type="math/tex">i</script> pointing to a web page <script type="math/tex">j</script> (which can be the same)
+has a score of <script type="math/tex">\frac{1}{n_i}</script>, where <script type="math/tex">n_i</script> is the number of outgoing links in the webpage <script type="math/tex">i</script>. This matrix might
+present a number of problems with actual graphs, so what Google did was to include page self references and random
+jumps between pages with a small probability given by a parameter <script type="math/tex">\beta</script>.</p>
+
+<script type="math/tex; mode=display">\mathbf{G} = \beta \mathbf{M} + (1-\beta) \frac{\mathbf{1} \mathbf{1}^T}{N}</script>
+
+<p>where <script type="math/tex">N</script> is the total number of web pages in the system and <script type="math/tex">\mathbf{1}</script> is the vector of all ones of size <script type="math/tex">N</script>.</p>
+
+<p><script type="math/tex">\mathbf{G}</script>, being a stochastic matrix, has one as the largest eigenvalue (in module). This can be proved by taking
+<script type="math/tex">\mathbf{G}^T \mathbf{1}=\mathbf{1}</script>, and since <script type="math/tex">\mathbf{G}^T = (\mathbf{P}^{-1})^{-T} \mathbf{D} \mathbf{P}{-T}</script>,
+where <script type="math/tex">\mathbf{P}</script> diagonalizes <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{D}</script> is the resulting diagonal matrix with the eigenvalues
+of both <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{G^{T}}</script>. Thus one is also the largest eigenvalue of <script type="math/tex">\mathbf{G}</script>. Proving that
+this is in fact the largest can be done by applyting the <a href="http://en.wikipedia.org/wiki/Gershgorin_circle_theorem">Gershgoring circle theorem</a>.</p>
+
+<p>Intuitively, applyting <script type="math/tex">\mathbf{G}</script> several times has the effect of building a power matrix <script type="math/tex">\mathbf{G}^M</script> whose
+largest eigenvalue is also one, but the rest are the power of elements less than one, meaning that each power decreases
+all the eigenvalues except the first one. This has the effect of minimizing the component of any vector (the projection)
+in the subspace spanned by the eigenvector corresponding to any eigenvalue except the first one. Eventually, all of them
+reach zero, leaving only the component of the original vector in the subspace of the eigenvector corresponding to the
+largest eigenvalue. This means
+<script type="math/tex">\mathbf{G}^M \mathbf{x} \rightarrow \mathbf{w}</script>, as <script type="math/tex">M</script> tends to infinite, where <script type="math/tex">\mathbf{w}</script> is the dominan
+eigenvector (the one corresponding to the eigenvalue one).</p>
+
+<p>The elements of this vectors are the important for all the pages registered on the database by the crawlers or
+robots.</p>
+
+<p>Obviously this demands a lot of computation since the web is ever changing and this power method would need to be
+performed in batch intermitently, so efficient implementations are needed (based on Map Reduce or not).</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a></h1>
     
     
@@ -85,7 +146,7 @@ NEVER lose files. You can always &hellip;">
 
 
 
-<time class='entry-date' datetime='2015-01-10T00:00:55+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:00 am</span></time>
+<time class='entry-date' datetime='2015-01-10T01:00:55+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:00 am</span></time>
         
       </p>
     
@@ -340,7 +401,7 @@ blog has a remote which is, obviously, Github pages, and it is where the stuff u
 
 
 
-<time class='entry-date' datetime='2015-01-06T00:24:36+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:24 am</span></time>
+<time class='entry-date' datetime='2015-01-06T01:24:36+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:24 am</span></time>
         
       </p>
     
@@ -439,7 +500,7 @@ issues are simmilar, but then again, everybody gets different symptoms when deal
 
 
 
-<time class='entry-date' datetime='2015-01-01T00:22:01+00:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>12:22 am</span></time>
+<time class='entry-date' datetime='2015-01-01T01:22:01+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>1:22 am</span></time>
         
       </p>
     
@@ -662,7 +723,7 @@ of the price movement of both stocks.</p>
 
 
 
-<time class='entry-date' datetime='2014-12-30T00:22:01+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:22 am</span></time>
+<time class='entry-date' datetime='2014-12-30T01:22:01+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:22 am</span></time>
         
       </p>
     
@@ -790,7 +851,7 @@ range (5%) if the null hypothesis is true.</li>
 
 
 
-<time class='entry-date' datetime='2014-12-14T10:47:29+00:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>10:47 am</span></time>
+<time class='entry-date' datetime='2014-12-14T11:47:29+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:47 am</span></time>
         
       </p>
     
@@ -876,7 +937,7 @@ does not so far.</p>
 
 
 
-<time class='entry-date' datetime='2014-11-27T11:01:19+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:01 am</span></time>
+<time class='entry-date' datetime='2014-11-27T12:01:19+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:01 pm</span></time>
         
       </p>
     
@@ -1219,7 +1280,7 @@ existing libraries will need time to be adapted to Python.</p>
 
 
 
-<time class='entry-date' datetime='2014-11-08T02:33:09+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>2:33 am</span></time>
+<time class='entry-date' datetime='2014-11-08T03:33:09+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:33 am</span></time>
         
       </p>
     
@@ -1263,7 +1324,7 @@ It is worth mentioning at this point that there is a new promising contender in 
 
 
 
-<time class='entry-date' datetime='2014-11-06T16:24:02+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>4:24 pm</span></time>
+<time class='entry-date' datetime='2014-11-06T17:24:02+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:24 pm</span></time>
         
       </p>
     
@@ -1331,7 +1392,7 @@ to establish that a straight line reflects on another straight line with the com
 
 
 
-<time class='entry-date' datetime='2014-11-05T11:02:16+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:02 am</span></time>
+<time class='entry-date' datetime='2014-11-05T12:02:16+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:02 pm</span></time>
         
       </p>
     
@@ -1417,110 +1478,6 @@ information loss in the process.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/04/a-gentle-introduction-to-rkhs/">A Gentle Introduction to RKHS and Kernel Methods</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-04T23:31:32+00:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>11:31 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
-<script type="math/tex">
-\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
-</script>
-for a location $x$, and two real (or complex) numbers $\alpha$ and $\beta$.</p>
-
-<p>This theory was originally developed as a functional analytic abstraction to solve a linear differential equations (as were Hilbert and Banach spaces) of positive (or negative) kind, but made their way to data analysis first in the theory of splines and later became the engine of multiple abstract machines, based on more general reproducing kernels.</p>
-
-<p>Let $\mathbf{X}$ be a compact set or a manifold. The linear property of the evaluation functional implies, by the Riesz representation theorem, that it has a representer within the space, in contrast, for example, to the Dirac’s $\delta$ evaluation functional of the Hilbert space of squared-integrable functions (equivalence classes of functions) $L^2(\mathbf{X})$, which is a generalized function and, thus, does not belong to $L^2(\mathbf{X})$. 
-The Riesz representation theorem implies that there is an element <em>within</em> the space of functions that yields the same results when operating it with the rest of the elements of that space than a certain linear functional. Note that this, alone, does not say that all functionals that are evaluation functionals are linear. 
-It is only when they are linear that the Riesz theorem applies and they can be associatited to certain elements within the space, and we find ourselves with a RKHS.</p>
-
-<p>A function $f$ belonging to a RKHS $H_k$ can then be evaluated, at any point $\mathbf{x}$ in the set on which the functions in $H_k$ are defined, with the <em>reproducing property</em>
-<script type="math/tex">
-f(\mathbf{x}) = \delta_{\mathbf{x}} (f) = \langle k_{\mathbf{x}}, f \rangle_{H_k}
-</script>
-where we call $\delta_x$ to the linear evaluation functional at location $\mathbf{x}$ for $H_k$, belonging to $H_k^{*}$, the algebraic dual of $H_k$, whose representer element in $H_k$ is $k_x$. The notation $k_x = k(\cdot, x) \in H_k$ means that we fix the second argument to $\mathbf{x}$ so that $k$ is a function only on the first argument, and then it belongs to the very space $H_k$ it can reproduce pointwise via inner products. We work with real RKHS henceforth.</p>
-
-<p>This function with two arguments, $k:\mathbf{X} \times \mathbf{X} \rightarrow \mathbb{R}$, is the <em>kernel</em> of the positive linear integral operator 
-<script type="math/tex">
-T_k : L_X^2(\mathbf{X}) \rightarrow H_k
-</script>
-such that the bi-linear form
-<script type="math/tex">
-\langle f, T_k f \rangle_{L^2(\mathbf{X})} = \int_{\mathbf{X}} \int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) f(\mathbf{x}_2) dP_X(\mathbf{x}_2) f(\mathbf{x}_1) dP_X(\mathbf{x}_1)
-</script>
-is positive, where $P_X$ is a finite Borel measure endowing $\mathbf{X}$ and $f \in L_{P_X}^2(\mathbf{X})$, the Hilbert space of square-integrable functions under measure $P_X$. Such a kernel is called positive-definite.
-This of this as the infinite-dimensional equivalent of a matrix, which instead of finite dimensional vectors, operates functions in a linear fashion (the kernel itself does not depend on the function it is operated with under the integral sign). This is the functional-analytic way of solving differential equations, since we can invert the linear differential operator with these kind of integral operators, and this get the solution. </p>
-
-<p>A particularly important class of linear operator kernels are positive-definite kernels, and of particular interest is that of Mercer’s kernels. Given a Mercer’s kernel $k$, it holds that
-<script type="math/tex">
-k(\mathbf{x}_1,\mathbf{x}_2)=\Phi(\mathbf{x}_1)^T\Phi(\mathbf{x}_2) = \sum_{j=1}^{\infty} \lambda_j \phi_j(\mathbf{x}_1) \phi_j(\mathbf{x}_2)
-</script>
-where $\lambda_j$ and $\phi_j$ are the eigenvalues and eigenfunctions of the linear integral operator $T_k$, which is compact. This iduces a map $\Phi: \mathbf{X} \rightarrow \ell^2$, the space of square-summable sequences. This map $\Phi = (\sqrt{\lambda_1} \phi_1, \sqrt{\lambda_2} \phi_2, \ldots)^T$ is the so-called <em>kernel embedding</em> and allows the practitioner to map the data to a definite dimension (possibly infinite), where the learning task is likely to become linear. This map, however, needs not be computed explicitly in Kernel Learning methods and is defined, as seen above, by the kernel we are using and, in practice, we are restricted to a finite number of training points. This map can be written as a vector $\mathbf{z} \in \mathbb{R}^D$ for each datum, with a dimension $D \leq N$. The collection for $N$ data can be written as a matrix $\mathbf{Z} \in \mathbb{R}^{N \times D}$ of vectors $\mathbf{z}$ vertically stacked, and the finite version of the Mercer kernel expansion, yields the finite-dimensional embedding $\mathbf{Z}$ and the so-called <em>kernel trick</em>
-<script type="math/tex">
-\mathbf{K} = \mathbf{Z} \mathbf{Z}^T
-</script>
-where $\mathbf{K} \in \mathbb{R}^{N \times N}$ is the Gram matrix of kernel evaluations on the dataset <script type="math/tex">\{\mathbf{x}_1, \mathbf{x}_2, \ldots, \mathbf{x}_N\}</script> built so that each entry of the matrix correspond to the kernel evaluation at two points, $\mathbf{K}_{i,j} = k(\mathbf{x}_i, \mathbf{x}_j)$. This embedding constituted the breakthrough in Machine Learning in the late 90s and early new century. Notice that this feature space is <strong>not</strong> the RKHS, since it is a subspace of $\ell^2$, their elements being sequences, whereas the RKHS is a subspace if $L^2$, its elements being functions.</p>
-
-<p>Let $f,g \in H_k$ be expressed as a linear combination of the eigenfunctions of $T_k$, <script type="math/tex">f = \sum_{j=1}^{\infty} \alpha_j \phi_j</script> and <script type="math/tex">g = \sum_{j=1}^{\infty} \beta_j \phi_j</script>. The inner product in $H_k$ is defined as
-<script type="math/tex">
-\langle f,  g \rangle_{H_k} = \sum_{j=1}^{\infty} \frac{\alpha_j \beta_j}{\lambda_j}
-</script>
-Which is equal to the equation above, i.e., 
-<script type="math/tex">\langle f,  g \rangle_{H_k} = \langle f, T_k g \rangle_{L^2(\mathbf{X})}
-</script>.
-This induces a norm
-<script type="math/tex">
-\|f\|_{H_k}^2 = \langle f,  f \rangle_{H_k} =  \|P f\|_{L^2(\mathbf{X})}^2
-</script>
-Where $P$ is a pseudo-differential operator and <script type="math/tex">P^{*}</script> is its adjoint such that <script type="math/tex">T_k = P^{*} P</script>.</p>
-
-<p>The learning task in kernel methods consist on computing a function that can approximate certain pre-defined data with certain desired properties, namely, that it is “simple” enough, simplicity measured by the norm in the space, the smaller norm, the better, as this requirement tries to overcome the overfitting and noise presence (the less “wiggly” the function, the less it responds to noise). So given a kernel function $k$ and a finite data sample of size $N$, the Representer theorem ensures that the subspace of functions spanned by finite linear combinations of the form $f=\sum_j^{n}{\alpha_j k(\cdot, \mathbf{x}_j)}$ is the solution to a regularization problem of the form
-<script type="math/tex">
-\min_{f \in H_k}  \sum_{j=1}^{n} (y_i - f(\mathbf{x}_i))^2 + \lambda \|f\|_{H_k}^2
-</script>
-where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p>
-
-<p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N^2$ scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation
-<script type="math/tex">
-\int_{\mathbf{X}} k(\mathbf{x}_1,\mathbf{x}_2) \phi_i(\mathbf{x}_2) dP_X(\mathbf{x}_2) = \lambda_i \phi_i(\mathbf{x}_1)
-</script>
-holds, so that uniformly sampling $\mathbf{x}$ from $P_X$, we can make the approximation of the kernel matrix
-<script type="math/tex">
-\mathbf{K} \mathbf{u} = \lambda \mathbf{u}
-</script>
-with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector approximation. Then, one can obtain an approximation to the first eigenvectors of the matrix, which have the following expressions
-<script type="math/tex">
-\phi_i(\mathbf{x}) \approx \sqrt{q} \mathbf{u}_i^{(q)} \quad\quad \lambda_i \approx \frac{\lambda_i^{(q)}}{q}
-</script></p>
-
-<p>Another well-known approximation is the random features technique, this time only for translation invariant kernels (i.e., those which can be written <script type="math/tex">k(\mathbf{x}_1,\mathbf{x}_2)=k(\mathbf{x}_1-\mathbf{x}_2)</script>, abusing notation and writing $k$ for both functions) was developed by Rahimi and Rech. Bochner’s theorem is a result from classical harmonic analysis and applies to the mentioned kernel types. A continuous function <script type="math/tex">k \in L^1(\mathbb{R}^N)</script> is positive definite if and only if it is the Fourier transform of a non-negative measure $\Lambda$.
-<script type="math/tex">
-k(\mathbf{x}_1-\mathbf{x}_2)=\int_{\mathbb{R}^N}{e^{i\mathbf{\omega}^T (\mathbf{x}_1-\mathbf{x}_2)}d \Lambda(\mathbf{\omega})}
-</script>
-The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^{-i\mathbf{\omega}^T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P_X$, whereas random features proceed independently of $P_X$. This idea has also been used in Gaussian Processes with success.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1534,6 +1491,10 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/02/08/google-original-page-rank/">Google&#8217;s Original Page Rank Implementation</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
@@ -1551,19 +1512,15 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
         <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/12/14/ipython-notebook-for-data-analysis/">IPython Notebook for Data Analysis</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/computation'>computation (1)</a></li><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/computation' style='font-size: 120.0%'>computation</a> <a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/maths' style='font-size: 120.0%'>maths</a> <a href='/blog/categories/matrices' style='font-size: 120.0%'>matrices</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

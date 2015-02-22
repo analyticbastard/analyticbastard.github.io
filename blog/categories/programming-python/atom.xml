@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Programming - Python | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/programming-python/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T22:59:26+00:00</updated>
+  <updated>2015-02-22T23:53:51+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
-    <updated>2014-11-05T11:02:16+00:00</updated>
+    <updated>2014-11-05T12:02:16+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
     <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
 

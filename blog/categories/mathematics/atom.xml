@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Mathematics | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/mathematics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T22:59:26+00:00</updated>
+  <updated>2015-02-22T23:53:51+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Principal Component Analysis]]></title>
     <link href="http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis/"/>
-    <updated>2015-01-01T00:22:01+00:00</updated>
+    <updated>2015-01-01T01:22:01+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2015/01/01/principal-component-analysis</id>
     <content type="html"><![CDATA[<p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
 input or measured variables so that the transformed variables offer a view of the data that maximizes the presented

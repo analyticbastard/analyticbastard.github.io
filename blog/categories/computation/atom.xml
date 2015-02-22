@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Computation | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/computation/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-02-22T23:53:51+01:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Google's Original Page Rank Implementation]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/02/08/google-original-page-rank/"/>
+    <updated>2015-02-08T11:31:03+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/02/08/google-original-page-rank</id>
+    <content type="html"><![CDATA[<p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google’s Page Rank algorithm was
+related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p>
+
+<p>Imagine the graph of web pages visited by Google crawlers, where <script type="math/tex">\mathbf{M}</script> is the adjacency matrix with the outgoing
+links in the columns, where each edge in the web page <script type="math/tex">i</script> pointing to a web page <script type="math/tex">j</script> (which can be the same)
+has a score of <script type="math/tex">\frac{1}{n_i}</script>, where <script type="math/tex">n_i</script> is the number of outgoing links in the webpage <script type="math/tex">i</script>. This matrix might
+present a number of problems with actual graphs, so what Google did was to include page self references and random
+jumps between pages with a small probability given by a parameter <script type="math/tex">\beta</script>.</p>
+
+<script type="math/tex; mode=display">\mathbf{G} = \beta \mathbf{M} + (1-\beta) \frac{\mathbf{1} \mathbf{1}^T}{N}</script>
+
+<p>where <script type="math/tex">N</script> is the total number of web pages in the system and <script type="math/tex">\mathbf{1}</script> is the vector of all ones of size <script type="math/tex">N</script>.</p>
+
+<p><script type="math/tex">\mathbf{G}</script>, being a stochastic matrix, has one as the largest eigenvalue (in module). This can be proved by taking
+<script type="math/tex">\mathbf{G}^T \mathbf{1}=\mathbf{1}</script>, and since <script type="math/tex">\mathbf{G}^T = (\mathbf{P}^{-1})^{-T} \mathbf{D} \mathbf{P}{-T}</script>,
+where <script type="math/tex">\mathbf{P}</script> diagonalizes <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{D}</script> is the resulting diagonal matrix with the eigenvalues
+of both <script type="math/tex">\mathbf{G}</script> and <script type="math/tex">\mathbf{G^{T}}</script>. Thus one is also the largest eigenvalue of <script type="math/tex">\mathbf{G}</script>. Proving that
+this is in fact the largest can be done by applyting the <a href="http://en.wikipedia.org/wiki/Gershgorin_circle_theorem">Gershgoring circle theorem</a>.</p>
+
+<p>Intuitively, applyting <script type="math/tex">\mathbf{G}</script> several times has the effect of building a power matrix <script type="math/tex">\mathbf{G}^M</script> whose
+largest eigenvalue is also one, but the rest are the power of elements less than one, meaning that each power decreases
+all the eigenvalues except the first one. This has the effect of minimizing the component of any vector (the projection)
+in the subspace spanned by the eigenvector corresponding to any eigenvalue except the first one. Eventually, all of them
+reach zero, leaving only the component of the original vector in the subspace of the eigenvector corresponding to the
+largest eigenvalue. This means
+<script type="math/tex">\mathbf{G}^M \mathbf{x} \rightarrow \mathbf{w}</script>, as <script type="math/tex">M</script> tends to infinite, where <script type="math/tex">\mathbf{w}</script> is the dominan
+eigenvector (the one corresponding to the eigenvalue one).</p>
+
+<p>The elements of this vectors are the important for all the pages registered on the database by the crawlers or
+robots.</p>
+
+<p>Obviously this demands a lot of computation since the web is ever changing and this power method would need to be
+performed in batch intermitently, so efficient implementations are needed (based on Map Reduce or not).</p>
+]]></content>
+  </entry>
+  
+</feed>

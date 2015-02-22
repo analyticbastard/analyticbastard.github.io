@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Machine Learning - Kernel Methods | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/machine-learning-kernel-methods/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-01-17T22:59:26+00:00</updated>
+  <updated>2015-02-22T23:53:51+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[A Gentle Introduction to RKHS and Kernel Methods]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs/"/>
-    <updated>2014-11-04T23:31:32+00:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/04/a-gentle-introduction-to-rkhs</id>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs/"/>
+    <updated>2014-11-05T00:31:32+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/a-gentle-introduction-to-rkhs</id>
     <content type="html"><![CDATA[<p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,
 <script type="math/tex">
 \delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta \delta_x(g)
@@ -100,7 +100,7 @@ The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega
   <entry>
     <title type="html"><![CDATA[Improve the Performance of an SVM With Differential Geometry]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/"/>
-    <updated>2014-11-03T02:19:37+00:00</updated>
+    <updated>2014-11-03T03:19:37+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry</id>
     <content type="html"><![CDATA[<p>Though I am not very wise concerning differential geometry (others aren’t either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p>
 
@@ -141,7 +141,7 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
   <entry>
     <title type="html"><![CDATA[The Gaussian Kernel Maps Data Onto the Sphere]]></title>
     <link href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/"/>
-    <updated>2014-11-02T00:54:39+00:00</updated>
+    <updated>2014-11-02T01:54:39+01:00</updated>
     <id>http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere</id>
     <content type="html"><![CDATA[<p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
 

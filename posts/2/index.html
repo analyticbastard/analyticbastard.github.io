@@ -9,7 +9,7 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear &hellip;">
+  <meta name="description" content="I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,106 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/">Naive Bayes Implemented With Map/Reduce Operations</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-05T12:02:16+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:02 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
+
+<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+</ul>
+
+<p>We only need to emit the category (attribute value) as the value</p>
+
+<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
+
+<script type="math/tex; mode=display">
+P(X_i=x_{i,0}|y=y_0)
+</script>
+
+<p>for which we emit a triplet</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+  <li>emit the category for this attribute of this example</li>
+</ul>
+
+<p>As value we only need to emit the previous division.</p>
+
+<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
+
+<p>I’ve just implemented this in MyML. </p>
+
+<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
+being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
+information loss in the process.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span><span class="line"><span class="n">Xd</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">256</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+</span><span class="line"><span class="n">X</span><span class="o">=</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">Xd</span><span class="o">&lt;.</span><span class="mi">5</span><span class="p">)</span>
+</span><span class="line"><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">Xd</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;.</span><span class="mi">5</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="kn">from</span> <span class="nn">myml.supervised</span> <span class="kn">import</span> <span class="n">bayes</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="nb">reload</span><span class="p">(</span><span class="n">bayes</span><span class="p">)</span>
+</span><span class="line"><span class="n">nb</span> <span class="o">=</span> <span class="n">bayes</span><span class="o">.</span><span class="n">NaiveBayes</span><span class="p">()</span>
+</span><span class="line"><span class="n">nb</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span><span class="line"><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,:])</span>
+</span><span class="line"><span class="n">pred</span><span class="o">=</span><span class="n">nb</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c">#Now we predict the (whole) dataset </span>
+</span><span class="line"><span class="mf">1.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="p">(</span><span class="n">pred</span><span class="o">&gt;.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="mf">0.89453125</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -357,6 +457,10 @@ OK, cloned, copied Ruby files and test (with current time position including <em
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/02/20/image-pan-sharpening-with-pca/">Image Pan-sharpening With PCA</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/08/google-original-page-rank/">Google&#8217;s Original Page Rank Implementation</a>
       </li>
     
@@ -372,19 +476,15 @@ OK, cloned, copied Ruby files and test (with current time position including <em
         <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation'>computation (1)</a></li><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/computation'>computation (1)</a></li><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/pca'>pca (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (3)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation' style='font-size: 120.0%'>computation</a> <a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/maths' style='font-size: 120.0%'>maths</a> <a href='/blog/categories/matrices' style='font-size: 120.0%'>matrices</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/computation' style='font-size: 120.0%'>computation</a> <a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 120.0%'>image processing</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/maths' style='font-size: 120.0%'>maths</a> <a href='/blog/categories/matrices' style='font-size: 120.0%'>matrices</a> <a href='/blog/categories/pca' style='font-size: 120.0%'>pca</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 160.0%'>statistics</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

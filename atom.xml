@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-02-22T23:53:51+01:00</updated>
+  <updated>2015-03-08T16:07:21+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,134 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Image Pan-sharpening With PCA]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/02/20/image-pan-sharpening-with-pca/"/>
+    <updated>2015-02-20T11:27:48+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/02/20/image-pan-sharpening-with-pca</id>
+    <content type="html"><![CDATA[<p>There is a collection of methods that are denominated image pan-sharpening, since they use
+information available in multiple bands to create an image output that enjoys properties
+from all sources, while minimizing drawbacks. The sources combined will contain several
+frequency bands, maybe hundreds or thousands. In this case, we are interested in combining
+a source with a high resolution but in gray scale, and a RGB image.</p>
+
+<p>To play with this, we will use Matlab (since I’ve worked a little bit with its image
+functions and array transformations, and this job will be quick)</p>
+
+<p>We first load original image (included in Matlab)</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">peppers</span> <span class="p">=</span> <span class="n">imread</span><span class="p">(</span><span class="s">&#39;peppers.png&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><img class="center" src="http://analyticbastard.github.io/images/peppers.png" title="Original image" alt="images" /></p>
+
+<p>Now we simulate uniband (grayscale) and multiband (downscaled) imagery</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">multiband</span> <span class="p">=</span> <span class="n">imresize</span><span class="p">(</span><span class="n">peppers</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">);</span>
+</span><span class="line"><span class="n">uniband</span> <span class="p">=</span> <span class="n">rgb2gray</span><span class="p">(</span><span class="n">peppers</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The multiband image looks like this</p>
+
+<p><img class="center" src="http://analyticbastard.github.io/images/multiband.png" title="Multiband image" alt="images" /></p>
+
+<p>And the high resolution (low band) image looks like this</p>
+
+<p><img class="center" src="http://analyticbastard.github.io/images/uniband.png" title="High resolution image" alt="images" /></p>
+
+<p>In the first case, we resize the image to a quarter of its size <strong><em>in both dimensions</em></strong>.
+This means we loose 15/16 of the information! In the second case we compute a grayscale
+image, loosing complementary information.</p>
+
+<p>These two images are the ones we are interested in combining.</p>
+
+<p>We now upscale multiband image (again, color image and same size than original but with
+the information from the downscaled version)</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">interpolated</span><span class="p">=</span><span class="n">imresize</span><span class="p">(</span><span class="n">multiband</span><span class="p">,[</span><span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">2</span><span class="p">)]);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>We will now perform PCA on the images. To do that we need to convert the images to the
+relevant variables we want to consider in the analysis. In this case, we want to extract
+the bands of the images, so that we linearize the images, thus turning matrices into
+unidimensional vectors. In case of the grayscale image, this is easily done by just
+using the <code>(:)</code> operator. Bit in case of the RGB image, we will need to
+reshape into a three-dimensional multivariate X = (R, G, B)</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">X</span><span class="p">=</span><span class="n">double</span><span class="p">(</span><span class="nb">reshape</span><span class="p">(</span><span class="n">interpolated</span><span class="p">,</span><span class="nb">numel</span><span class="p">(</span><span class="n">interpolated</span><span class="p">)</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>where we have also converted the data type to double so that we can use Matlab functions.</p>
+
+<p>Now we can compute the components and the projections onto the PCA space</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="p">[</span><span class="n">C</span><span class="p">,</span><span class="n">Y</span><span class="p">]=</span><span class="n">pca</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>where <code>C</code> is the matrix of loadings and <code>Y</code> is the projections of the data onto
+the PCA space.</p>
+
+<p>At this point, out of curiosity, we can compute correlations. Notice that the first
+projection will correlate a lot with the univariate, since both capture mean luminosity
+levels, which is an indicator of which component can be substituted by the higher
+resolution grayscale image.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">corrcoef</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">1</span><span class="p">),</span><span class="n">double</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:)))</span>
+</span><span class="line"><span class="n">corrcoef</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">2</span><span class="p">),</span><span class="n">double</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:)))</span>
+</span><span class="line"><span class="n">corrcoef</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">3</span><span class="p">),</span><span class="n">double</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:)))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The first one yields around <code>0.98</code>. Substitute the component now</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">Z</span><span class="p">=</span><span class="n">Y</span><span class="p">;</span>
+</span><span class="line"><span class="n">Z</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)=(</span><span class="n">double</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:)</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:)))</span><span class="o">./</span><span class="n">double</span><span class="p">(</span><span class="n">max</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:))</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">uniband</span><span class="p">(:))))</span><span class="o">*</span><span class="p">(</span><span class="n">max</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">1</span><span class="p">))</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)))</span><span class="o">+</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">(:,</span><span class="mi">1</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>We are adapting the maximum and minimum luminosity of the grayscale image to match
+that of the first component.</p>
+
+<p>We now project the new components back to the original RGB space. The matrix <code>C</code> is not
+orthonormal, so that we don’t get a properly scaled representation, so we do it manually
+(we could also make the matrix <code>C</code> orthonormal, though the effect of changing the first
+component would have impacted the final luminosity levels and thus we still would have needed
+to rescale the colors)</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">G</span><span class="p">=</span><span class="n">Z</span><span class="o">*</span><span class="n">C</span><span class="o">&#39;</span><span class="p">;</span>
+</span><span class="line"><span class="n">I</span> <span class="p">=</span> <span class="p">(</span><span class="n">G</span> <span class="o">-</span> <span class="n">min</span><span class="p">(</span><span class="n">G</span><span class="p">(:)))</span><span class="o">/</span><span class="p">(</span><span class="n">max</span><span class="p">(</span><span class="n">G</span><span class="p">(:))</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">G</span><span class="p">(:)));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Lastly we reshape from (R, G, B) multivariate to an RGB image</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">merged</span> <span class="p">=</span> <span class="nb">reshape</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="nb">size</span><span class="p">(</span><span class="n">interpolated</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The result shows that, effectively, we enjoy the best part of the two worlds</p>
+
+<p><img class="center" src="http://analyticbastard.github.io/images/merged.png" title="Merged image" alt="images" /></p>
+
+<p>As mentioned, we could play with the luminiscence levels to attain a color more loyal
+to the original.</p>
+
+<p>The reason why this works is that the first PCA component takes most of the information,
+thus creating a sort of best fit for all colors in the RGB spectrum. This is a kind of
+luminiscence, which is what the grayscape image is and what we substitute it by.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Google's Original Page Rank Implementation]]></title>

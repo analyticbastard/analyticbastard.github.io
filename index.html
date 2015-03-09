@@ -105,6 +105,8 @@ camera among their equipment.</p>
 <p>To play with this, we will use Matlab (since I’ve worked a little bit with its image
 functions and array transformations, and this job will be quick)</p>
 
+<h2 id="data-preparation">Data preparation</h2>
+
 <p>We first load original image (included in Matlab)</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
@@ -134,6 +136,8 @@ This means we loose 15/16 of the information! In the second case we compute a gr
 image, loosing complementary information.</p>
 
 <p>These two images are the ones we are interested in combining.</p>
+
+<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 
 <p>We now upscale multiband image (again, color image and same size than original but with
 the information from the downscaled version)</p>

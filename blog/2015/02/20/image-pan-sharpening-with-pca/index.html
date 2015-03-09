@@ -134,14 +134,14 @@ image, loosing complementary information.</p>
 
 <p>These two images are the ones we are interested in combining.</p>
 
-<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
-
 <p>We now upscale multiband image (again, color image and same size than original but with
 the information from the downscaled version)</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">interpolated</span><span class="p">=</span><span class="n">imresize</span><span class="p">(</span><span class="n">multiband</span><span class="p">,[</span><span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">2</span><span class="p">)]);</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 
 <p>We will now perform PCA on the images. To do that we need to convert the images to the
 relevant variables we want to consider in the analysis. In this case, we want to extract

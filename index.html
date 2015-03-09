@@ -144,6 +144,11 @@ the information from the downscaled version)</p>
 </pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">interpolated</span><span class="p">=</span><span class="n">imresize</span><span class="p">(</span><span class="n">multiband</span><span class="p">,[</span><span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">2</span><span class="p">)]);</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
+<p><img class="center" src="/images/interpolated.png" title="Interpolated image from the low resolution, hight band image" alt="images" /></p>
+
+<p>The missing information from this image with respect to the original is noticeable
+to the eye in form of blur.</p>
+
 <h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 
 <p>We will now perform PCA on the images. To do that we need to convert the images to the

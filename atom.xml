@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-09T15:33:48+01:00</updated>
+  <updated>2015-03-09T15:36:50+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -69,6 +69,11 @@ the information from the downscaled version)</p>
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">interpolated</span><span class="p">=</span><span class="n">imresize</span><span class="p">(</span><span class="n">multiband</span><span class="p">,[</span><span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">2</span><span class="p">)]);</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><img class="center" src="http://analyticbastard.github.io/images/interpolated.png" title="Interpolated image from the low resolution, hight band image" alt="images" /></p>
+
+<p>The missing information from this image with respect to the original is noticeable
+to the eye in form of blur.</p>
 
 <h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 

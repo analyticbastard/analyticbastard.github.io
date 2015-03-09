@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Pca | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/pca/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-09T15:33:48+01:00</updated>
+  <updated>2015-03-09T15:36:50+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -68,6 +68,11 @@ the information from the downscaled version)</p>
 <p><code>matlab
 interpolated=imresize(multiband,[size(uniband,1) size(uniband,2)]);
 </code></p>
+
+<p><img class="center" src="/images/interpolated.png" title="‘Interpolated image from the low resolution, hight band image’ ‘images’" ></p>
+
+<p>The missing information from this image with respect to the original is noticeable
+to the eye in form of blur.</p>
 
 <h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 

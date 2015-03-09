@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-09T15:36:50+01:00</updated>
+  <updated>2015-03-09T15:39:57+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -63,8 +63,12 @@ image, loosing complementary information.</p>
 
 <p>These two images are the ones we are interested in combining.</p>
 
-<p>We now upscale multiband image (again, color image and same size than original but with
-the information from the downscaled version)</p>
+<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
+
+<p>We still need to prepare the data one more time. 
+We need to upscale multiband image (again, color image and same size than original but with
+the information from the downscaled version) so that we can combine it with the hight
+resolution image (adjust its dimensions)</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="matlab"><span class="line"><span class="n">interpolated</span><span class="p">=</span><span class="n">imresize</span><span class="p">(</span><span class="n">multiband</span><span class="p">,[</span><span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="nb">size</span><span class="p">(</span><span class="n">uniband</span><span class="p">,</span><span class="mi">2</span><span class="p">)]);</span>
@@ -74,8 +78,6 @@ the information from the downscaled version)</p>
 
 <p>The missing information from this image with respect to the original is noticeable
 to the eye in form of blur.</p>
-
-<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 
 <p>We will now perform PCA on the images. To do that we need to convert the images to the
 relevant variables we want to consider in the analysis. In this case, we want to extract
@@ -151,6 +153,8 @@ to the original.</p>
 <p>The reason why this works is that the first PCA component takes most of the information,
 thus creating a sort of best fit for all colors in the RGB spectrum. This is a kind of
 luminiscence, which is what the grayscape image is and what we substitute it by.</p>
+
+<p>Donwload full Matlab program form <a href="https://github.com/analyticbastard/pansharpening-pca">Github</a></p>
 ]]></content>
   </entry>
   

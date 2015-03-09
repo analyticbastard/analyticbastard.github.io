@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Pca | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/pca/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-09T15:36:50+01:00</updated>
+  <updated>2015-03-09T15:39:57+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -62,8 +62,12 @@ image, loosing complementary information.</p>
 
 <p>These two images are the ones we are interested in combining.</p>
 
-<p>We now upscale multiband image (again, color image and same size than original but with
-the information from the downscaled version)</p>
+<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
+
+<p>We still need to prepare the data one more time. 
+We need to upscale multiband image (again, color image and same size than original but with
+the information from the downscaled version) so that we can combine it with the hight
+resolution image (adjust its dimensions)</p>
 
 <p><code>matlab
 interpolated=imresize(multiband,[size(uniband,1) size(uniband,2)]);
@@ -73,8 +77,6 @@ interpolated=imresize(multiband,[size(uniband,1) size(uniband,2)]);
 
 <p>The missing information from this image with respect to the original is noticeable
 to the eye in form of blur.</p>
-
-<h2 id="image-pan-sharp-with-pca">Image pan-sharp with PCA</h2>
 
 <p>We will now perform PCA on the images. To do that we need to convert the images to the
 relevant variables we want to consider in the analysis. In this case, we want to extract
@@ -146,6 +148,8 @@ to the original.</p>
 <p>The reason why this works is that the first PCA component takes most of the information,
 thus creating a sort of best fit for all colors in the RGB spectrum. This is a kind of
 luminiscence, which is what the grayscape image is and what we substitute it by.</p>
+
+<p>Donwload full Matlab program form <a href="https://github.com/analyticbastard/pansharpening-pca">Github</a></p>
 ]]></content>
   </entry>
   

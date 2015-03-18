@@ -9,8 +9,7 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="There is a collection of methods that are denominated image pan-sharpening, since they use
-information available in multiple bands to create an image &hellip;">
+  <meta name="description" content="If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three is the right one, the rest containing an &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +69,155 @@ information available in multiple bands to create an image &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/">The Monty Hall Problem (My Explanation)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-03-08T00:17:17+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:17 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins… and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p>
+
+<p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet):
+Let’s call R “right choice” V “visible incorrect wallet” and S “your choice”. We need to compute <script type="math/tex">P(R=3|V=2,S=1)</script>, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).
+<script type="math/tex">P(R=3|V=2,S=1)=\frac{P(V=2,S=1|R=3)P(R=3)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}\\=\frac{1\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=2/3</script><script type="math/tex">P(V=2,S=1|R=3)=1</script> is the probability that, given R=3, then I was forced to show you the incorrect wallet remaining (you already chose one incorrect wallet). <script type="math/tex">P(V=2,S=1|R=1)=1/2</script> because there are two possible incorrect wallets (since you selected the correct one) that I can choose from to show you.</p>
+
+<p>Let’s compute the same posterior for the case I decide not to change wallet:
+<script type="math/tex">P(R=1|V=2,S=1)=\frac{P(V=2,S=1|R=1)P(R=1)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}\\=\frac{1/2\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=1/3</script>.</p>
+
+<p>Therefore if you change you have more chances of winning the 1000 bitcoins.</p>
+
+<p>Needless to say, this works for every possible combination of <script type="math/tex">R</script>, <script type="math/tex">S</script> and <script type="math/tex">V</script>. 
+This happens, as I mentioned, because of the way I was influenced (forced) to show you the incorrect remaining wallets. To see it intuitively, imagine 100 wallets, and that you chose one amongst them, and I am forced to show you 98 incorrect wallets, leaving your choice and another one. Is it more likely that this particular wallet is the correct one (that your choice forced me to leave it) or that you chose wisely amongst 100 wallets? If you choose 99 incorrect wallets, the set that I show you is the same, except for the chosen incorrect wallets each time, and will never contain the particular correct wallet.</p>
+
+<p>There is a cool <a href="https://play.google.com/store/apps/details?id=us.steveo.montyhall">Android app</a> in case you want to check how the law of large numbers works for this problem.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T00:01:36+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:01 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p>
+
+<p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+
+<p>Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.</p>
+
+<p>The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="r"><span class="line">B<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;B.csv&quot;</span><span class="p">,</span>header<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+</span><span class="line">st<span class="o">=</span><span class="kp">proc.time</span><span class="p">();</span> eigB<span class="o">=</span><span class="kp">eigen</span><span class="p">(</span>B<span class="p">,</span>symmetric<span class="o">=</span><span class="bp">T</span><span class="p">);</span> en<span class="o">=</span><span class="kp">proc.time</span><span class="p">()</span>
+</span><span class="line"><span class="o">&gt;</span> en<span class="o">-</span>st
+</span><span class="line">   user  system elapsed
+</span><span class="line">   <span class="m">0.58</span>    <span class="m">0.00</span>    <span class="m">0.58</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>In Python:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">numpy</span>
+</span><span class="line"><span class="n">B</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&quot;B.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+</span><span class="line"><span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">();</span> <span class="n">U</span><span class="p">,</span> <span class="n">E</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">B</span><span class="p">);</span> <span class="n">en</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class="line"><span class="o">&gt;&gt;&gt;</span> <span class="n">en</span><span class="o">-</span><span class="n">st</span>
+</span><span class="line"><span class="mf">0.13400006294250488</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.</p>
+
+<p>Link to the positive definite matrix used in the experiments <a href="https://www.dropbox.com/s/uxijs3jckckafra/B.7z">here</a>.
+Link to Christoph Gohlke’s page <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">here</a>.</p>
+
+<p>Despite the fact that I’ve been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.</p>
+
+<p>I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.</p>
+
+<p>Regarding data analysis, it is a little more complicated than Matlab’s clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are</p>
+
+<ul>
+  <li><a href="https://sites.google.com/site/pythonforscientists/python-vs-matlab">https://sites.google.com/site/pythonforscientists/python-vs-matlab</a></li>
+  <li><a href="http://www.stat.washington.edu/~hoytak/blog/whypython.html">http://www.stat.washington.edu/~hoytak/blog/whypython.html</a></li>
+  <li><a href="http://stevetjoa.com/305/">http://stevetjoa.com/305/</a></li>
+</ul>
+
+<p>Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.</p>
+
+<ul>
+  <li>Data preprocessors, including text vectorizers and TF IDF preprocessors</li>
+  <li>SVM implementations</li>
+  <li>Stochastic Gradient Descent algorithms for fast regression and classification</li>
+  <li>Random Forest and other ensemble methods for robust regression and classification</li>
+  <li>Clustering algorithms</li>
+  <li>Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings</li>
+  <li>Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.</li>
+</ul>
+
+<p>This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble…). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.</p>
+
+<p>One of the lead programmers of the project, <a href="peekaboo-vision.blogspot.com.es">Andreas Müller</a> has a very insightful blog.</p>
+
+<p>I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.</p>
+
+<p>Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out</p>
+
+<ul>
+  <li><a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Gnumpy</a></li>
+  <li><a href="http://deeplearning.net/tutorial/DBN.html">Deep Belief Networks</a></li>
+  <li><a href="http://documen.tician.de/pycuda/tutorial.html">PyCUDA</a></li>
+</ul>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -853,14 +1001,10 @@ supports incomplete data.</p>
 of the price movement of both stocks.</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
-</span><span class="line">
-</span><span class="line"><span class="n">array</span><span class="p">([</span> <span class="mf">0.8132162</span><span class="p">,</span>  <span class="mf">0.1867838</span><span class="p">])</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>Now we can print out the PCA transformation</p>
+<p>with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
@@ -974,7 +1118,10 @@ This means that if the sample difference is larger that the percentile enclosing
 <em>accepting</em> the null hypothesis (remember, that $\mu_X = \mu_Y$). Note that with probability 0.05, we are going to get a
 sample difference larger than that percentile. For this reason, one does not say <em>reject</em>: There is a chance that the
 population means are truly different, bit there is also a small (0.05 probability) chance that, being the population
-means the same, we got difference of averages larger than the boundary percentile). </p>
+means the same, we got difference of averages larger than the boundary percentile).</p>
+
+<p>Of course, <em>the true statistical test is divided by a kind of standard deviation made up of an aggregate of the variances
+of both samples, which makes the statistic be distributed as a t distribution. Otherwise the test would have no power.</em></p>
 
 <p>To sum up, the statistical test for equality of means is:</p>
 
@@ -1431,118 +1578,6 @@ existing libraries will need time to be adapted to Python.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-08T03:33:09+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:33 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
-
-<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
-
-<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
-
-<blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language&#8217;s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft&#8217;s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote>
-
-<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
-
-<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
-
-<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
-It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-06T17:24:02+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:24 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
-it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
- such as triangle similarity considerations.</p>
-
-<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
-triangles.</p>
-
-<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
-triangles, such as in the figure below. </p>
-
-<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
-side of the large outer triangle $(a+b)$. In the smaller square,
-let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
-
-<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="Pythagorean theorem" alt="images" /></p>
-
-<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
-<script type="math/tex">
-L=(a+b)^2=a^2 + b^2 + 2ab
-</script> </p>
-
-<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
-the inner square, whose area is $c^2$. Thus</p>
-
-<script type="math/tex; mode=display">
-L=4 \times \frac{ab}{2} + c^2
-</script>
-
-<p>Equating both expressions, we can arrive at the result of the theorem</p>
-
-<script type="math/tex; mode=display">
-a^2 + b^2 + 2ab = 4 \frac{ab}{2} + c^2 \\
-a^2 + b^2 + 2ab = 2 \times ab + c^2\\
-a^2 + b^2 = c^2
-</script>
-
-<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
-to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
-
-<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1558,6 +1593,14 @@ to establish that a straight line reflects on another straight line with the com
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/">The Monty Hall Problem (My Explanation)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/20/image-pan-sharpening-with-pca/">Image Pan-sharpening With PCA</a>
       </li>
     
@@ -1569,23 +1612,15 @@ to establish that a straight line reflects on another straight line with the com
         <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/01/06/hackintosh/">Hackintosh</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation'>computation (1)</a></li><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/pca'>pca (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/computation'>computation (5)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (4)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (4)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/programming'>programming (5)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation' style='font-size: 120.0%'>computation</a> <a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 120.0%'>image processing</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/maths' style='font-size: 120.0%'>maths</a> <a href='/blog/categories/matrices' style='font-size: 120.0%'>matrices</a> <a href='/blog/categories/pca' style='font-size: 120.0%'>pca</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 160.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/brainteasers' style='font-size: 112.0%'>brainteasers</a> <a href='/blog/categories/computation' style='font-size: 160.0%'>computation</a> <a href='/blog/categories/computing' style='font-size: 112.0%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 148.0%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 112.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 112.0%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 136.0%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 148.0%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 148.0%'>mathematics</a> <a href='/blog/categories/maths' style='font-size: 112.0%'>maths</a> <a href='/blog/categories/matlab' style='font-size: 112.0%'>matlab</a> <a href='/blog/categories/matrices' style='font-size: 112.0%'>matrices</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 136.0%'>python</a> <a href='/blog/categories/software-development' style='font-size: 112.0%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 148.0%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 148.0%'>tools</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Software Development | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/software-development/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-03-18T01:39:05+01:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[My Git Workflow]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/01/10/my-git-workflow/"/>
+    <updated>2015-01-10T01:00:55+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/01/10/my-git-workflow</id>
+    <content type="html"><![CDATA[<p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never,
+NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little
+more attention on the part of the user than other control version systems. This starts by fixing the basic concepts
+clearly.</p>
+
+<h3 id="concepts">Concepts</h3>
+
+<p>The concepts, from basic qto more complex, and also sorted by the first time you are likely to come across them, is:</p>
+
+<ul>
+  <li><strong>Tracked file</strong>: A file that is under version control. You specifically told Git to track it at some point of its life.</li>
+  <li><strong>Woring directory</strong>: This is the classical concept, your working copy of the project, including the files you
+modify, the ones that are tracked and others that you want to leave untracked (such as IDE files or personal notes).</li>
+  <li><strong>Local repository</strong>: This is <em>the Git repository stored on your local computer</em>. It is <em>not</em> your local working
+directory, but the files stored in the <code>.git</code> directory within your working copy.</li>
+  <li><strong>remote</strong>: A remote is a remote Git server that stores our project. Several remotes can exist for a project and we
+always need to specify the remote to which we are going to send our changes.</li>
+  <li><strong>Remote repository</strong>: The remote repository that stores the version of the project that everybody can see.</li>
+  <li><strong>Branch</strong>: This is the usual concept of branch. Branches of the project may evolve in an independent way from each
+other. All commits are attached to a branch. Local branches may not exist in the remote repository and remote branches
+may have not been updated in your local repository at some point. The default branch is called <em>master</em>.</li>
+  <li><strong>Conflict</strong>: Incompatible changes from a source were incorporated to a dirty copy (meaning that you modify something
+that had been already modified), or you have a commit that modifies something already modified in the source you are
+applying. You will need to resolve this by hand.</li>
+  <li><strong>stash</strong>: Shelve your local changes. In other words, pack your dirty working copy and leave a clean working directory
+that matches the contents of your local repository. This is important if you want to do operations on files that you
+have changed on your working copy, since Git will complain otherwise.</li>
+  <li><strong>unstash</strong>: Get the changes from the stash into your local copy, making it dirty if it was not. If it was not dirty
+or you got changes from another branch or from the remote repository, you are likely to have conflicts and will need
+to resolve them.</li>
+  <li><strong>pull</strong>: Update remote changes in your local repository (and your working copy so you can see them). If you have
+a dirty working copy you will need to stash your local changes.</li>
+  <li><strong>Dirty local copy</strong>: Tracked files in the working directory that have been changed.</li>
+  <li><strong>commit</strong>: A change in a tracked file (dirty local copy) that gets added to the local repository. You commit to a
+branch.</li>
+  <li><strong>push</strong>: The commits (local changes that now form part of your local repository) get sent to the remote repository
+so that everybody can finally access them. This updates the remote branch.</li>
+  <li><strong>merge</strong>: This happens when two members have changed the same tracked files on a branch in the the remote
+repository. The last user in pushing the changes (<em>B</em>) will need to pull the changes that the first one (<em>A</em>) already pushed,
+so that the official history was written firstly by <em>A</em>. The conflicts will most likely need to be resolved by
+hand by <em>B</em>, since Git does not understand any particular language (and is not intelligent to decide on the conflicts
+or have criteria to do so). Once merged, <em>B</em> ends up with a dirty working copy, that he needs to commit and then push.
+This last push will be accepted by the remote repository server (if no one has put new stuff in the meantime).</li>
+  <li><strong>rebase</strong>: This is a especially useful type of merge in which a user has not pulled down changes for a while and there
+are a number of commits in the remote repository. If the user commits, then he can rebase the remote branch onto his,
+so that his commit is merged on top of the remote commits. The user can then push to the remote branch and see his
+changes reflected there. The rebase command is very versatile since it allows us to modify previous commits in our
+repository.</li>
+  <li><strong>reset</strong>: Set your branch to any commit in your repository. At this point a <strong>VERY IMPORTANT NOTE</strong> must be mentioned:
+any repository, including the local one, stores commits. This means that commits <em>ALWAYS</em> survive, they are always
+present, and one can always reset a branch head to a particular commit if the commit hash is available. It does not
+matter that the commit had been “lost” in the branch chain.</li>
+  <li><strong>cherry-pick</strong>: One can also cherry-pick a commit in the repository, given its hash, from any branch and apply it
+to any other branch. Again, it does not matter that the picked commit does not currently appear on any branch, it
+suffices for it to have been stored in the repository at some point.</li>
+  <li><strong>log</strong>: This command is useful since it shows the chain of commits we have on our <em>local</em> repository that end up
+in our current state. This does not show all the commits that once belonged to a branch if the branch was reset and
+then new commits arrived (in a similar way to when we undo something in MS Word and then write new stuff, we cannot
+redo). Useful for rebasing stuff.</li>
+  <li><strong>reflog</strong>: This is <strong>ALL</strong> the repository history, including committed stuff, branch changes, pulled changes, etc.
+You can find <strong>EVERYTHING</strong> here, even commits that were apparently “lost” from a branch. If you feel you have lost
+a commit, just issue <code>git reflog</code> and cherry-pick from there.</li>
+</ul>
+
+<h3 id="my-workflow">My workflow</h3>
+
+<p>When you are developing a new feature for your project, want you want to do is branch the master branch (or any other,
+but it makes sense to pick up the official state of the project and start from there).</p>
+
+<p><code>bash 
+git checkout -b newfeature
+</code></p>
+
+<p>This creates a <strong>local branch</strong>. We are interested in storing our changes remotely so that if something happens to our
+local copy (major Git messup that is easy to just ignore and pull the remote, hard drive issues, computer issues,
+get your stuff done in some other computer, etc), we have our changes in the remote server too.</p>
+
+<p><code>bash
+git push origin newfeature
+git branch --set-origin=origin/newfeature
+</code></p>
+
+<p>This creates the <strong>remote branch</strong> and sets the default link to our local branch, so that we can push to it.</p>
+
+<p>After this, we can do our changes. I normally spend some time with a feature and by the time I want to commit to master (when the changes are not enough
+to be peer reviewed in a pull request to the master branch), some other workmate has committed something, which forces
+me to <strong>pull</strong> and <strong>rebase</strong>.</p>
+
+<p>Imagine that I am working on newfeature and I notice that master has changed. It is better to incorporate the remote
+changes sooner so that conflicts are minimal. I first <strong>stash</strong> my local changes, since I will need to change branch
+to pull master (you can do it from newfeature branch, but I like it this way).</p>
+
+<p><code>bash
+git stash
+git checkout master
+git pull
+</code></p>
+
+<p>Now we have the remote latest changes. We switch to the newfeature branch</p>
+
+<p><code>bash
+git checkout newfeature
+git rebase -i master
+</code></p>
+
+<p>This tells git to get (local, which was just updated) commits onto the current branch, newfeature. Now newfeature is
+updated with the latest master state. We can keep on working. Get our latest changes, the ones we stashed.</p>
+
+<p><code>bash
+git stash apply
+</code></p>
+
+<p>This applies the top of the stash to the current clean local branch, and does not remove them from the stash. I am
+normally interested in keeping these changes just in case. I can later remove them with <code>git stash drop</code>. I sometimes
+use <code>git stash pop</code> which applies changes <em>and</em> removes them from the stash. If I need to refer to the stash to get
+a change that I know was there but am not sure it is on the top, then I use <code>git stash show --name-only</code>, which
+gives me the names of the changed files.</p>
+
+<p>When I feel I can commit (because I am done or because I want to store remotely)</p>
+
+<p><code>bash
+git commit -m "Message"
+git push origin newfeature
+</code></p>
+
+<p>Which saves my commits in the remote branch (remote repository).</p>
+
+<p>I sometimes need to modify something that I committed, because I forgot to include it (and we want our master history
+to be clean of mistakes and easy to follow), I prepare my local changes (tracked files) for commit fixup. First I use
+the <code>git add</code> command to add these files to the subsequent commit. This commit will be done in a special manner:
+using the <code>--fixup=</code> modifier, which accepts the hash of the commit to be modified. This is an extremely versatile
+modifier, since it allows us to modify commits buried deep beneath our current head. This creates a new commit chain
+with the fixed commit and all the commits that followed it, with new versions adapted to the changes we have introduced
+(and of course, all with new hashes, since they are all new commits).</p>
+
+<p>I came across a very easy command pipe to do this, since adding files one by one is a time waster:</p>
+
+<p><code>bash
+git status | grep modified | cut -d: -f2 | xargs git add
+</code></p>
+
+<p>The command <code>status</code> gives us the modified files, among other stuff (untracked files, etc). I filter the modified files
+(getting only the file name) and then add them as an argument to <code>git add</code>.</p>
+
+<p>We now fix the particular commit. In this case, I get the commit hash with <code>git log</code>.</p>
+
+<p><code>bash
+git commit --fixup=24ee1df941679953529aabc3d0eef5727a44c094
+</code></p>
+
+<p>This creates a <em>new</em> commit on top of the rest. We need to squash everything so that git creates the new commit chain,
+wich entirely different commits and with the fixing and fixed commits merged into one. If the commit is buried below
+the head, you would use the commit previous to the one being fixed. Imagine this chain</p>
+
+<p><code>bash
+c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+</code></p>
+
+<p>When you create the fixup commit, it will appear on top of the chain</p>
+
+<p><code>bash
+f36806a856994c8365e199a72501a5461ca99497 fixup! First commit to my-source
+c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+</code></p>
+
+<p>Then you autosquash the chain, selecting the commit previous to the fix</p>
+
+<p><code>bash
+git rebase -i --autosquash 7f49807d5c5651baccb6d66c504549713a7ae7d7
+</code></p>
+
+<p>The result is a new chain</p>
+
+<p><code>bash
+c927d675189eedd89d972663e2ef0ffe1438f4f7 Categories and other plugin stuff
+e08ef8e27b3fd3c15e07a5e032e66a67a533ca3d Remove deploy stuff that got added by mistake
+7d94aace9629272848382abfc217282c676f108e First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+</code></p>
+
+<p>Where the new <code>7d94aace9629272848382abfc217282c676f108e</code> contains the modifications needed.</p>
+
+<p>In case the commit we want to fix is on top of the chain, the autosquash is simpler:</p>
+
+<p><code>bash
+git rebase -i --autosquash HEAD~2
+</code></p>
+
+<p>If I had pushed my branch to the remote repository, then I would have to force push, since there is no way my local
+branch and the remote one are compatible. To do that, you need to be pretty sure nobody is in the process of
+committing anything to that particular branch (this is not a problem if you are working on this feature on your own),
+and issue</p>
+
+<p><code>bash
+git push origin newfeature -f
+</code></p>
+
+<p>Where origin is my remote repository name and <code>-f</code> overwrites the remote contents.</p>
+
+<h3 id="final-thoughts">Final thoughts</h3>
+
+<p>We can see that we can modify our commit chain (resetting our branch head or fixing commits). Some people say it changes
+the history, but I don’t see it that way). The true history is in the <strong>reflog</strong>.</p>
+
+<p>Also, people might find it difficult to think of the usefulness of having several remote repositories. For example, this
+blog has a remote which is, obviously, Github pages, and it is where the stuff under <code>_deploy</code> gets sebt.</p>
+]]></content>
+  </entry>
+  
+</feed>

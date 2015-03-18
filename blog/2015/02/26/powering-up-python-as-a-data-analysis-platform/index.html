@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Powering Up Python as a Data Analysis Platform - The Analytic Bastard</title>
+  <meta name="author" content="Analytic Bastard">
+
+  
+  <meta name="description" content="When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib<n/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">The Analytic Bastard</a></h1>
+  
+    <h2>Making geometers go crazier</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:analyticbastard.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Powering Up Python as a Data Analysis Platform</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T00:01:36+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:01 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p>
+
+<p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+
+<p>Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.</p>
+
+<p>The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="r"><span class="line">B<span class="o">=</span>read.csv<span class="p">(</span><span class="s">&quot;B.csv&quot;</span><span class="p">,</span>header<span class="o">=</span><span class="bp">F</span><span class="p">)</span>
+</span><span class="line">st<span class="o">=</span><span class="kp">proc.time</span><span class="p">();</span> eigB<span class="o">=</span><span class="kp">eigen</span><span class="p">(</span>B<span class="p">,</span>symmetric<span class="o">=</span><span class="bp">T</span><span class="p">);</span> en<span class="o">=</span><span class="kp">proc.time</span><span class="p">()</span>
+</span><span class="line"><span class="o">&gt;</span> en<span class="o">-</span>st
+</span><span class="line">   user  system elapsed
+</span><span class="line">   <span class="m">0.58</span>    <span class="m">0.00</span>    <span class="m">0.58</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>In Python:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">numpy</span>
+</span><span class="line"><span class="n">B</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&quot;B.csv&quot;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&quot;,&quot;</span><span class="p">)</span>
+</span><span class="line"><span class="n">st</span> <span class="o">=</span> <span class="n">time</span><span class="p">();</span> <span class="n">U</span><span class="p">,</span> <span class="n">E</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">B</span><span class="p">);</span> <span class="n">en</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+</span><span class="line"><span class="o">&gt;&gt;&gt;</span> <span class="n">en</span><span class="o">-</span><span class="n">st</span>
+</span><span class="line"><span class="mf">0.13400006294250488</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.</p>
+
+<p>Link to the positive definite matrix used in the experiments <a href="https://www.dropbox.com/s/uxijs3jckckafra/B.7z">here</a>.
+Link to Christoph Gohlke’s page <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">here</a>.</p>
+
+<p>Despite the fact that I’ve been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.</p>
+
+<p>I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.</p>
+
+<p>Regarding data analysis, it is a little more complicated than Matlab’s clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are</p>
+
+<ul>
+  <li><a href="https://sites.google.com/site/pythonforscientists/python-vs-matlab">https://sites.google.com/site/pythonforscientists/python-vs-matlab</a></li>
+  <li><a href="http://www.stat.washington.edu/~hoytak/blog/whypython.html">http://www.stat.washington.edu/~hoytak/blog/whypython.html</a></li>
+  <li><a href="http://stevetjoa.com/305/">http://stevetjoa.com/305/</a></li>
+</ul>
+
+<p>Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.</p>
+
+<ul>
+  <li>Data preprocessors, including text vectorizers and TF IDF preprocessors</li>
+  <li>SVM implementations</li>
+  <li>Stochastic Gradient Descent algorithms for fast regression and classification</li>
+  <li>Random Forest and other ensemble methods for robust regression and classification</li>
+  <li>Clustering algorithms</li>
+  <li>Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings</li>
+  <li>Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.</li>
+</ul>
+
+<p>This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble…). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.</p>
+
+<p>One of the lead programmers of the project, <a href="peekaboo-vision.blogspot.com.es">Andreas Müller</a> has a very insightful blog.</p>
+
+<p>I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.</p>
+
+<p>Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out</p>
+
+<ul>
+  <li><a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Gnumpy</a></li>
+  <li><a href="http://deeplearning.net/tutorial/DBN.html">Deep Belief Networks</a></li>
+  <li><a href="http://documen.tician.de/pycuda/tutorial.html">PyCUDA</a></li>
+</ul>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-02-26T00:01:36+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>26</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:01 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/computation/'>computation</a>, <a class='category' href='/blog/categories/data-analysis/'>data analysis</a>, <a class='category' href='/blog/categories/python/'>python</a>, <a class='category' href='/blog/categories/tools/'>tools</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/02/20/image-pan-sharpening-with-pca/" title="Previous Post: Image pan-sharpening with PCA">&laquo; Image pan-sharpening with PCA</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/" title="Next Post: The Monty Hall problem (my explanation)">The Monty Hall problem (my explanation) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/">The Monty Hall Problem (My Explanation)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/20/image-pan-sharpening-with-pca/">Image Pan-sharpening With PCA</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/08/google-original-page-rank/">Google&#8217;s Original Page Rank Implementation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+    <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/computation'>computation (5)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (4)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (4)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/programming'>programming (5)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
+</section>
+<section>
+    <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/brainteasers' style='font-size: 112.0%'>brainteasers</a> <a href='/blog/categories/computation' style='font-size: 160.0%'>computation</a> <a href='/blog/categories/computing' style='font-size: 112.0%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 148.0%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 112.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 112.0%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 136.0%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 148.0%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 148.0%'>mathematics</a> <a href='/blog/categories/maths' style='font-size: 112.0%'>maths</a> <a href='/blog/categories/matlab' style='font-size: 112.0%'>matlab</a> <a href='/blog/categories/matrices' style='font-size: 112.0%'>matrices</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 136.0%'>python</a> <a href='/blog/categories/software-development' style='font-size: 112.0%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 148.0%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 148.0%'>tools</a> </span>
+</section><section>
+    <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+</section><section>
+  <h3>Blogroll</h3>
+  <!-- IMPORTANT: Do not change the below ID as it will affect the functioning of the plugin-->
+    <ul id="blogroll-list"><li><a href='http://blog.cognitect.com/' feedurl='http://blog.cognitect.com/blog?format=rss' title = 'Clojure, ClojureScript, Datomic, Programming'>Cognitec</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/FeaturedBlogPosts-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://www.datasciencecentral.com/' feedurl='http://feeds.feedburner.com/ResearchDiscussions-DataScienceCentral?format=xml' title = 'Big Data, Data Mining, Machine Learning'>Data Science Central</a></li><li><a href='http://deeplearning.net' feedurl='http://deeplearning.net/feed/' title = 'Deep Learning, Neural Networks'>deeplearning.net</a></li><li><a href='http://hunch.net' feedurl='http://feeds2.feedburner.com/MachineLearningtheory' title = 'Machine Learning, Data Mining'>Hunch.net</a></li><li><a href='http://blog.kaggle.com' feedurl='http://blog.kaggle.com/feed/' title = 'Data mining, Big Data, Machine Learning, Competitions'>Kaggle</a></li><li><a href='http://www.kdnuggets.com/' feedurl='http://feeds.feedburner.com/kdnuggets-data-mining-analytics?format=xml' title = 'Data Mining, Big Data, Machine Learning'>KDnuggets</a></li><li><a href='http://www.thoughtworks.com/' feedurl='http://feeds.feedburner.com/thoughtworks-blogs?format=xml' title = 'Programming, Software Engineering'>Thoughtworks</a></li><li><a href='http://engineeringblog.yelp.com' feedurl='http://engineeringblog.yelp.com/feed' title = 'Big Data, Machine Learning, Text Mining'>Yelp Engineering</a></li></ul>
+    
+    <script type="text/javascript">
+      $(document).ready(function(){
+        updateFeeds(true);
+      });
+    </script>
+    <script src="/javascripts/tinysort-min.js"></script>
+    <script src="/javascripts/blogroll.js"></script>
+    
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/analyticbastard">@analyticbastard</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'analyticbastard',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Analytic Bastard -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+
+</body>
+</html>

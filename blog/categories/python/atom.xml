@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Python | The Analytic Bastard]]></title>
+  <link href="http://analyticbastard.github.io/blog/categories/python/atom.xml" rel="self"/>
+  <link href="http://analyticbastard.github.io/"/>
+  <updated>2015-03-18T01:39:05+01:00</updated>
+  <id>http://analyticbastard.github.io/</id>
+  <author>
+    <name><![CDATA[Analytic Bastard]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Powering Up Python as a Data Analysis Platform]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/"/>
+    <updated>2015-02-26T00:01:36+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform</id>
+    <content type="html"><![CDATA[<p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p>
+
+<p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+
+<p>Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.</p>
+
+<p>The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.</p>
+
+<p><code>r
+B=read.csv("B.csv",header=F)
+st=proc.time(); eigB=eigen(B,symmetric=T); en=proc.time()
+&gt; en-st
+   user  system elapsed
+   0.58    0.00    0.58 
+</code></p>
+
+<p>In Python:</p>
+
+<p><code>python
+from time import time
+import numpy
+B=numpy.loadtxt("B.csv", delimiter=",")
+st = time(); U, E = numpy.linalg.eigh(B); en = time()
+&gt;&gt;&gt; en-st
+0.13400006294250488
+</code></p>
+
+<p>A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.</p>
+
+<p>Link to the positive definite matrix used in the experiments <a href="https://www.dropbox.com/s/uxijs3jckckafra/B.7z">here</a>.
+Link to Christoph Gohlke’s page <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">here</a>.</p>
+
+<p>Despite the fact that I’ve been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.</p>
+
+<p>I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.</p>
+
+<p>Regarding data analysis, it is a little more complicated than Matlab’s clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are</p>
+
+<ul>
+  <li><a href="https://sites.google.com/site/pythonforscientists/python-vs-matlab">https://sites.google.com/site/pythonforscientists/python-vs-matlab</a></li>
+  <li><a href="http://www.stat.washington.edu/~hoytak/blog/whypython.html">http://www.stat.washington.edu/~hoytak/blog/whypython.html</a></li>
+  <li><a href="http://stevetjoa.com/305/">http://stevetjoa.com/305/</a></li>
+</ul>
+
+<p>Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.</p>
+
+<ul>
+  <li>Data preprocessors, including text vectorizers and TF IDF preprocessors</li>
+  <li>SVM implementations</li>
+  <li>Stochastic Gradient Descent algorithms for fast regression and classification</li>
+  <li>Random Forest and other ensemble methods for robust regression and classification</li>
+  <li>Clustering algorithms</li>
+  <li>Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings</li>
+  <li>Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.</li>
+</ul>
+
+<p>This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble…). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.</p>
+
+<p>One of the lead programmers of the project, <a href="peekaboo-vision.blogspot.com.es">Andreas Müller</a> has a very insightful blog.</p>
+
+<p>I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.</p>
+
+<p>Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out</p>
+
+<ul>
+  <li><a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Gnumpy</a></li>
+  <li><a href="http://deeplearning.net/tutorial/DBN.html">Deep Belief Networks</a></li>
+  <li><a href="http://documen.tician.de/pycuda/tutorial.html">PyCUDA</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IPython Notebook for Data Analysis]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis/"/>
+    <updated>2014-12-14T11:47:29+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis</id>
+    <content type="html"><![CDATA[<p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing
+Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and
+output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages,
+each of one contains data input lines in Python and their corresponding beautified output, which can include images
+and charts generated by <em>Matplotlib</em> or any other library that produces graphical output.</p>
+
+<p>In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using
+general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and
+feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of
+matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to 
+implement your in-house algorithms for data munging, or at least turn you too lazy to look for them 
+(in the spirit of “that’ll only take me half an hour and then I’ll devote my time to productive
+coding”).</p>
+
+<p>I felt picky today, so I opened up my IPython Notebook server. For data munging, as everything else, one must not
+re-invent the wheel, but let oneself use one of the excellent libraries out there. Pandas is an excellent example of
+data munging libraries. Here we are going to align two time series, and the problem is the same than in the previous
+post, i.e., align two time series with different time indices, such as two stock prices belonging to different markets,
+observing different holidays (see the full description and solution in my previous post).</p>
+
+<p>To do that, we concluded that the alignment could be made by merging two Pandas’ DataFrame objects, each containing
+a series data (which can be multidimensional, and whose cells will be mixed), which produces some <em>NA</em>s. Then we could
+apply the <em>gap</em> <em>NA</em> filling policy, which took the last valid value on each series.</p>
+
+<p>The result, prettified by IPy Notebook can be seen in the figure to the right (you can click on it, a pop up will show
+thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bootstrap Image Pop plugin</a>, of which I will
+talk in the following post).</p>
+
+<p><!-- Image -->
+<a id="img-9" class="imgModal floatRight" href="#imgModal-9" data-toggle="modal">
+  <img src="/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-9" tabindex="-1" role="dialog" aria-labelledby="imgModal-9Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/ipython-notebook.png" width="1366" height="771" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
+
+<p>As you can see, this makes it especially adequate for information propagation environments such as board presentations
+of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to
+the teacher’s server and inputting their commands, while the teacher corrects them when they are wrong. To update items
+in real time, IPy Notebook should contemplate using websockets or any kind of server side events, which I believe
+does not so far.</p>
+
+<p>Anyway, it is a great tool to present results in a very neat way.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
+    <updated>2014-11-05T12:02:16+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
+    <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
+
+<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+</ul>
+
+<p>We only need to emit the category (attribute value) as the value</p>
+
+<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
+
+<script type="math/tex; mode=display">
+P(X_i=x_{i,0}|y=y_0)
+</script>
+
+<p>for which we emit a triplet</p>
+
+<ul>
+  <li>emit the label as key</li>
+  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
+  <li>emit the category for this attribute of this example</li>
+</ul>
+
+<p>As value we only need to emit the previous division.</p>
+
+<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
+
+<p>I’ve just implemented this in MyML. </p>
+
+<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
+being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
+information loss in the process.</p>
+
+<p>&#8220;` python
+import numpy as np
+Xd=np.random.random((256,2))
+X=1<em>(Xd&lt;.5)
+y=1</em>(Xd.sum(axis=1)&lt;.5)</p>
+
+<p>from myml.supervised import bayes</p>
+
+<p>reload(bayes)
+nb = bayes.NaiveBayes()
+nb.fit(X, y)
+nb.predict(X[0,:])
+pred=nb.predict(X)</p>
+
+<h1 id="now-we-predict-the-whole-dataset">Now we predict the (whole) dataset</h1>
+<p>1.0<em>np.sum(1.0</em>(pred&gt;.5).reshape((1,len(y)))[0]==y)/len(y) </p>
+
+<p>0.89453125</p>
+
+<p>&#8220;`</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -9,7 +9,7 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you &hellip;">
+  <meta name="description" content="There is an interesting series of articles on Dr. Dobb’s essentially about what we can call the computer languages market, where they analyze trends &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,118 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/08/current-computer-language-market/">Current Computer Language Market</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-08T03:33:09+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>3:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
+
+<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
+
+<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
+
+<blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language&#8217;s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft&#8217;s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote>
+
+<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
+
+<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
+
+<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
+It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
+
+<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/06/pythagorean-theorem/">Pythagorean Theorem</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-06T17:24:02+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>5:24 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove
+it. Here is a proof that I consider to be the easiest one. It’s very analytic and avoids any geometric complications
+ such as triangle similarity considerations.</p>
+
+<p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right
+triangles.</p>
+
+<p>Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right 
+triangles, such as in the figure below. </p>
+
+<p>Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the
+side of the large outer triangle $(a+b)$. In the smaller square,
+let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.</p>
+
+<p><img class="left" src="/images/pythagorean.png" width="400" height="400" title="Pythagorean theorem" alt="images" /></p>
+
+<p>Now, we know that the area $L$ of the large is its side squared, if arithmetic holds, 
+<script type="math/tex">
+L=(a+b)^2=a^2 + b^2 + 2ab
+</script> </p>
+
+<p>On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and
+the inner square, whose area is $c^2$. Thus</p>
+
+<script type="math/tex; mode=display">
+L=4 \times \frac{ab}{2} + c^2
+</script>
+
+<p>Equating both expressions, we can arrive at the result of the theorem</p>
+
+<script type="math/tex; mode=display">
+a^2 + b^2 + 2ab = 4 \frac{ab}{2} + c^2 \\
+a^2 + b^2 + 2ab = 2 \times ab + c^2\\
+a^2 + b^2 = c^2
+</script>
+
+<p>Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need
+to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).</p>
+
+<p>I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -457,6 +569,14 @@ OK, cloned, copied Ruby files and test (with current time position including <em
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/">The Monty Hall Problem (My Explanation)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/02/20/image-pan-sharpening-with-pca/">Image Pan-sharpening With PCA</a>
       </li>
     
@@ -468,23 +588,15 @@ OK, cloned, copied Ruby files and test (with current time position including <em
         <a href="/blog/2015/01/10/my-git-workflow/">My Git Workflow</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/01/06/hackintosh/">Hackintosh</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/computation'>computation (1)</a></li><li><a href='/blog/categories/computation-programming'>computation - programming (3)</a></li><li><a href='/blog/categories/computation-theory'>computation - theory (1)</a></li><li><a href='/blog/categories/computation-tools'>computation - tools (1)</a></li><li><a href='/blog/categories/computation-web'>computation - web (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (1)</a></li><li><a href='/blog/categories/data-analysis-tools'>data analysis - tools (1)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/machine-learning-kernel-methods'>machine learning - kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning-probabilistic-methods'>machine learning - probabilistic methods (1)</a></li><li><a href='/blog/categories/machine-learning-svm'>machine learning - svm (1)</a></li><li><a href='/blog/categories/mathematics'>mathematics (1)</a></li><li><a href='/blog/categories/mathematics-analysis'>mathematics - analysis (2)</a></li><li><a href='/blog/categories/mathematics-differential-geometry'>mathematics - differential geometry (1)</a></li><li><a href='/blog/categories/mathematics-geometry'>mathematics - geometry (1)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/pca'>pca (1)</a></li><li><a href='/blog/categories/programming-mapreduce'>programming - mapreduce (1)</a></li><li><a href='/blog/categories/programming-python'>programming - python (1)</a></li><li><a href='/blog/categories/statistics'>statistics (3)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/computation'>computation (5)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (4)</a></li><li><a href='/blog/categories/hacking'>hacking (1)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (4)</a></li><li><a href='/blog/categories/maths'>maths (1)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/matrices'>matrices (1)</a></li><li><a href='/blog/categories/programming'>programming (5)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/computation' style='font-size: 120.0%'>computation</a> <a href='/blog/categories/computation-programming' style='font-size: 160.0%'>computation - programming</a> <a href='/blog/categories/computation-theory' style='font-size: 120.0%'>computation - theory</a> <a href='/blog/categories/computation-tools' style='font-size: 120.0%'>computation - tools</a> <a href='/blog/categories/computation-web' style='font-size: 120.0%'>computation - web</a> <a href='/blog/categories/data-analysis' style='font-size: 120.0%'>data analysis</a> <a href='/blog/categories/data-analysis-tools' style='font-size: 120.0%'>data analysis - tools</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 120.0%'>image processing</a> <a href='/blog/categories/machine-learning-kernel-methods' style='font-size: 160.0%'>machine learning - kernel methods</a> <a href='/blog/categories/machine-learning-probabilistic-methods' style='font-size: 120.0%'>machine learning - probabilistic methods</a> <a href='/blog/categories/machine-learning-svm' style='font-size: 120.0%'>machine learning - svm</a> <a href='/blog/categories/mathematics' style='font-size: 120.0%'>mathematics</a> <a href='/blog/categories/mathematics-analysis' style='font-size: 140.0%'>mathematics - analysis</a> <a href='/blog/categories/mathematics-differential-geometry' style='font-size: 120.0%'>mathematics - differential geometry</a> <a href='/blog/categories/mathematics-geometry' style='font-size: 120.0%'>mathematics - geometry</a> <a href='/blog/categories/maths' style='font-size: 120.0%'>maths</a> <a href='/blog/categories/matrices' style='font-size: 120.0%'>matrices</a> <a href='/blog/categories/pca' style='font-size: 120.0%'>pca</a> <a href='/blog/categories/programming-mapreduce' style='font-size: 120.0%'>programming - mapreduce</a> <a href='/blog/categories/programming-python' style='font-size: 120.0%'>programming - python</a> <a href='/blog/categories/statistics' style='font-size: 160.0%'>statistics</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/brainteasers' style='font-size: 112.0%'>brainteasers</a> <a href='/blog/categories/computation' style='font-size: 160.0%'>computation</a> <a href='/blog/categories/computing' style='font-size: 112.0%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 148.0%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 112.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 112.0%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 136.0%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 148.0%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 148.0%'>mathematics</a> <a href='/blog/categories/maths' style='font-size: 112.0%'>maths</a> <a href='/blog/categories/matlab' style='font-size: 112.0%'>matlab</a> <a href='/blog/categories/matrices' style='font-size: 112.0%'>matrices</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 136.0%'>python</a> <a href='/blog/categories/software-development' style='font-size: 112.0%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 148.0%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 148.0%'>tools</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

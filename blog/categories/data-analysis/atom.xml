@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Data Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/data-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-09T15:39:57+01:00</updated>
+  <updated>2015-03-18T01:39:05+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Powering Up Python as a Data Analysis Platform]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/"/>
+    <updated>2015-02-26T00:01:36+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform</id>
+    <content type="html"><![CDATA[<p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p>
+
+<p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+
+<p>Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.</p>
+
+<p>The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.</p>
+
+<p><code>r
+B=read.csv("B.csv",header=F)
+st=proc.time(); eigB=eigen(B,symmetric=T); en=proc.time()
+&gt; en-st
+   user  system elapsed
+   0.58    0.00    0.58 
+</code></p>
+
+<p>In Python:</p>
+
+<p><code>python
+from time import time
+import numpy
+B=numpy.loadtxt("B.csv", delimiter=",")
+st = time(); U, E = numpy.linalg.eigh(B); en = time()
+&gt;&gt;&gt; en-st
+0.13400006294250488
+</code></p>
+
+<p>A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.</p>
+
+<p>Link to the positive definite matrix used in the experiments <a href="https://www.dropbox.com/s/uxijs3jckckafra/B.7z">here</a>.
+Link to Christoph Gohlke’s page <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">here</a>.</p>
+
+<p>Despite the fact that I’ve been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.</p>
+
+<p>I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.</p>
+
+<p>Regarding data analysis, it is a little more complicated than Matlab’s clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are</p>
+
+<ul>
+  <li><a href="https://sites.google.com/site/pythonforscientists/python-vs-matlab">https://sites.google.com/site/pythonforscientists/python-vs-matlab</a></li>
+  <li><a href="http://www.stat.washington.edu/~hoytak/blog/whypython.html">http://www.stat.washington.edu/~hoytak/blog/whypython.html</a></li>
+  <li><a href="http://stevetjoa.com/305/">http://stevetjoa.com/305/</a></li>
+</ul>
+
+<p>Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.</p>
+
+<ul>
+  <li>Data preprocessors, including text vectorizers and TF IDF preprocessors</li>
+  <li>SVM implementations</li>
+  <li>Stochastic Gradient Descent algorithms for fast regression and classification</li>
+  <li>Random Forest and other ensemble methods for robust regression and classification</li>
+  <li>Clustering algorithms</li>
+  <li>Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings</li>
+  <li>Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.</li>
+</ul>
+
+<p>This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble…). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.</p>
+
+<p>One of the lead programmers of the project, <a href="peekaboo-vision.blogspot.com.es">Andreas Müller</a> has a very insightful blog.</p>
+
+<p>I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.</p>
+
+<p>Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out</p>
+
+<ul>
+  <li><a href="http://www.cs.toronto.edu/~tijmen/gnumpy.html">Gnumpy</a></li>
+  <li><a href="http://deeplearning.net/tutorial/DBN.html">Deep Belief Networks</a></li>
+  <li><a href="http://documen.tician.de/pycuda/tutorial.html">PyCUDA</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Principal Component Analysis]]></title>
@@ -36,13 +113,13 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
 <p><!-- Image -->
-<a id="img-9" class="imgModal floatRight" href="#imgModal-9" data-toggle="modal">
+<a id="img-10" class="imgModal floatRight" href="#imgModal-10" data-toggle="modal">
   <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
 </a>
 <div style="float: none;"></div>
 
 <!-- Modal -->
-<div class="modal fade" id="imgModal-9" tabindex="-1" role="dialog" aria-labelledby="imgModal-9Label" aria-hidden="true">
+<div class="modal fade" id="imgModal-10" tabindex="-1" role="dialog" aria-labelledby="imgModal-10Label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -189,19 +266,400 @@ T = pca.fit_transform(X)
 <p>Let’s examine the variance ratio explained by each of the components. Notice that the first component explains a lot
 of the price movement of both stocks.</p>
 
-<p>&#8220;`python
-pca.explained_variance_ratio_</p>
+<p><code>python
+pca.explained_variance_ratio_
+</code></p>
 
-<p>array([ 0.8132162,  0.1867838])
-&#8220;`</p>
-
-<p>Now we can print out the PCA transformation</p>
+<p>with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation</p>
 
 <p><code>python
 plot(T)
 </code></p>
 
 <p><img src="/images/pca_intc_msft_transform.png"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[IPython Notebook for Data Analysis]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis/"/>
+    <updated>2014-12-14T11:47:29+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/12/14/ipython-notebook-for-data-analysis</id>
+    <content type="html"><![CDATA[<p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing
+Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and
+output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages,
+each of one contains data input lines in Python and their corresponding beautified output, which can include images
+and charts generated by <em>Matplotlib</em> or any other library that produces graphical output.</p>
+
+<p>In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using
+general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and
+feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of
+matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to 
+implement your in-house algorithms for data munging, or at least turn you too lazy to look for them 
+(in the spirit of “that’ll only take me half an hour and then I’ll devote my time to productive
+coding”).</p>
+
+<p>I felt picky today, so I opened up my IPython Notebook server. For data munging, as everything else, one must not
+re-invent the wheel, but let oneself use one of the excellent libraries out there. Pandas is an excellent example of
+data munging libraries. Here we are going to align two time series, and the problem is the same than in the previous
+post, i.e., align two time series with different time indices, such as two stock prices belonging to different markets,
+observing different holidays (see the full description and solution in my previous post).</p>
+
+<p>To do that, we concluded that the alignment could be made by merging two Pandas’ DataFrame objects, each containing
+a series data (which can be multidimensional, and whose cells will be mixed), which produces some <em>NA</em>s. Then we could
+apply the <em>gap</em> <em>NA</em> filling policy, which took the last valid value on each series.</p>
+
+<p>The result, prettified by IPy Notebook can be seen in the figure to the right (you can click on it, a pop up will show
+thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bootstrap Image Pop plugin</a>, of which I will
+talk in the following post).</p>
+
+<p><!-- Image -->
+<a id="img-11" class="imgModal floatRight" href="#imgModal-11" data-toggle="modal">
+  <img src="/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-11" tabindex="-1" role="dialog" aria-labelledby="imgModal-11Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/ipython-notebook.png" width="1366" height="771" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
+
+<p>As you can see, this makes it especially adequate for information propagation environments such as board presentations
+of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to
+the teacher’s server and inputting their commands, while the teacher corrects them when they are wrong. To update items
+in real time, IPy Notebook should contemplate using websockets or any kind of server side events, which I believe
+does not so far.</p>
+
+<p>Anyway, it is a great tool to present results in a very neat way.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Future of Data Analysis Tools: Python, Web Technologies]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools/"/>
+    <updated>2014-11-27T12:01:19+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/27/the-future-of-data-analysis-tools</id>
+    <content type="html"><![CDATA[<p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines
+involving data handling or processing. An easy example is this blog, which is made with 
+<a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control,
+modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar
+to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p>
+
+<p>We find this shift to be a real convergence in the case of data analysis and software development, specifically,
+web software development and scripting with Python. This is almost self evident and has been noted previously, in fact,
+a blog entry talking about
+<a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist’s data toolkit</a>
+and thinking about my own data analysis toolkit got me writing about this.</p>
+
+<h3 id="the-past">The past</h3>
+
+<p>Previously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs
+(cells are another very useful structure to consider when elements of a set do not share the same dimension or types).
+Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data
+in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general
+case exposes several problems that one normally faces during the data analysis process. For example, one might be
+interested in correlating sells with the social sentiment about our product. This involves scraping candidate web
+pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with
+sells by date. This is an unbearable task to do by moving data blocks in Matlab.</p>
+
+<p>R, as in <a href="http://www.r-project.org/">GNU R-Project</a> is a more complete framework for data munging, since it seeks to
+replicate the S statistical language in its origins. R, which has the concept of objects, defines a dataframe class
+that specifically considers column as attributes and rows as instances, defines a set of methods that allow us to
+deal with specialized tasks like sorting, filtering or rearranging. Although I have used R in the past, I never came to
+like it despite the hught support by the community. I feel that some piece is missing, and that is maybe the heavily
+typing for a data analysis language, poor language-level support for functional paradigms which are great for data
+munging (map, reduce, filter and the like). Algorithms must be implemented in an imperative setting, which isn’t
+sometimes the best option.</p>
+
+<h3 id="the-present">The present</h3>
+
+<p>Python comes in the middle of it all. It supports functional paradigms such as lambda functions (functions defined
+where they are used), functions as first-class objects, and classical operations on collections. On the other hand,
+Python has increasingly getting more support from the community and the amount of available libraries is astonishing.
+It is true that the support for statistical analysis in Python cannot be compared to that or R yet, but Python is
+steadily catching up, with ever increasing scientists switching in all disciplines. A number of mature projects
+exist in all the areas, ranging from general Statistics to Neuroimaging. Several bridges exist to R packages with no
+native counterpart. This, the language support for advanced features, optimized packages such as
+<a href="www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Golke’s</a> (which include NumPy and SciPy versions statically compiled
+against the highly efficient Intel’s MKL BLAS distributions) and the extra toolset derived from years of using
+Python as a generalist scripting data (including a highly-productive web toolset), makes Python a worthy
+next-generation substitute for R.</p>
+
+<p>Imagine that we collect two time series of stock prices that originated in two different markets. These two markets
+observe different holidays, so the raw time series that we get are unaligned (this is true for Yahoo Finance historical
+data, for example). Our data pre-processing task is to align the data, keeping the last valid price for holidays where
+the other market is open.</p>
+
+<p>Pandas is a Python library that includes much of R functionality and is extremely handy for this kind of data munging
+tasks. By creating DataFrame objects from our raw data, we access the kind of functionality we need. In this case, once
+we have two DataFrame objects, <em>dt1</em> and <em>dt2</em>, where we simulates two weeks of data, by starting on Monday, 1st,
+and ending on Friday, 12th. The first market observes a holiday on Friday the 5th, while the second observes a
+holiday on Monday, 1st. We define the dataframes as follows:</p>
+
+<p><code>python
+dt1 = DataFrame({'date' : [1,2,3,4,8,9,10,11,12], 'value' : [100,101,102,103,104,105,106,107,108]})
+dt2 = DataFrame({'date' : [1,2,3,4,5,9,10,11,12], 'value' : [100,101,102,103,104,105,106,107,108]})
+</code></p>
+
+<p>To successfully mix the data toether, we can use the merge function on the column date, specifying the <em>outer</em> merging
+method, which keeps data rows coming from both dataframes.</p>
+
+<p><code>python
+dt1.merge(dt2, on=['date'], how='outer')
+</code></p>
+
+<p>This will output</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">NaN</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">NaN</td>
+      <td style="text-align: right">104</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We notice the dates are unsorted due to using the first dataframe, which skips friday (date 8 would be unsorted if we
+were to use the <em>dt2</em> object). We sort on the <em>date</em> column. However, there is a bigger problem, we see NaNs,
+Not a number values for column of a dataframe not defined in the other, since this is the usual outcome from the
+outer merge. In this case, the <em>fillna</em> method of the DataFrame class with the <em>gap</em> policy will fit our purposes
+(carry over the last valid value).</p>
+
+<p><code>python
+dt1.merge(dt2, on=['date'], how='outer').sort(columns=['date']).fillna(method='pad')
+</code></p>
+
+<p>The result of all steps is</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th style="text-align: center">date</th>
+      <th style="text-align: right">value_x</th>
+      <th style="text-align: right">value_y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: right">100</td>
+      <td style="text-align: right">100</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: right">101</td>
+      <td style="text-align: right">101</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: right">102</td>
+      <td style="text-align: right">102</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">103</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: right">103</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: right">104</td>
+      <td style="text-align: right">104</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: right">105</td>
+      <td style="text-align: right">105</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td style="text-align: center">10</td>
+      <td style="text-align: right">106</td>
+      <td style="text-align: right">106</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td style="text-align: center">11</td>
+      <td style="text-align: right">107</td>
+      <td style="text-align: right">107</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td style="text-align: center">12</td>
+      <td style="text-align: right">108</td>
+      <td style="text-align: right">108</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Of course, we have excellent IDEs to work with, ranging from generalist tools and plugins for major IDE frameworks
+such as Eclipse and IntelliJ IDEA, to more specialized editors such as the Matlab-like Spyder, IPython Notebook (embedded
+in the IPython executable, which can be started with the option <code>-notebook</code>). Also, emerging editors such as the
+celebrated Sublime Text and Light Table fully support Python.</p>
+
+<h3 id="data-visualization-past-and-present">Data visualization: past and present</h3>
+
+<p>An often overlooked side is data visualization. As people coming from the engineering side, where doing ugly and
+hard to use things is almost a badge of pride, we never care about how our results look as long as they are correct
+(in a sense that they fulfill their functional requirements). Presentation is not only important from the aesthetic
+point of view, but can also help the experts discover patterns in the data that offer previously unknown clues about
+the nature of our data.</p>
+
+<p>Plotting Matlab graphs and pasting them on a Word document was the normal. R has an impressive set of graphical tools
+that cope with the most exigent user. For the presentations, using PowerPoint was the thing to do in corporate
+environments and the most adventurous could embark on the quest of using Latex Beamer for this purpose. Not any more.</p>
+
+<p>The new normal will be web technologies. Web browsers are the most advanced graphical tool available to any user in the
+world. The dynamic capabilities achieved by both CSS and Javascript make any other technology pale. To easy the burden
+of dealing with raw CSS and Javascript, a number of libraries have been built on top of the browser native support.
+Some of these rise above the others. I must mention <a href="http://d3js.org">D3js</a>, an impressive graphical library with
+anything a data scientist with graphical needs might need. Visit their examples page to get a glance of the
+capabilities.</p>
+
+<iframe width="720" height="480" marginheight="-500" marginwidth="-300" src="http://mbostock.github.io/d3/talk/20111018/collision.html"></iframe>
+
+<p>Lastly, PowerPoint and Latex Beamer users with professional needs will both shift to browser presentation technologies
+such as <a href="http://lab.hakim.se/reveal-js/#/">RevealJS</a>, which can be complemented with Latex renderers to achieve perfect
+results for the mathematical formulae, on top of superior interactions.</p>
+
+<iframe width="720" height="480" src="http://lab.hakim.se/reveal-js/#/"></iframe>
+
+<h3 id="the-future">The future</h3>
+
+<p>A large shift towards Python can be expected, especially in rapid prototyping. Even though R is not going away soon,
+Python bindings will relegate R to a second class language, so to speak, in the same way as Fortran is today, this is,
+there are many classical algorithms written in Fortran in the 70’s and 80’s still being in production today. This
+includes a huge number of well-known and widely-used linear algebra libraries such as Netlib’s BLAS and LAPACK, which
+are currently interfaced to other languages such as R.</p>
+
+<p>Also, functional programming should play a role in data analysis. Lisps variants have an important advantage over imperative
+paradigms such as working naturally with monads. This makes the use of the monad <em>some</em> very useful for list processing.
+For example, in closure we can write</p>
+
+<p>&#8220;` clojure
+(def data [1 2 3 4])</p>
+
+<p>(some-&gt; data
+        process1
+        process2
+        process3)
+&#8220;`</p>
+
+<p>which prevents us from using a large chain of nested if blocks for this conditional processing. However, Lisp syntax
+is not well suited for rapid prototyping, where data scientists prefer a more imperative approach to define global
+variables for later processing</p>
+
+<p><code>python
+X = np.array([1,2,3,4])
+</code></p>
+
+<p>Functional languages might become, if not a rapid prototyping choice, indeed a data system deployment choice, since
+a lot more data processing and state handling will need to be done. It is worth mentioning
+<a href="http://clojure.github.io/clojure/clojure.zip-api.html">zippers</a>,
+<a href="https://clojure.github.io/clojure/clojure.walk-api.html">walkers</a> and
+<a href="https://github.com/clojure/core.match">match</a>, three libraries that make the programmer’s life easier by orders of
+magnitude when dealing with data processing, but I will devote an article to them.</p>
+
+<p>Regarding data visualization, it will be done primarily with web technologies on the browser, with AJAX data requests
+to the server were the data processing and storage are done. Here, technologies such as D3js will be a must.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>In the future, it is conceivable to use an integrated framework that analyzes data with Python libraries and then
+presents the results via a Python web server to multiple browsers.</p>
+
+<p>As well as Java will not totally go away in the enterprise software development world, neither will current data processing
+technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
+existing libraries will need time to be adapted to Python.</p>
+
 ]]></content>
   </entry>
   

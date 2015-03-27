@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>The Gaussian Kernel Maps Data Onto the Sphere - The Analytic Bastard</title>
+  <title>Installing Theano on Windows - The Analytic Bastard</title>
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS &hellip;">
+  <meta name="description" content="Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows. In this post I assume you are going &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere">
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
@@ -72,7 +72,7 @@
   
   <header>
     
-      <h1 class="entry-title">The Gaussian Kernel Maps Data Onto the Sphere</h1>
+      <h1 class="entry-title">Installing Theano on Windows</h1>
     
     
       <p class="meta">
@@ -81,24 +81,63 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T01:54:39+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>1:54 am</span></time>
+<time class='entry-date' datetime='2015-03-25T00:56:43+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:56 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p>
+<div class="entry-content"><p>Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.</p>
 
-<script type="math/tex; mode=display">k(x,y)=\exp(-\gamma \| x-y\|^2)</script>
+<p>In this post I assume you are going with <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Gohlke’s packages</a> (for reasons, read <a href="blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">here</a>)</p>
 
-<p>defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.</p>
+<p>Make sure you also have MS Visual C++ and the NVidia CUDA Toolkit. If you don’t have it, add the Visual C++ cl.exe compiler’s directory to the path. Mine was under C:\Program Files (x86)\Microsoft Visual Studio 10\VC\bin.</p>
 
-<p>We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $|\Phi(x)|^2 = \sum_i \lambda_i \phi_i(x) \phi_i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.</p>
+<p>First think you need, after installing Theano, is the nose package, since Gohlke’s build needs it at initialization time. Download it and install it from Gohlke’s site along with Theano.</p>
 
-<p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
+<p>Next, you need this .theanorc to be put under your home directory under <code>C:\USER\&lt;yourname&gt;</code></p>
 
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">[global]device = gpu
+</span><span class="line">[nvcc]compiler_bindir=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin# flags=-m32 # we have this hard coded for now
+</span><span class="line">[blas]ldflags =# ldflags = -lopenblas # placeholder for openblas support</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>I am not very sure how to use OpenBLAS from here. I assume that if all CPU operations are done via Numpy and SciPy, then their default BLAS routines are used, and no direct call to a third BLAS implementation is made, but who knows! (Well, I looked into it a little bit and it seems Theano calls BLAS directly, I guess you may want to install OpenBLAS).</p>
+
+<p>OK, we have the NVidia compiler and tools, the MS compiler that nvcc needs and the configuration. The last thing we need is to install a GNU C and C++ compiler that supports 64 bit Windows binary creation. There is a project called MinGW-w64 that does that. I recommend to download a <a href="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/rubenvb/gcc-4.8-release/">private build from the user rubenvb</a> that does not come along with the Python environment embedded as the more official build does. Put the bin directory (where GCC is located) of that installation in the Path (Control panel, etc). Theano needs this to compile the symbolic operations to object code and then to CUDA kernels if applicable, I presume.</p>
+
+<p>If you run into errors of type “GCC: sorry, unimplemented: 64-bit mode not compiled in”, then your MinGW is not x86_64 compliant. The NVidia compiler nvcc can also complain if it finds no cl.exe in the path.</p>
+
+<p>By the way, all of this was to use deep learning techniques for Kaggle competitions, so the intended consequence was to install PyLearn2. This is not listed under Gohlke’s libraries, but it is not low level and all is based on Theano and maybe other numerical packages such as Numpy. Being a pure Python package, you need to clone it from Github:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git clone git://github.com/lisa-lab/pylearn2.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>And then perform</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nb">cd </span>pylearn2
+</span><span class="line">python setup.py install
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>There is an easier procedure that will not require you to manually perform the git operations, and it is through pip</p>
+
+<p><code>bash
+pip install git+git://github.com/lisa-lab/pylearn2.git
+</code>`</p>
+
+<p>You have pip under your Python installation, within the Scripts directory, in the case it came with Python, or if you got Gohlke’s installer.</p>
+
+<p>This will also leave the module correctly accessible through Python.</p>
+
+<p>Pylearn2’s tutorial test is a little bit complicated to be a “hello world” test, so I looked for another quick example to see if my installation was finished. A very nice one popped up in <a href="http://www.arngarden.com/2013/07/29/neural-network-example-using-pylearn2/">this link</a>. But first I have to tell that this made me realize that Gohlke’s Theano is missing three files, something very, very strange since they are called from within Theano. In particular, the module missing is everything under theano.compat. In this case, just copy the contents from Theano’s <a href="https://github.com/Theano/Theano/blob/master/theano/compat">Github repository</a> directory compat to a compat directory created on your local theano installation under Python 2.7 (mine C:\Python27\Lib\site-packages\theano).</p>
+
+<p>After that, run the code in <a href="https://gist.github.com/arngarden/6087798">this link</a>, which is a neural network solving the XOR problem. And we are done.</p>
 </div>
 
 
@@ -114,12 +153,12 @@
 
 
 
-<time class='entry-date' datetime='2014-11-02T01:54:39+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>2</span><span class='date-suffix'>nd</span>, <span class='date-year'>2014</span></span> <span class='time'>1:54 am</span></time>
+<time class='entry-date' datetime='2015-03-25T00:56:43+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:56 am</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/kernel-methods/'>kernel methods</a>, <a class='category' href='/blog/categories/machine-learning/'>machine learning</a>
+    <a class='category' href='/blog/categories/computation/'>computation</a>, <a class='category' href='/blog/categories/data-analysis/'>data analysis</a>
   
 </span>
 
@@ -128,7 +167,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2014/11/02/the-gaussian-kernel-maps-data-onto-the-sphere/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows/" >Tweet</a>
   
   
   
@@ -137,10 +176,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2014/11/01/my-new-blog/" title="Previous Post: My new blog in Github Pages + Octopress">&laquo; My new blog in Github Pages + Octopress</a>
+        <a class="basic-alignment left" href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/" title="Previous Post: The Monty Hall problem (my explanation)">&laquo; The Monty Hall problem (my explanation)</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2014/11/03/improve-the-performance-of-an-svm-with-differential-geometry/" title="Next Post: Improve the performance of an SVM with differential geometry">Improve the performance of an SVM with differential geometry &raquo;</a>
       
     </p>
   </footer>

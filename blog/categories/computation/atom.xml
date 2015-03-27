@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Computation | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/computation/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-18T01:39:05+01:00</updated>
+  <updated>2015-03-27T01:07:58+01:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,62 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Installing Theano on Windows]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows/"/>
+    <updated>2015-03-25T00:56:43+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows</id>
+    <content type="html"><![CDATA[<p>Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.</p>
+
+<p>In this post I assume you are going with <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Gohlke’s packages</a> (for reasons, read <a href="blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">here</a>)</p>
+
+<p>Make sure you also have MS Visual C++ and the NVidia CUDA Toolkit. If you don’t have it, add the Visual C++ cl.exe compiler’s directory to the path. Mine was under C:\Program Files (x86)\Microsoft Visual Studio 10\VC\bin.</p>
+
+<p>First think you need, after installing Theano, is the nose package, since Gohlke’s build needs it at initialization time. Download it and install it from Gohlke’s site along with Theano.</p>
+
+<p>Next, you need this .theanorc to be put under your home directory under <code>C:\USER\&lt;yourname&gt;</code></p>
+
+<p><code>
+[global]device = gpu
+[nvcc]compiler_bindir=C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin# flags=-m32 # we have this hard coded for now
+[blas]ldflags =# ldflags = -lopenblas # placeholder for openblas support
+</code></p>
+
+<p>I am not very sure how to use OpenBLAS from here. I assume that if all CPU operations are done via Numpy and SciPy, then their default BLAS routines are used, and no direct call to a third BLAS implementation is made, but who knows! (Well, I looked into it a little bit and it seems Theano calls BLAS directly, I guess you may want to install OpenBLAS).</p>
+
+<p>OK, we have the NVidia compiler and tools, the MS compiler that nvcc needs and the configuration. The last thing we need is to install a GNU C and C++ compiler that supports 64 bit Windows binary creation. There is a project called MinGW-w64 that does that. I recommend to download a <a href="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/rubenvb/gcc-4.8-release/">private build from the user rubenvb</a> that does not come along with the Python environment embedded as the more official build does. Put the bin directory (where GCC is located) of that installation in the Path (Control panel, etc). Theano needs this to compile the symbolic operations to object code and then to CUDA kernels if applicable, I presume.</p>
+
+<p>If you run into errors of type “GCC: sorry, unimplemented: 64-bit mode not compiled in”, then your MinGW is not x86_64 compliant. The NVidia compiler nvcc can also complain if it finds no cl.exe in the path.</p>
+
+<p>By the way, all of this was to use deep learning techniques for Kaggle competitions, so the intended consequence was to install PyLearn2. This is not listed under Gohlke’s libraries, but it is not low level and all is based on Theano and maybe other numerical packages such as Numpy. Being a pure Python package, you need to clone it from Github:</p>
+
+<p><code>bash
+git clone git://github.com/lisa-lab/pylearn2.git
+</code></p>
+
+<p>And then perform</p>
+
+<p><code>bash
+cd pylearn2
+python setup.py install
+</code></p>
+
+<p>There is an easier procedure that will not require you to manually perform the git operations, and it is through pip</p>
+
+<p><code>bash
+pip install git+git://github.com/lisa-lab/pylearn2.git
+</code>`</p>
+
+<p>You have pip under your Python installation, within the Scripts directory, in the case it came with Python, or if you got Gohlke’s installer.</p>
+
+<p>This will also leave the module correctly accessible through Python.</p>
+
+<p>Pylearn2’s tutorial test is a little bit complicated to be a “hello world” test, so I looked for another quick example to see if my installation was finished. A very nice one popped up in <a href="http://www.arngarden.com/2013/07/29/neural-network-example-using-pylearn2/">this link</a>. But first I have to tell that this made me realize that Gohlke’s Theano is missing three files, something very, very strange since they are called from within Theano. In particular, the module missing is everything under theano.compat. In this case, just copy the contents from Theano’s <a href="https://github.com/Theano/Theano/blob/master/theano/compat">Github repository</a> directory compat to a compat directory created on your local theano installation under Python 2.7 (mine C:\Python27\Lib\site-packages\theano).</p>
+
+<p>After that, run the code in <a href="https://gist.github.com/arngarden/6087798">this link</a>, which is a neural network solving the XOR problem. And we are done.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Powering Up Python as a Data Analysis Platform]]></title>
@@ -469,69 +525,6 @@ existing libraries will need time to be adapted to Python.</p>
 It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
 
 <p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Naive Bayes Implemented With Map/Reduce Operations]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations/"/>
-    <updated>2014-11-05T12:02:16+01:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/05/naive-bayes-implemented-with-map-slash-reduce-operations</id>
-    <content type="html"><![CDATA[<p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p>
-
-<p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
-
-<ul>
-  <li>emit the label as key</li>
-  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
-</ul>
-
-<p>We only need to emit the category (attribute value) as the value</p>
-
-<p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p>
-
-<script type="math/tex; mode=display">
-P(X_i=x_{i,0}|y=y_0)
-</script>
-
-<p>for which we emit a triplet</p>
-
-<ul>
-  <li>emit the label as key</li>
-  <li>for each variable (attribute) emit its index (for example, column index) also as key</li>
-  <li>emit the category for this attribute of this example</li>
-</ul>
-
-<p>As value we only need to emit the previous division.</p>
-
-<p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p>
-
-<p>I’ve just implemented this in MyML. </p>
-
-<p>As an example its usage, we consider two random uniform variables <script type="math/tex">\[0,1\]</script> and its classification depends on the sum 
-being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding
-information loss in the process.</p>
-
-<p>&#8220;` python
-import numpy as np
-Xd=np.random.random((256,2))
-X=1<em>(Xd&lt;.5)
-y=1</em>(Xd.sum(axis=1)&lt;.5)</p>
-
-<p>from myml.supervised import bayes</p>
-
-<p>reload(bayes)
-nb = bayes.NaiveBayes()
-nb.fit(X, y)
-nb.predict(X[0,:])
-pred=nb.predict(X)</p>
-
-<h1 id="now-we-predict-the-whole-dataset">Now we predict the (whole) dataset</h1>
-<p>1.0<em>np.sum(1.0</em>(pred&gt;.5).reshape((1,len(y)))[0]==y)/len(y) </p>
-
-<p>0.89453125</p>
-
-<p>&#8220;`</p>
 ]]></content>
   </entry>
   

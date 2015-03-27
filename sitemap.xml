@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://analyticbastard.github.io/blog/2015/03/25/installing-theano-on-windows/</loc>
+    <lastmod>2015-03-25T00:56:43+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://analyticbastard.github.io/blog/2015/03/08/the-monty-hall-problem-my-explanation/</loc>
     <lastmod>2015-03-08T00:17:17+01:00</lastmod>
   </url>
@@ -70,79 +74,79 @@
   </url>
   <url>
     <loc>http://analyticbastard.github.io/blog/archives/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/blog/categories/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/courses/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/clojure/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/databases/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/git/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/android/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/hadoop/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/intellij/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/java/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/javascript/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/lein/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/matlab-r/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/python/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/scientific/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience/c/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/prueba/</loc>
-    <lastmod>2015-03-18T01:39:05+01:00</lastmod>
+    <lastmod>2015-03-27T01:07:58+01:00</lastmod>
   </url>
   <url>
     <loc>http://analyticbastard.github.io/experience.html</loc>

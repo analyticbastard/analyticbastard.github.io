@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Android and Mobile App Development - The Analytic Bastard</title>
+  <title>Manipulating SVG Images From Browser Javascript - The Analytic Bastard</title>
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Android and Mobile App Development Mar 8th, 2015 9:13 pm I will shortly be releasing a collaborative game for Android and, in the future,
-also &hellip;">
+  <meta name="description" content="SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ also &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://analyticbastard.github.io/experience/android">
+  <link rel="canonical" href="http://analyticbastard.github.io/blog/2015/04/09/manipulating-svg-images-from-browser-javascript">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="The Analytic Bastard" type="application/atom+xml">
@@ -69,50 +68,114 @@ also &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Android and Mobile App Development</h1>
-    <p class="meta">
-
-
-
-
-<time class='entry-date' datetime='2015-03-08T21:13:00+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:13 pm</span></time></p>
-  </header>
-  
-  <p>I will shortly be releasing a collaborative game for Android and, in the future,
-also iPhone and Windows phone versions. The app is built with Apache Cordova/Adobe
-Phonegap to be able to have a single codebase and minimize cross-platform problems.
-It is also built in Javascript on top of the Durandal/Knockout SPA frameworks,
-aided with jQuery and companion libraries.</p>
-
-<p>Previously I also programmed a native Android small single player game.</p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Manipulating SVG Images From Browser Javascript</h1>
+    
+    
       <p class="meta">
         
-        
 
 
 
 
-<time class='entry-date' datetime='2015-03-08T21:13:00+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:13 pm</span></time>
+<time class='entry-date' datetime='2015-04-09T01:18:48+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:18 am</span></time>
         
       </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.</p>
+
+<p>I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.</p>
+
+<p>In particular, I could convert a collection of labels whose XML tag was “text” within the SVG image to a Javascript array in this way:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">labelArray</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Then I used the Functional Javascript library, which is cool, to select the element I was looking for</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">label</span> <span class="o">=</span> <span class="nx">fjs</span><span class="p">.</span><span class="nx">first</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">                    <span class="c1">// textContent is an attribute of SVG element type</span>
+</span><span class="line">                    <span class="k">return</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">===</span> <span class="s2">&quot;ad&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="p">})(</span><span class="nx">labelsArray</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>And then set special properties on it, so it would be distinguishable from the rest of the elements:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="nx">label</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontSize</span> <span class="o">=</span> <span class="s2">&quot;20px&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="nx">label</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontWeight</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Otherwise, elements with specific ID could be accessed firstly by getting the SVG file content from the SVG DOM element first, then accessing the internal element by ID:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;imagesvg&quot;</span><span class="p">);</span>
+</span><span class="line"><span class="nx">a</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;load&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class="line">            <span class="kd">var</span> <span class="nx">svgDoc</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">contentDocument</span><span class="p">;</span> <span class="c1">//get the inner DOM of image.svg</span>
+</span><span class="line">            <span class="kd">var</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">svgDoc</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">);</span> <span class="c1">//get the inner element by id</span>
+</span><span class="line"><span class="p">},</span><span class="kc">false</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Notice that the file is called image.svg and that the browser can load it asynchronously, and that’s the reason for the load event handler.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
       
-        <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/experience/android/index.html" data-via="" data-counturl="http://analyticbastard.github.io/experience/android/index.html" >Tweet</a>
+
+<span class="byline author vcard">Posted by <span class="fn">Analytic Bastard</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-04-09T01:18:48+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>1:18 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/programming/'>programming</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://analyticbastard.github.io/blog/2015/04/09/manipulating-svg-images-from-browser-javascript/" data-via="" data-counturl="http://analyticbastard.github.io/blog/2015/04/09/manipulating-svg-images-from-browser-javascript/" >Tweet</a>
   
   
   
 </div>
 
+    
+    <p class="meta">
       
-    </footer>
-  
+        <a class="basic-alignment left" href="/blog/2015/03/25/installing-theano-on-windows/" title="Previous Post: Installing Theano on Windows">&laquo; Installing Theano on Windows</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

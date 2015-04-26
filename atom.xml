@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-03-30T01:33:06+02:00</updated>
+  <updated>2015-04-27T01:31:51+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Manipulating SVG Images From Browser Javascript]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/04/09/manipulating-svg-images-from-browser-javascript/"/>
+    <updated>2015-04-09T01:18:48+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/04/09/manipulating-svg-images-from-browser-javascript</id>
+    <content type="html"><![CDATA[<p>SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.</p>
+
+<p>I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.</p>
+
+<p>In particular, I could convert a collection of labels whose XML tag was “text” within the SVG image to a Javascript array in this way:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">labelArray</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">));</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Then I used the Functional Javascript library, which is cool, to select the element I was looking for</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">label</span> <span class="o">=</span> <span class="nx">fjs</span><span class="p">.</span><span class="nx">first</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">                    <span class="c1">// textContent is an attribute of SVG element type</span>
+</span><span class="line">                    <span class="k">return</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">===</span> <span class="s2">&quot;ad&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="p">})(</span><span class="nx">labelsArray</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>And then set special properties on it, so it would be distinguishable from the rest of the elements:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="nx">label</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontSize</span> <span class="o">=</span> <span class="s2">&quot;20px&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="nx">label</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fontWeight</span> <span class="o">=</span> <span class="s2">&quot;bold&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Otherwise, elements with specific ID could be accessed firstly by getting the SVG file content from the SVG DOM element first, then accessing the internal element by ID:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="Javascript"><span class="line"><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;imagesvg&quot;</span><span class="p">);</span>
+</span><span class="line"><span class="nx">a</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;load&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(){</span>
+</span><span class="line">            <span class="kd">var</span> <span class="nx">svgDoc</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">contentDocument</span><span class="p">;</span> <span class="c1">//get the inner DOM of image.svg</span>
+</span><span class="line">            <span class="kd">var</span> <span class="nx">delta</span> <span class="o">=</span> <span class="nx">svgDoc</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;delta&quot;</span><span class="p">);</span> <span class="c1">//get the inner element by id</span>
+</span><span class="line"><span class="p">},</span><span class="kc">false</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Notice that the file is called image.svg and that the browser can load it asynchronously, and that’s the reason for the load event handler.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Installing Theano on Windows]]></title>

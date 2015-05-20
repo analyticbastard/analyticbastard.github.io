@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-04-27T01:31:51+02:00</updated>
+  <updated>2015-05-21T00:31:28+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,178 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Max Subsequence Problem]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem/"/>
+    <updated>2015-05-02T21:05:23+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem</id>
+    <content type="html"><![CDATA[<p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence.
+We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p>
+
+<p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves,
+using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two
+parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when
+we find either two or only one element in the sequence (odd or even super sequence), at which point
+we return the information we need (we’ll talk about this later on).</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="kd">defn </span><span class="nv">best</span> <span class="p">[</span><span class="nv">myseq</span><span class="p">]</span>
+</span><span class="line">  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">N</span> <span class="p">(</span><span class="nb">count </span><span class="nv">myseq</span><span class="p">)]</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">case</span> <span class="nv">N</span>
+</span><span class="line">      <span class="mi">1</span> <span class="nv">nil</span>
+</span><span class="line">      <span class="mi">2</span> <span class="nv">nil</span>
+</span><span class="line">      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n</span> <span class="p">(</span><span class="nf">Math/round</span> <span class="p">(</span><span class="nb">double </span><span class="p">(</span><span class="nb">/ </span><span class="nv">N</span> <span class="mi">2</span><span class="p">)))</span>
+</span><span class="line">            <span class="nv">m</span> <span class="p">(</span><span class="nb">- </span><span class="nv">N</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">s1</span> <span class="p">(</span><span class="nb">take </span><span class="nv">n</span> <span class="nv">myseq</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">s2</span> <span class="p">(</span><span class="nf">take-last</span> <span class="nv">m</span> <span class="nv">myseq</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">m1</span> <span class="p">(</span><span class="nf">best</span> <span class="nv">s1</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">m2</span> <span class="p">(</span><span class="nf">best</span> <span class="nv">s2</span><span class="p">)</span>
+</span><span class="line">            <span class="p">]</span>
+</span><span class="line">
+</span><span class="line">        <span class="p">))</span>
+</span><span class="line">    <span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>This was the basic recursion skeleton. Now we need to return and process the interesting information
+about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary
+search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be
+negative because they would otherwise increase the sum). For example, the sequence <code>[-1 -1 3 4 -2]</code> would
+produce a best subsequence <code>[3 4]</code>, a discarded left sequence <code>[-1 -1]</code> and a discarded right sequence
+[-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that
+we don’t need to recompute at the upper-levels (when returning from the call). The information retrieved from
+the lower levels is a map with this structure (using the previous example):</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">{</span><span class="ss">:l</span> <span class="mi">-2</span> <span class="ss">:sum</span> <span class="mi">7</span> <span class="ss">:r</span> <span class="p">[</span><span class="mi">-2</span><span class="p">]</span> <span class="ss">:sl</span> <span class="p">[</span><span class="mi">-1</span> <span class="mi">-1</span><span class="p">]</span> <span class="ss">:seq</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span><span class="p">]</span> <span class="ss">:sr</span> <span class="p">[</span><span class="mi">-2</span><span class="p">]}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>where the first three keys are the sums, and the last three keys are the proper sequences. We now build
+the information according to the sequence we recieve as input. When there is only one element, it is easy to
+see that we need to return empty discarded sequences, and the input number as the best sequence. If we get
+two elements, we need to check whether both are positive, in which case, we return both as the best sequence
+(and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence,
+and return the other as either the left or right discarded sequence depending on whether it was the first or
+second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is
+to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when
+we have two subsequences, we need to check if the total sum of both best subsequences and everything in the
+middle (the right discarded sequence from the left half and the left discarded sequence from the right half)
+is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose
+the left and right discarded sequences, and the best sequences up to this stage. This is the result:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="kd">defn </span><span class="nv">best</span> <span class="p">[</span><span class="nv">myseq</span><span class="p">]</span>
+</span><span class="line">  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">N</span> <span class="p">(</span><span class="nb">count </span><span class="nv">myseq</span><span class="p">)]</span>
+</span><span class="line">    <span class="p">(</span><span class="nf">case</span> <span class="nv">N</span>
+</span><span class="line">      <span class="mi">1</span> <span class="p">{</span><span class="ss">:l</span> <span class="mi">0</span> <span class="ss">:r</span> <span class="mi">0</span> <span class="ss">:sl</span> <span class="p">[]</span> <span class="ss">:sr</span> <span class="p">[]</span> <span class="ss">:seq</span> <span class="nv">myseq</span> <span class="ss">:sum</span> <span class="p">(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)}</span>
+</span><span class="line">      <span class="mi">2</span> <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">and </span><span class="p">(</span><span class="nb">&gt; </span><span class="p">(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nb">&gt; </span><span class="p">(</span><span class="nb">second </span><span class="nv">myseq</span><span class="p">)</span> <span class="mi">0</span><span class="p">))</span>
+</span><span class="line">          <span class="p">{</span><span class="ss">:l</span> <span class="mi">0</span> <span class="ss">:r</span> <span class="mi">0</span> <span class="ss">:sl</span> <span class="p">[]</span> <span class="ss">:seq</span> <span class="nv">myseq</span> <span class="ss">:sr</span> <span class="p">[]</span> <span class="ss">:sum</span> <span class="p">(</span><span class="nb">apply + </span><span class="nv">myseq</span><span class="p">)}</span>
+</span><span class="line">          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&lt; </span><span class="p">(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)</span> <span class="p">(</span><span class="nb">second </span><span class="nv">myseq</span><span class="p">))</span>
+</span><span class="line">            <span class="p">{</span><span class="ss">:l</span> <span class="p">(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)</span> <span class="ss">:r</span> <span class="mi">0</span> <span class="ss">:sl</span> <span class="p">[(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)]</span> <span class="ss">:sr</span> <span class="p">[]</span> <span class="ss">:seq</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">myseq</span><span class="p">)</span> <span class="ss">:sum</span> <span class="p">(</span><span class="nb">second </span><span class="nv">myseq</span><span class="p">)}</span>
+</span><span class="line">            <span class="p">{</span><span class="ss">:l</span> <span class="mi">0</span> <span class="ss">:r</span> <span class="p">(</span><span class="nb">second </span><span class="nv">myseq</span><span class="p">)</span> <span class="ss">:sl</span> <span class="p">[]</span> <span class="ss">:sr</span> <span class="p">(</span><span class="nb">rest </span><span class="nv">myseq</span><span class="p">)</span> <span class="ss">:seq</span> <span class="p">[(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)]</span> <span class="ss">:sum</span> <span class="p">(</span><span class="nb">first </span><span class="nv">myseq</span><span class="p">)}))</span>
+</span><span class="line">      <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">n</span> <span class="p">(</span><span class="nf">Math/round</span> <span class="p">(</span><span class="nb">double </span><span class="p">(</span><span class="nb">/ </span><span class="nv">N</span> <span class="mi">2</span><span class="p">)))</span>
+</span><span class="line">            <span class="nv">m</span> <span class="p">(</span><span class="nb">- </span><span class="nv">N</span> <span class="nv">n</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">s1</span> <span class="p">(</span><span class="nb">take </span><span class="nv">n</span> <span class="nv">myseq</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">s2</span> <span class="p">(</span><span class="nb">reverse </span><span class="p">(</span><span class="nb">take </span><span class="nv">m</span> <span class="p">(</span><span class="nb">reverse </span><span class="nv">myseq</span><span class="p">)))</span>
+</span><span class="line">            <span class="nv">m1</span> <span class="p">(</span><span class="nf">best</span> <span class="nv">s1</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">m2</span> <span class="p">(</span><span class="nf">best</span> <span class="nv">s2</span><span class="p">)</span>
+</span><span class="line">            <span class="nv">sum2</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="ss">:sum</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m2</span><span class="p">))</span>
+</span><span class="line">            <span class="nv">cost</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="ss">:r</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:l</span> <span class="nv">m2</span><span class="p">))</span>
+</span><span class="line">            <span class="nv">sumt</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">sum2</span> <span class="nv">cost</span><span class="p">)</span>
+</span><span class="line">            <span class="p">]</span>
+</span><span class="line">        <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="nv">sumt</span> <span class="p">(</span><span class="nb">max </span><span class="p">(</span><span class="ss">:sum</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m2</span><span class="p">)))</span>
+</span><span class="line">          <span class="p">{</span><span class="ss">:l</span> <span class="p">(</span><span class="ss">:l</span> <span class="nv">m1</span><span class="p">)</span> <span class="ss">:r</span> <span class="p">(</span><span class="ss">:r</span> <span class="nv">m2</span><span class="p">)</span> <span class="ss">:sl</span> <span class="p">(</span><span class="ss">:sl</span> <span class="nv">m1</span><span class="p">)</span> <span class="ss">:sr</span> <span class="p">(</span><span class="ss">:sr</span> <span class="nv">m2</span><span class="p">)</span> <span class="ss">:seq</span> <span class="p">(</span><span class="nb">concat </span><span class="p">(</span><span class="ss">:seq</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sr</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sl</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="ss">:seq</span> <span class="nv">m2</span><span class="p">))</span> <span class="ss">:sum</span> <span class="nv">sumt</span><span class="p">}</span>
+</span><span class="line">          <span class="p">(</span><span class="k">if </span><span class="p">(</span><span class="nb">&gt; </span><span class="p">(</span><span class="ss">:sum</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m2</span><span class="p">))</span>
+</span><span class="line">            <span class="p">{</span><span class="ss">:l</span> <span class="p">(</span><span class="ss">:l</span> <span class="nv">m1</span><span class="p">)</span> <span class="ss">:r</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="ss">:r</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:l</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="ss">:r</span> <span class="nv">m2</span><span class="p">))</span> <span class="ss">:sl</span> <span class="p">(</span><span class="ss">:sl</span> <span class="nv">m1</span><span class="p">)</span> <span class="ss">:sr</span> <span class="p">(</span><span class="nb">concat </span><span class="p">(</span><span class="ss">:sr</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sl</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="ss">:seq</span> <span class="nv">m2</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sr</span> <span class="nv">m2</span><span class="p">))</span> <span class="ss">:seq</span> <span class="p">(</span><span class="ss">:seq</span> <span class="nv">m1</span><span class="p">)</span> <span class="ss">:sum</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m1</span><span class="p">)}</span>
+</span><span class="line">            <span class="p">{</span><span class="ss">:l</span> <span class="p">(</span><span class="nb">+ </span><span class="p">(</span><span class="ss">:l</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:r</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:l</span> <span class="nv">m2</span><span class="p">))</span> <span class="ss">:r</span> <span class="p">(</span><span class="ss">:r</span> <span class="nv">m2</span><span class="p">)</span> <span class="ss">:sl</span> <span class="p">(</span><span class="nb">concat </span><span class="p">(</span><span class="ss">:sl</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:seq</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sr</span> <span class="nv">m1</span><span class="p">)</span> <span class="p">(</span><span class="ss">:sl</span> <span class="nv">m2</span><span class="p">))</span> <span class="ss">:sr</span> <span class="p">(</span><span class="ss">:sr</span> <span class="nv">m2</span><span class="p">)</span> <span class="ss">:seq</span> <span class="p">(</span><span class="ss">:seq</span> <span class="nv">m2</span><span class="p">)</span> <span class="ss">:sum</span> <span class="p">(</span><span class="ss">:sum</span> <span class="nv">m2</span><span class="p">)}))</span>
+</span><span class="line">        <span class="p">))</span>
+</span><span class="line">    <span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>As test data, we choose three sequences, one whose best subsequence is in the middle, separated by negative numbers
+(one in this case), another whose best subsequence is at the left side, and it is not worth to join it with another
+positive sequence at the right side, and one whose best subsequence is itself.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="k">def </span><span class="nv">ex-bestmiddle</span> <span class="p">[</span><span class="mi">-1</span> <span class="mi">-3</span> <span class="mi">-2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">-1</span> <span class="mi">3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">])</span>
+</span><span class="line"><span class="p">(</span><span class="k">def </span><span class="nv">ex-bestleft</span> <span class="p">[</span><span class="mi">-1</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">-2</span> <span class="mi">-5</span> <span class="mi">-3</span> <span class="mi">-3</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">])</span>
+</span><span class="line"><span class="p">(</span><span class="k">def </span><span class="nv">ex-bestall</span> <span class="p">[</span><span class="mi">5</span> <span class="mi">-3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">-1</span> <span class="mi">3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">-1</span> <span class="mi">3</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>For the last one:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="nf">best</span> <span class="nv">ex-bestall</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">{</span><span class="ss">:l</span> <span class="mi">0</span>, <span class="ss">:r</span> <span class="mi">0</span>, <span class="ss">:sl</span> <span class="p">[]</span>, <span class="ss">:sr</span> <span class="p">[]</span>, <span class="ss">:seq</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">-3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">-1</span> <span class="mi">3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">-1</span> <span class="mi">3</span><span class="p">)</span>, <span class="ss">:sum</span> <span class="mi">9</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>For the best subsequence on the left side:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="nf">best</span> <span class="nv">ex-bestleft</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">{</span><span class="ss">:l</span> <span class="mi">-1</span>, <span class="ss">:r</span> <span class="mi">-12</span>, <span class="ss">:sl</span> <span class="p">[</span><span class="mi">-1</span><span class="p">]</span>, <span class="ss">:sr</span> <span class="p">(</span><span class="mi">-2</span> <span class="mi">-5</span> <span class="mi">-3</span> <span class="mi">-3</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span>, <span class="ss">:seq</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">)</span>, <span class="ss">:sum</span> <span class="mi">6</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>And for the best subsequence in the middle:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">(</span><span class="nf">best</span> <span class="nv">ex-bestmiddle</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="Clojure"><span class="line"><span class="p">{</span><span class="ss">:l</span> <span class="mi">-6</span>, <span class="ss">:r</span> <span class="mi">-4</span>, <span class="ss">:sl</span> <span class="p">(</span><span class="mi">-1</span> <span class="mi">-3</span> <span class="mi">-2</span><span class="p">)</span>, <span class="ss">:sr</span> <span class="p">(</span><span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span>, <span class="ss">:seq</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">-1</span> <span class="mi">3</span> <span class="mi">-2</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">)</span>, <span class="ss">:sum</span> <span class="mi">6</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The code is on <a href="https://github.com/analyticbastard/java-exercises">Github</a> under <code>src/main/clj</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Manipulating SVG Images From Browser Javascript]]></title>

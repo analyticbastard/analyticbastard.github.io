@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Programming | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/programming/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-04-27T01:31:51+02:00</updated>
+  <updated>2015-05-21T00:31:28+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Max Subsequence Problem]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem/"/>
+    <updated>2015-05-02T21:05:23+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem</id>
+    <content type="html"><![CDATA[<p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence.
+We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p>
+
+<p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves,
+using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two
+parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when
+we find either two or only one element in the sequence (odd or even super sequence), at which point
+we return the information we need (we’ll talk about this later on).</p>
+
+<p>&#8220;` Clojure
+(defn best [myseq]
+  (let [N (count myseq)]
+    (case N
+      1 nil
+      2 nil
+      (let [n (Math/round (double (/ N 2)))
+            m (- N n)
+            s1 (take n myseq)
+            s2 (take-last m myseq)
+            m1 (best s1)
+            m2 (best s2)
+            ]</p>
+
+<pre><code>    ))
+)) ``` 
+</code></pre>
+
+<p>This was the basic recursion skeleton. Now we need to return and process the interesting information
+about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary
+search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be
+negative because they would otherwise increase the sum). For example, the sequence <code>[-1 -1 3 4 -2]</code> would
+produce a best subsequence <code>[3 4]</code>, a discarded left sequence <code>[-1 -1]</code> and a discarded right sequence
+[-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that
+we don’t need to recompute at the upper-levels (when returning from the call). The information retrieved from
+the lower levels is a map with this structure (using the previous example):</p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>where the first three keys are the sums, and the last three keys are the proper sequences. We now build
+the information according to the sequence we recieve as input. When there is only one element, it is easy to
+see that we need to return empty discarded sequences, and the input number as the best sequence. If we get
+two elements, we need to check whether both are positive, in which case, we return both as the best sequence
+(and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence,
+and return the other as either the left or right discarded sequence depending on whether it was the first or
+second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is
+to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when
+we have two subsequences, we need to check if the total sum of both best subsequences and everything in the
+middle (the right discarded sequence from the left half and the left discarded sequence from the right half)
+is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose
+the left and right discarded sequences, and the best sequences up to this stage. This is the result:</p>
+
+<p><code>Clojure
+(defn best [myseq]
+  (let [N (count myseq)]
+    (case N
+      1 {:l 0 :r 0 :sl [] :sr [] :seq myseq :sum (first myseq)}
+      2 (if (and (&gt; (first myseq) 0) (&gt; (second myseq) 0))
+          {:l 0 :r 0 :sl [] :seq myseq :sr [] :sum (apply + myseq)}
+          (if (&lt; (first myseq) (second myseq))
+            {:l (first myseq) :r 0 :sl [(first myseq)] :sr [] :seq (rest myseq) :sum (second myseq)}
+            {:l 0 :r (second myseq) :sl [] :sr (rest myseq) :seq [(first myseq)] :sum (first myseq)}))
+      (let [n (Math/round (double (/ N 2)))
+            m (- N n)
+            s1 (take n myseq)
+            s2 (reverse (take m (reverse myseq)))
+            m1 (best s1)
+            m2 (best s2)
+            sum2 (+ (:sum m1) (:sum m2))
+            cost (+ (:r m1) (:l m2))
+            sumt (+ sum2 cost)
+            ]
+        (if (&gt; sumt (max (:sum m1) (:sum m2)))
+          {:l (:l m1) :r (:r m2) :sl (:sl m1) :sr (:sr m2) :seq (concat (:seq m1) (:sr m1) (:sl m2) (:seq m2)) :sum sumt}
+          (if (&gt; (:sum m1) (:sum m2))
+            {:l (:l m1) :r (+ (:r m1) (:l m2) (:sum m2) (:r m2)) :sl (:sl m1) :sr (concat (:sr m1) (:sl m2) (:seq m2) (:sr m2)) :seq (:seq m1) :sum (:sum m1)}
+            {:l (+ (:l m1) (:r m1) (:sum m1) (:l m2)) :r (:r m2) :sl (concat (:sl m1) (:seq m1) (:sr m1) (:sl m2)) :sr (:sr m2) :seq (:seq m2) :sum (:sum m2)}))
+        ))
+    ))
+</code></p>
+
+<p>As test data, we choose three sequences, one whose best subsequence is in the middle, separated by negative numbers
+(one in this case), another whose best subsequence is at the left side, and it is not worth to join it with another
+positive sequence at the right side, and one whose best subsequence is itself.</p>
+
+<p><code>Clojure
+(def ex-bestmiddle [-1 -3 -2 1 2 -1 3 -2 2 1 -1 -3])
+(def ex-bestleft [-1 3 2 1 -2 -5 -3 -3 2 3 -1 -3])
+(def ex-bestall [5 -3 -2 2 2 -1 3 -2 2 1 -1 3])
+</code></p>
+
+<p>For the last one:</p>
+
+<p><code>Clojure
+(best ex-bestall)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>For the best subsequence on the left side:</p>
+
+<p><code>Clojure
+(best ex-bestleft)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>And for the best subsequence in the middle:</p>
+
+<p><code>Clojure
+(best ex-bestmiddle)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>The code is on <a href="https://github.com/analyticbastard/java-exercises">Github</a> under <code>src/main/clj</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Manipulating SVG Images From Browser Javascript]]></title>
@@ -658,30 +785,6 @@ presents the results via a Python web server to multiple browsers.</p>
 technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
 existing libraries will need time to be adapted to Python.</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Current Computer Language Market]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market/"/>
-    <updated>2014-11-08T03:33:09+01:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/08/current-computer-language-market</id>
-    <content type="html"><![CDATA[<p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb’s</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief’s article.</p>
-
-<p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
-
-<p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
-
-<p><blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language’s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft’s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote></p>
-
-<p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
-
-<p>Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(“hello”) and echo “hello”…), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D’s C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.</p>
-
-<p>On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer’s productivity to new heights.
-It is worth mentioning at this point that there is a new promising contender in the field. It is <a href="http://drmeister.wordpress.com/2014/09/18/announcing-clasp/">Clasp</a>, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. </p>
-
-<p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html">here</a></sub></p>
 ]]></content>
   </entry>
   

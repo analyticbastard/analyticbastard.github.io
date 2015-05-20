@@ -9,8 +9,8 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing
-Python commands on an IPython &hellip;">
+  <meta name="description" content="I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -70,6 +70,137 @@ Python commands on an IPython &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/30/equality-of-means-statistical-test/">Equality of Means Statistical Test Made Easy</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-12-30T01:22:01+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>1:22 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means
+until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of
+my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe,
+stating the null hypothesis, performing the computations and stating the results in the correct statistical language.
+I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of
+its difficulty.</p>
+
+<p>My little sister could not understand the meaning of (talking about box plots):</p>
+
+<blockquote><p>If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.</p></blockquote>
+
+<p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
+
+<p>I was shocked, and certainly ashamed, I could not even begin to articulate any word. I was naked, I didn’t know anything
+about it. “OK”, I thought, “let’s start from the beginning. What do you <em>really</em> want to do? What you want to do is
+test if the two medians of both populations are equal or not, in a statistical sense”. I located a perniciously hidden
+important constraint: The variables are normally distributed. “OK, that’s it”. Since their distribution is normal, 
+which is symmetrically distributed around the mean, the median turns out to be the mean (and also the mode). The test
+is reduced to an equality of means. Now, what would I do with two averages of two samples taken from two normally
+distributed populations? For that, one must recall the difference between the average and the mathematical expectation
+of a probability distribution (the first moment). The average is an aggregate of the different values of a sample.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} = \frac{1}{N} \sum_{i=1}^N x_i
+</script>
+
+<p>Each of the values come from a distribution, which means that each of them is a random variable that acquires a
+particular value. This means that the aggregate is also normally distributed.</p>
+
+<script type="math/tex; mode=display">
+\bar{X} = \frac{1}{N} \sum_{i=1}^N X_i \sim N(\mu, \sigma)
+</script>
+
+<p>This $\mu$ is the mathematical expectation. Recall that this is a linear operator in the functional analytic sense
+of the word <em>operator</em>, that takes a function (probability density) and spits a number in the field the distribution
+domain is a subset of (we assume it is the real numbers).</p>
+
+<p>If the random variable is discrete, the operator $E[\cdot] : \ell \rightarrow \mathbb{R}$ is defined as</p>
+
+<script type="math/tex; mode=display">
+E[X] = \sum_{i \in \mathbb{I}} x_i p_i
+</script>
+
+<p>If it is otherwise continuous, $E[\cdot] : \mathbb{F} \rightarrow \mathbb{R}$ is:</p>
+
+<script type="math/tex; mode=display">
+E[X] = \int_{\mathbb{X}} x p(x) dx
+</script>
+
+<p>Where $\ell$ (for the lack of a better symbol) is a set of number sequences and $\mathbb{F}$ is a space of functions
+whose analysis lies beyond the purpose of this post (just treat them as sets that contain respectively discrete and
+continuous density functions). And $p$ (and $p_i$) is the probability density function or the density frequencies.</p>
+
+<p>Then, we know by the law of large numbers that the average converges to the mathematical expectation as the number
+of data $N$ tends to infinity.</p>
+
+<script type="math/tex; mode=display">
+\bar{x} \rightarrow E[X] = \mu
+</script>
+
+<p>Now, with two random variables $X$ and $Y$, under the null hypothesis, their mathematical expectation, or population
+means, are the same:</p>
+
+<script type="math/tex; mode=display">
+H_0 : \mu_X = \mu_Y
+</script>
+
+<p>So that $\mu_0 - \mu_1 = 0$. This is, the difference must be zero. Now, this is a technicality: The difference is a new
+random variable $F=X-Y$ with $E[X-Y]=E[X]-E[Y]=0$ because the operator is linear and the variables
+come from the same distribution. <em>This difference is what we use in the test</em>. If we knew more about how it is
+distributed, <em>we could query it for possible values to statistically validate the null hypothesis</em> $H_0$. </p>
+
+<p>It turns out that this new difference random variable is also normally distributed and centered
+around zero. We can then compute te standard deviation and fix the shape of the distribution, and place a confidence
+interval so that the value resulting of the difference of means falls within the 95% of probability density around zero.
+This means that if the sample difference is larger that the percentile enclosing this 95% of probability, we are not
+<em>accepting</em> the null hypothesis (remember, that $\mu_X = \mu_Y$). Note that with probability 0.05, we are going to get a
+sample difference larger than that percentile. For this reason, one does not say <em>reject</em>: There is a chance that the
+population means are truly different, bit there is also a small (0.05 probability) chance that, being the population
+means the same, we got difference of averages larger than the boundary percentile).</p>
+
+<p>Of course, <em>the true statistical test is divided by a kind of standard deviation made up of an aggregate of the variances
+of both samples, which makes the statistic be distributed as a t distribution. Otherwise the test would have no power.</em></p>
+
+<p>To sum up, the statistical test for equality of means is:</p>
+
+<ul>
+  <li>Two samples from two populations.</li>
+  <li>I want to know whether the means are equal.</li>
+  <li>Under the hypothesis that they are equal (constrained to normality of populations and independence of samples):
+    <ul>
+      <li>The difference of means is zero</li>
+      <li>Therefore, the difference between sample averages must be small, and it is a random variable itself that must be
+normally distributed around zero.</li>
+      <li>Once we compute the standard deviation, and hence the shape of this normal distribution of the difference, we
+can select the interval to achieve the desired probability to find the value difference of means in the range,
+say, 95%. If it falls outside, then we do not accept the null hypothesis (that the difference is zero). We do
+this because it should be extremely rare for us to find two samples whose average difference falls ourside the
+range (5%) if the null hypothesis is true.</li>
+      <li>If it falls inside the 95% range, then there is no statistical evidence against the null hypothesis.</li>
+    </ul>
+  </li>
+</ul>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -999,6 +1130,10 @@ OK, cloned, copied Ruby files and test (with current time position including <em
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/05/02/max-subsequence-problem/">Max Subsequence Problem</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/09/manipulating-svg-images-from-browser-javascript/">Manipulating SVG Images From Browser Javascript</a>
       </li>
     
@@ -1014,19 +1149,15 @@ OK, cloned, copied Ruby files and test (with current time position including <em
         <a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/02/20/image-pan-sharpening-with-pca/">Image Pan-sharpening With PCA</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/computation'>computation (6)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (5)</a></li><li><a href='/blog/categories/hacking'>hacking (2)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (5)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/programming'>programming (6)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/brainteaser'>brainteaser (1)</a></li><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/clojure'>clojure (1)</a></li><li><a href='/blog/categories/computation'>computation (6)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (5)</a></li><li><a href='/blog/categories/hacking'>hacking (2)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (5)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/programming'>programming (7)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/brainteasers' style='font-size: 110.0%'>brainteasers</a> <a href='/blog/categories/computation' style='font-size: 160.0%'>computation</a> <a href='/blog/categories/computing' style='font-size: 110.0%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 150.0%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 120.0%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 110.0%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 130.0%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 140.0%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 150.0%'>mathematics</a> <a href='/blog/categories/matlab' style='font-size: 110.0%'>matlab</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 130.0%'>python</a> <a href='/blog/categories/software-development' style='font-size: 110.0%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 140.0%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 140.0%'>tools</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/brainteaser' style='font-size: 108.57142857142857%'>brainteaser</a> <a href='/blog/categories/brainteasers' style='font-size: 108.57142857142857%'>brainteasers</a> <a href='/blog/categories/clojure' style='font-size: 108.57142857142857%'>clojure</a> <a href='/blog/categories/computation' style='font-size: 151.42857142857144%'>computation</a> <a href='/blog/categories/computing' style='font-size: 108.57142857142857%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 142.85714285714286%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 117.14285714285714%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 108.57142857142857%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 125.71428571428572%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 134.28571428571428%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 142.85714285714286%'>mathematics</a> <a href='/blog/categories/matlab' style='font-size: 108.57142857142857%'>matlab</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 125.71428571428572%'>python</a> <a href='/blog/categories/software-development' style='font-size: 108.57142857142857%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 134.28571428571428%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 134.28571428571428%'>tools</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

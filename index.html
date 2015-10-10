@@ -341,6 +341,205 @@ positive sequence at the right side, and one whose best subsequence is itself.</
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net/">Kaggle TFI Restaurants: Beat the Benchmark With PCA and Elastic Net</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-04-05T23:03:15+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>11:03 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This competition is about predicting the revenue of prospective restaurants of the TFI corporation (parent company of Burger King, apparently). They are interested in predicting the revenue as accurately as possible for the purpose of opening new restaurants. In my opinion, this has more limited utility than it seems, because open a new restaurant will drain customers from existing onesm and, at the same time, a new restaurant will not respond to the predicted revenue in the presence of other equivalent restarants. Nevertheless, this issue is not a big concern if we want to predict the best spot to invest in.</p>
+
+<p>As a first approximation, we can use elasticnet (L1 and L2 norm regularization) with PCA as input preprocessing, to make nicer orthogonal features and remove potentially unwanted noise.</p>
+
+<p>This method got me to position one hundred something I believe.</p>
+
+<p>First, we import all the methods we require:</p>
+
+<ul>
+  <li>Numpy: For numeric array</li>
+  <li>Pandas: For dataframes</li>
+  <li>Pylab: For matplotlib and graphic visualization</li>
+  <li>Sklearn: For Statistical/Machine Learning methods</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">ElasticNetCV</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>We define auxiliary functions. For this iteration we want to get rid of specific attributes such as the city or features that need further processing before they are used such as the restaurant opening date, city type or restaurant type.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">data_preprocess</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">,</span> <span class="s">&quot;City&quot;</span><span class="p">,</span> <span class="s">&quot;City Group&quot;</span><span class="p">,</span> <span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Open Date&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">]]]</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">data</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">get_categorical</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="n">ctyp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">((</span><span class="nb">input</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">==</span> <span class="nb">input</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;T1&#39;</span><span class="p">,</span><span class="s">&#39;T2&#39;</span><span class="p">,</span><span class="s">&#39;T3&#39;</span><span class="p">,</span><span class="s">&#39;T4&#39;</span><span class="p">])</span>
+</span><span class="line">    <span class="n">city</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">((</span><span class="nb">input</span><span class="p">[</span><span class="s">&quot;City Group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">==</span> <span class="nb">input</span><span class="p">[</span><span class="s">&quot;City Group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;C1&#39;</span><span class="p">,</span><span class="s">&#39;C2&#39;</span><span class="p">])</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">city</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctyp</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">remove_revenue</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="k">return</span> <span class="nb">input</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">]]]</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Load up train and test data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">orig_train</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="s">&#39;data/train.csv&#39;</span><span class="p">)</span>
+</span><span class="line"><span class="n">orig_test</span> <span class="o">=</span>  <span class="n">read_file</span><span class="p">(</span><span class="s">&#39;data/test.csv&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">revenue</span>  <span class="o">=</span> <span class="n">orig_train</span><span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span class="line"><span class="n">logrevenue</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">revenue</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">train_test</span> <span class="o">=</span> <span class="n">remove_revenue</span><span class="p">(</span><span class="n">orig_train</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orig_test</span><span class="p">)</span>
+</span><span class="line"><span class="n">train_test_proc</span> <span class="o">=</span> <span class="n">data_preprocess</span><span class="p">(</span><span class="n">train_test</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">train</span> <span class="o">=</span> <span class="n">train_test_proc</span><span class="p">[:</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</span><span class="line"><span class="n">test</span>  <span class="o">=</span> <span class="n">train_test_proc</span><span class="p">[</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+</span><span class="line"><span class="n">train_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</span><span class="line"><span class="n">test_pca</span>  <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">categories</span> <span class="o">=</span> <span class="n">get_categorical</span><span class="p">(</span><span class="n">train_test</span><span class="p">)</span>
+</span><span class="line"><span class="n">train_mix</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[:</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_pca</span><span class="p">))</span>
+</span><span class="line"><span class="n">categories_test</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class="line"><span class="n">test_mix</span>  <span class="o">=</span> <span class="n">categories_test</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_pca</span><span class="p">))</span>
+</span><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">no_cols_to_remove</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class="line"><span class="n">train_x</span> <span class="o">=</span> <span class="n">train_mix</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,:</span><span class="o">-</span><span class="n">no_cols_to_remove</span><span class="p">]</span>
+</span><span class="line"><span class="n">test_x</span> <span class="o">=</span> <span class="n">test_mix</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,:</span><span class="o">-</span><span class="n">no_cols_to_remove</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">lm</span> <span class="o">=</span> <span class="n">ElasticNetCV</span><span class="p">(</span><span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.09</span><span class="p">)</span>
+</span><span class="line"><span class="n">lm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">logrevenue</span><span class="p">[</span><span class="s">&#39;revenue&#39;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">predicted</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+</span><span class="line"><span class="n">test_revenue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">predicted</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pl</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">test_revenue</span><span class="p">)</span>
+</span><span class="line"><span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">test_revenue</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">revenue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_x</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">submission</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_revenue</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Prediction&#39;</span><span class="p">])</span>
+</span><span class="line"><span class="n">submission</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Id&#39;</span>
+</span><span class="line"><span class="n">submission</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">&#39;submissions/pca-elastic-search-cv.csv&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/03/25/installing-theano-on-windows/">Installing Theano on Windows</a></h1>
     
     
@@ -1143,225 +1342,6 @@ issues are simmilar, but then again, everybody gets different symptoms when deal
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/01/01/principal-component-analysis/">Principal Component Analysis</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-01-01T01:22:01+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2015</span></span> <span class='time'>1:22 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the
-input or measured variables so that the transformed variables offer a view of the data that maximizes the presented
-“information” about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions
-which provide most of the “information” and be sure that each of the rest of the discarded dimensions contain less
-information than each of the dimensions we have retained.</p>
-
-<p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the
-coefficient vector is of norm one) so that it is of maximum square norm.</p>
-
-<script type="math/tex; mode=display">
-\max_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^2 \\
-\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
-</script>
-
-<p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
-for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
-
-<div class="bogus-wrapper"><notextile><!-- Image -->
-<a id="img-4" class="imgModal floatRight" href="#imgModal-4" data-toggle="modal">
-  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
-</a>
-<div style="float: none;"></div>
-
-<!-- Modal -->
-<div class="modal fade" id="imgModal-4" tabindex="-1" role="dialog" aria-labelledby="imgModal-4Label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></notextile></div>
-
-<p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
-
-<p>Since the scalar product induces a norm, $ \mathbf{w}^T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p>
-
-<p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^T \mathbf{X}$ be the covariance matrix.</p>
-
-<script type="math/tex; mode=display">
-\max_{\|\mathbf{w}\|=1}  \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} \\
-\mbox{s.t. }  \mathbf{w}^T \mathbf{w_i} = 0
-</script>
-
-<p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the
-solution. This can be written as the optimization of a Rayleigh quotient.</p>
-
-<script type="math/tex; mode=display">
-\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^2} \\
-\max_{\mathbf{w}} \frac{\mathbf{w}^T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^T \mathbf{w}} \\
-</script>
-
-<p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector
-corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite). 
-Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^2 = \mathbf{w}^T \mathbf{w} = 1$.
-The same result can be
-computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p>
-
-<script type="math/tex; mode=display">
-\frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^T \mathbf{w} - 1\right) \right) = 0 \\
-\mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0
-</script>
-
-<p>We arrive at</p>
-
-<script type="math/tex; mode=display">
-\mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w}
-</script>
-
-<p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient
-methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest
-eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p>
-
-<p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of
-$\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal,
-I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for
-component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts
-to stacking up the vectors $\mathbf{w}$ in columns).</p>
-
-<script type="math/tex; mode=display">
-\mathbf{W} = \mathbf{U} \mathbf{D}^{\frac{1}{2}}
-</script>
-
-<p>And the transformation of the data is</p>
-
-<script type="math/tex; mode=display">
-\mathbf{Z} = \mathbf{X} \mathbf{W}
-</script>
-
-<h3 id="probabilistic-derivation">Probabilistic derivation</h3>
-
-<p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following
-this approach. The seminal paper is <a href="http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf">“Probabilistic Principal Component Analysis”, by M. E. Tipping and C. M. Bishop</a>,
-published in The Journal of the Royal Statistical Society, Series B.</p>
-
-<p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain
-transformations even in the presence of missing attributes. This, however, has been rarely implemented on software
-packages.  The <a href="http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&amp;d=R_BC">Probabilistic PCA R Package</a>
-supports incomplete data.</p>
-
-<h3 id="playground-with-sklearn-and-r">Playground with Sklearn and R</h3>
-
-<p>In IPython Notebook, open up a new sheet and import the necessary modules</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">matplotlib</span>
-</span><span class="line"><span class="kn">import</span> <span class="nn">datetime</span>
-</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.finance</span> <span class="kn">import</span> <span class="n">quotes_historical_yahoo</span>
-</span><span class="line"><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">YearLocator</span><span class="p">,</span> <span class="n">MonthLocator</span><span class="p">,</span> <span class="n">DateFormatter</span>
-</span><span class="line"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
-</span><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Define the date range that we are going to extract prices from</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">date1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2004</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span><span class="line"><span class="n">date2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2013</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Get the historical data</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">intc</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;INTC&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
-</span><span class="line"><span class="n">msft</span> <span class="o">=</span> <span class="n">quotes_historical_yahoo</span><span class="p">(</span><span class="s">&quot;MSFT&quot;</span><span class="p">,</span> <span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Extract the closing price from the data</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">cintc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">intc</span><span class="p">])</span>
-</span><span class="line"><span class="n">cmsft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">msft</span><span class="p">])</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Build a data matrix to be fed to the PCA implementation in a suitable format</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cintc</span><span class="p">,</span><span class="n">cmsft</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Plot both closing prices so that we can visually compare them with the transforms</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p><img src="/images/pca_intc_msft_stocks.png" /></p>
-
-<p>Build the object</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Transform the data</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">T</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Let’s examine the variance ratio explained by each of the components. Notice that the first component explains a lot
-of the price movement of both stocks.</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p><img src="/images/pca_intc_msft_transform.png" /></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/posts/2">&larr; Older</a>
@@ -1385,6 +1365,10 @@ of the price movement of both stocks.</p>
       </li>
     
       <li class="post">
+        <a href="/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net/">Kaggle TFI Restaurants: Beat the Benchmark With PCA and Elastic Net</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/03/25/installing-theano-on-windows/">Installing Theano on Windows</a>
       </li>
     
@@ -1392,19 +1376,15 @@ of the price movement of both stocks.</p>
         <a href="/blog/2015/03/08/the-monty-hall-problem-my-explanation/">The Monty Hall Problem (My Explanation)</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">Powering Up Python as a Data Analysis Platform</a>
-      </li>
-    
   </ul>
 </section>
 <section>
     <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/brainteaser'>brainteaser (1)</a></li><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/clojure'>clojure (1)</a></li><li><a href='/blog/categories/computation'>computation (6)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (5)</a></li><li><a href='/blog/categories/hacking'>hacking (2)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (4)</a></li><li><a href='/blog/categories/mathematics'>mathematics (5)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/programming'>programming (7)</a></li><li><a href='/blog/categories/python'>python (3)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (4)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/brainteaser'>brainteaser (1)</a></li><li><a href='/blog/categories/brainteasers'>brainteasers (1)</a></li><li><a href='/blog/categories/clojure'>clojure (1)</a></li><li><a href='/blog/categories/computation'>computation (6)</a></li><li><a href='/blog/categories/computing'>computing (1)</a></li><li><a href='/blog/categories/data-analysis'>data analysis (5)</a></li><li><a href='/blog/categories/hacking'>hacking (2)</a></li><li><a href='/blog/categories/image-processing'>image processing (1)</a></li><li><a href='/blog/categories/kaggle'>kaggle (1)</a></li><li><a href='/blog/categories/kernel-methods'>kernel methods (3)</a></li><li><a href='/blog/categories/machine-learning'>machine learning (5)</a></li><li><a href='/blog/categories/mathematics'>mathematics (5)</a></li><li><a href='/blog/categories/matlab'>matlab (1)</a></li><li><a href='/blog/categories/programming'>programming (7)</a></li><li><a href='/blog/categories/python'>python (4)</a></li><li><a href='/blog/categories/software-development'>software development (1)</a></li><li><a href='/blog/categories/statistics'>statistics (5)</a></li><li><a href='/blog/categories/tools'>tools (4)</a></li></ul>
 </section>
 <section>
     <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/brainteaser' style='font-size: 108.57142857142857%'>brainteaser</a> <a href='/blog/categories/brainteasers' style='font-size: 108.57142857142857%'>brainteasers</a> <a href='/blog/categories/clojure' style='font-size: 108.57142857142857%'>clojure</a> <a href='/blog/categories/computation' style='font-size: 151.42857142857144%'>computation</a> <a href='/blog/categories/computing' style='font-size: 108.57142857142857%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 142.85714285714286%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 117.14285714285714%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 108.57142857142857%'>image processing</a> <a href='/blog/categories/kernel-methods' style='font-size: 125.71428571428572%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 134.28571428571428%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 142.85714285714286%'>mathematics</a> <a href='/blog/categories/matlab' style='font-size: 108.57142857142857%'>matlab</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 125.71428571428572%'>python</a> <a href='/blog/categories/software-development' style='font-size: 108.57142857142857%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 134.28571428571428%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 134.28571428571428%'>tools</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/brainteaser' style='font-size: 108.57142857142857%'>brainteaser</a> <a href='/blog/categories/brainteasers' style='font-size: 108.57142857142857%'>brainteasers</a> <a href='/blog/categories/clojure' style='font-size: 108.57142857142857%'>clojure</a> <a href='/blog/categories/computation' style='font-size: 151.42857142857144%'>computation</a> <a href='/blog/categories/computing' style='font-size: 108.57142857142857%'>computing</a> <a href='/blog/categories/data-analysis' style='font-size: 142.85714285714286%'>data analysis</a> <a href='/blog/categories/hacking' style='font-size: 117.14285714285714%'>hacking</a> <a href='/blog/categories/image-processing' style='font-size: 108.57142857142857%'>image processing</a> <a href='/blog/categories/kaggle' style='font-size: 108.57142857142857%'>kaggle</a> <a href='/blog/categories/kernel-methods' style='font-size: 125.71428571428572%'>kernel methods</a> <a href='/blog/categories/machine-learning' style='font-size: 142.85714285714286%'>machine learning</a> <a href='/blog/categories/mathematics' style='font-size: 142.85714285714286%'>mathematics</a> <a href='/blog/categories/matlab' style='font-size: 108.57142857142857%'>matlab</a> <a href='/blog/categories/programming' style='font-size: 160.0%'>programming</a> <a href='/blog/categories/python' style='font-size: 134.28571428571428%'>python</a> <a href='/blog/categories/software-development' style='font-size: 108.57142857142857%'>software development</a> <a href='/blog/categories/statistics' style='font-size: 142.85714285714286%'>statistics</a> <a href='/blog/categories/tools' style='font-size: 134.28571428571428%'>tools</a> </span>
 </section><section>
     <script type="text/javascript" src="//rb.revolvermaps.com/0/0/6.js?i=1eyn18efppk&amp;m=7&amp;s=270&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
 </section><section>

@@ -4,7 +4,7 @@
   <title><![CDATA[The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-05-21T00:31:28+02:00</updated>
+  <updated>2015-10-10T21:56:13+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -235,6 +235,185 @@ positive sequence at the right side, and one whose best subsequence is itself.</
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>Notice that the file is called image.svg and that the browser can load it asynchronously, and that’s the reason for the load event handler.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Kaggle TFI Restaurants: Beat the Benchmark With PCA and Elastic Net]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net/"/>
+    <updated>2015-04-05T23:03:15+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net</id>
+    <content type="html"><![CDATA[<p>This competition is about predicting the revenue of prospective restaurants of the TFI corporation (parent company of Burger King, apparently). They are interested in predicting the revenue as accurately as possible for the purpose of opening new restaurants. In my opinion, this has more limited utility than it seems, because open a new restaurant will drain customers from existing onesm and, at the same time, a new restaurant will not respond to the predicted revenue in the presence of other equivalent restarants. Nevertheless, this issue is not a big concern if we want to predict the best spot to invest in.</p>
+
+<p>As a first approximation, we can use elasticnet (L1 and L2 norm regularization) with PCA as input preprocessing, to make nicer orthogonal features and remove potentially unwanted noise.</p>
+
+<p>This method got me to position one hundred something I believe.</p>
+
+<p>First, we import all the methods we require:</p>
+
+<ul>
+  <li>Numpy: For numeric array</li>
+  <li>Pandas: For dataframes</li>
+  <li>Pylab: For matplotlib and graphic visualization</li>
+  <li>Sklearn: For Statistical/Machine Learning methods</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</span><span class="line"><span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">ElasticNetCV</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</span><span class="line"><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>We define auxiliary functions. For this iteration we want to get rid of specific attributes such as the city or features that need further processing before they are used such as the restaurant opening date, city type or restaurant type.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="k">def</span> <span class="nf">data_preprocess</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">,</span> <span class="s">&quot;City&quot;</span><span class="p">,</span> <span class="s">&quot;City Group&quot;</span><span class="p">,</span> <span class="s">&quot;Id&quot;</span><span class="p">,</span> <span class="s">&quot;Open Date&quot;</span><span class="p">,</span> <span class="s">&quot;Type&quot;</span><span class="p">]]]</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">data</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">get_categorical</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="n">ctyp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">((</span><span class="nb">input</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">==</span> <span class="nb">input</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;T1&#39;</span><span class="p">,</span><span class="s">&#39;T2&#39;</span><span class="p">,</span><span class="s">&#39;T3&#39;</span><span class="p">,</span><span class="s">&#39;T4&#39;</span><span class="p">])</span>
+</span><span class="line">    <span class="n">city</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">((</span><span class="nb">input</span><span class="p">[</span><span class="s">&quot;City Group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">==</span> <span class="nb">input</span><span class="p">[</span><span class="s">&quot;City Group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;C1&#39;</span><span class="p">,</span><span class="s">&#39;C2&#39;</span><span class="p">])</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">city</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctyp</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">remove_revenue</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+</span><span class="line">    <span class="k">return</span> <span class="nb">input</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">input</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">]]]</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Load up train and test data</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">orig_train</span> <span class="o">=</span> <span class="n">read_file</span><span class="p">(</span><span class="s">&#39;data/train.csv&#39;</span><span class="p">)</span>
+</span><span class="line"><span class="n">orig_test</span> <span class="o">=</span>  <span class="n">read_file</span><span class="p">(</span><span class="s">&#39;data/test.csv&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">revenue</span>  <span class="o">=</span> <span class="n">orig_train</span><span class="p">[</span><span class="s">&quot;revenue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span class="line"><span class="n">logrevenue</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">revenue</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">train_test</span> <span class="o">=</span> <span class="n">remove_revenue</span><span class="p">(</span><span class="n">orig_train</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orig_test</span><span class="p">)</span>
+</span><span class="line"><span class="n">train_test_proc</span> <span class="o">=</span> <span class="n">data_preprocess</span><span class="p">(</span><span class="n">train_test</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">train</span> <span class="o">=</span> <span class="n">train_test_proc</span><span class="p">[:</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</span><span class="line"><span class="n">test</span>  <span class="o">=</span> <span class="n">train_test_proc</span><span class="p">[</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+</span><span class="line"><span class="n">train_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">train</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</span><span class="line"><span class="n">test_pca</span>  <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">test</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">categories</span> <span class="o">=</span> <span class="n">get_categorical</span><span class="p">(</span><span class="n">train_test</span><span class="p">)</span>
+</span><span class="line"><span class="n">train_mix</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[:</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_pca</span><span class="p">))</span>
+</span><span class="line"><span class="n">categories_test</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[</span><span class="n">orig_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</span><span class="line"><span class="n">test_mix</span>  <span class="o">=</span> <span class="n">categories_test</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_pca</span><span class="p">))</span>
+</span><span class="line"><span class="n">pca</span><span class="o">.</span><span class="n">explained_variance_ratio_</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">no_cols_to_remove</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class="line"><span class="n">train_x</span> <span class="o">=</span> <span class="n">train_mix</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,:</span><span class="o">-</span><span class="n">no_cols_to_remove</span><span class="p">]</span>
+</span><span class="line"><span class="n">test_x</span> <span class="o">=</span> <span class="n">test_mix</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,:</span><span class="o">-</span><span class="n">no_cols_to_remove</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">lm</span> <span class="o">=</span> <span class="n">ElasticNetCV</span><span class="p">(</span><span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.09</span><span class="p">)</span>
+</span><span class="line"><span class="n">lm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">logrevenue</span><span class="p">[</span><span class="s">&#39;revenue&#39;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">predicted</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_x</span><span class="p">)</span>
+</span><span class="line"><span class="n">test_revenue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">predicted</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">pl</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">test_revenue</span><span class="p">)</span>
+</span><span class="line"><span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">test_revenue</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>x</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">revenue</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">lm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_x</span><span class="p">)))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">submission</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_revenue</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Prediction&#39;</span><span class="p">])</span>
+</span><span class="line"><span class="n">submission</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Id&#39;</span>
+</span><span class="line"><span class="n">submission</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">&#39;submissions/pca-elastic-search-cv.csv&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 ]]></content>
   </entry>
   
@@ -1897,54 +2076,6 @@ c(\mathbf{x}) = \sum_{i \in SV} h_i e^{\frac{\| \mathbf{x} - \mathbf{x}\|^2}{2\t
 <p>If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is <a href="http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU">Geodesic Analysis on the Gaussian RKHS hypersphere</a>, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L^2$ and the feature space is a sequence space that belongs to $\ell^2$). In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.</p>
 
 <p><sub>This post is part of my old blog. See the original <a href="http://machinomics.blogspot.co.uk/search/label/kernel%20methods">here</a></sub></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[My New Blog in Github Pages + Octopress]]></title>
-    <link href="http://analyticbastard.github.io/blog/2014/11/01/my-new-blog/"/>
-    <updated>2014-11-01T23:19:40+01:00</updated>
-    <id>http://analyticbastard.github.io/blog/2014/11/01/my-new-blog</id>
-    <content type="html"><![CDATA[<p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
-others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
-instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
-follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
-for real).</p>
-
-<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
-personal set up, because the plugin at my job is definitely more functional.</p>
-
-<p>Now a code snippet. I follow the instructions at Octopress’ website.</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="bash"><span class="line">env <span class="nv">x</span><span class="o">=</span><span class="s1">&#39;() { :;}; echo vulnerable&#39;</span> bash -c <span class="s2">&quot;echo this is a test&quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>Check. Beautiful. Lovin’ it.</p>
-
-<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
-to be able to edit in Latex. The lack of it is a no go. Luckily, I found
-<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
-to do precisely that. Testing:</p>
-
-<script type="math/tex; mode=display">
-\int_a^b f(x) dx = F(b) - F(a)
-</script>
-
-<p>Check. Awesome! Sold!</p>
-
-<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
-by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
-
-<p>Let be it! I am moving to Github Pages + Octopress.</p>
-
-<p>Edit: I forgot to test Youtube video insertion. <del>Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a></del> 
-This is done by pasting the <em>iframe</em> tag as given by youtube.
-OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
-
-<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
-
-<p>No responsiveness as of yet, but it’s fine for now.</p>
 ]]></content>
   </entry>
   

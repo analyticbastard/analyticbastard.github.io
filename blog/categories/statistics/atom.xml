@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statistics | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/statistics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-05-21T00:31:28+02:00</updated>
+  <updated>2015-10-10T21:56:13+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,149 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Kaggle TFI Restaurants: Beat the Benchmark With PCA and Elastic Net]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net/"/>
+    <updated>2015-04-05T23:03:15+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net</id>
+    <content type="html"><![CDATA[<p>This competition is about predicting the revenue of prospective restaurants of the TFI corporation (parent company of Burger King, apparently). They are interested in predicting the revenue as accurately as possible for the purpose of opening new restaurants. In my opinion, this has more limited utility than it seems, because open a new restaurant will drain customers from existing onesm and, at the same time, a new restaurant will not respond to the predicted revenue in the presence of other equivalent restarants. Nevertheless, this issue is not a big concern if we want to predict the best spot to invest in.</p>
+
+<p>As a first approximation, we can use elasticnet (L1 and L2 norm regularization) with PCA as input preprocessing, to make nicer orthogonal features and remove potentially unwanted noise.</p>
+
+<p>This method got me to position one hundred something I believe.</p>
+
+<p>First, we import all the methods we require:</p>
+
+<ul>
+  <li>Numpy: For numeric array</li>
+  <li>Pandas: For dataframes</li>
+  <li>Pylab: For matplotlib and graphic visualization</li>
+  <li>Sklearn: For Statistical/Machine Learning methods</li>
+</ul>
+
+<p><code>python
+import numpy as np
+import pandas as pd
+import pylab as pl
+from sklearn.cross_validation import cross_val_score
+from sklearn.linear_model import ElasticNetCV
+from sklearn.decomposition import PCA
+from sklearn.metrics import mean_squared_error
+</code></p>
+
+<p>We define auxiliary functions. For this iteration we want to get rid of specific attributes such as the city or features that need further processing before they are used such as the restaurant opening date, city type or restaurant type.</p>
+
+<p>&#8220;` python
+def data_preprocess(input):
+    data = input[[col for col in input.columns if not col in [“revenue”, “City”, “City Group”, “Id”, “Open Date”, “Type”]]]
+    return data</p>
+
+<p>def get_categorical(input):
+    ctyp = pd.DataFrame((input.Type.values[:,np.newaxis] == input.Type.unique()).astype(int),columns=[‘T1’,’T2’,’T3’,’T4’])
+    city = pd.DataFrame((input[“City Group”].values[:,np.newaxis] == input[“City Group”].unique()).astype(int),columns=[‘C1’,’C2’])
+    return city.join(ctyp)</p>
+
+<p>def remove_revenue(input):
+    return input[[col for col in input.columns if not col in [“revenue”]]]</p>
+
+<p>def read_file(input_file):
+    return pd.read_csv(input_file)
+&#8220;`</p>
+
+<p>Load up train and test data</p>
+
+<p><code>python
+orig_train = read_file('data/train.csv')
+orig_test =  read_file('data/test.csv')
+</code>
+x</p>
+
+<p><code>python
+revenue  = orig_train["revenue"].copy()
+logrevenue = pd.DataFrame(np.log(revenue))
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+train_test = remove_revenue(orig_train).append(orig_test)
+train_test_proc = data_preprocess(train_test)
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+train = train_test_proc[:orig_train.shape[0]]
+test  = train_test_proc[orig_train.shape[0]:]
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+pca = PCA()
+train_pca = pca.fit_transform(np.log(train+1))
+test_pca  = pca.transform(np.log(test+1))
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+categories = get_categorical(train_test)
+train_mix = categories[:orig_train.shape[0]].join(pd.DataFrame(train_pca))
+categories_test = categories[orig_train.shape[0]:].reset_index(drop=True)
+test_mix  = categories_test.join(pd.DataFrame(test_pca))
+pca.explained_variance_ratio_
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+no_cols_to_remove = 1
+train_x = train_mix.ix[:,:-no_cols_to_remove]
+test_x = test_mix.ix[:,:-no_cols_to_remove]
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+lm = ElasticNetCV(l1_ratio=0.09)
+lm.fit(train_x, logrevenue['revenue'])
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+predicted = lm.predict(test_x)
+test_revenue = np.exp(predicted)
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+pl.hist(test_revenue)
+pl.show()
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+test_revenue.mean()
+</code></p>
+
+<p>x</p>
+
+<p><code>python
+mean_squared_error(revenue, np.exp(lm.predict(train_x)))
+</code></p>
+
+<p><code>python
+submission = pd.DataFrame(test_revenue, columns=['Prediction'])
+submission.index.name = 'Id'
+submission.to_csv('submissions/pca-elastic-search-cv.csv')
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Monty Hall Problem (My Explanation)]]></title>

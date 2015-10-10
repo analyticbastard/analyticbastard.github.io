@@ -9,7 +9,7 @@
   <meta name="author" content="Analytic Bastard">
 
   
-  <meta name="description" content="Clojure Mar 8th, 2015 10:54 am I’ve been making several projects with Clojure since 2013. Clojure is incredibly expressive and offers a declarative &hellip;">
+  <meta name="description" content="Clojure Mar 8th, 2015 10:54 am I’ve been making several projects with Clojure since 2013. In Erudine, we heavily used Clojure to develop new modules &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,23 +80,31 @@
 <time class='entry-date' datetime='2015-03-08T10:54:00+01:00'><span class='date'><span class='date-month'>Mar</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:54 am</span></time></p>
   </header>
   
-  <p>I’ve been making several projects with Clojure since 2013. Clojure is incredibly expressive and offers a declarative
-approach to software developing that improves the code readability and also the programmer’s focus,
-since it prevents scrolling up and down on the screen, promoting that a whole concept, idea or
-algorithm is present on the screen as a whole.</p>
+  <p>I’ve been making several projects with Clojure since 2013. </p>
 
-<p>In Erudine Financial Control, we heavily used Clojure to develop new modules on top of legacy
-software written in Java, including a new persistence repository based on Datomic.</p>
+<p>In Erudine, we heavily used Clojure to develop new modules on top of legacy
+software written in Java, including a new persistence repository based on Datomic and a
+network collaboration server, of which I have designed and developed an encryption
+layer for clients to seamlessly and safely store external passwords.</p>
 
 <p>Among others, we used the following libraries</p>
 
 <p>clojure.walk, org.clojure/data.zip, org.clojure/tools.cli, org.clojure/tools.namespace, core.async,
-clj-http, clj-time, aleph, datomic.api, http-kit, compojure.</p>
+clj-http, clj-time, aleph, datomic.api, http-kit, compojure, reagent.</p>
 
 <p>As part of the collaboration server, we used ClojureScript and the Leiningen’s Figwheel plugin for
 live coding the web server, which shared Datomic access code in the API server and the administrator web
 console. This abstracted codebase was compiled to either Clojure (API server) or ClojureScript (web console)
 via the Cljx plugin.</p>
+
+<p>As part of out-of-work projects, I have developed among others:</p>
+
+<ul>
+  <li>macros that extend the expressivity of Clojure thread flows when more than one
+evaluation over a result must be made at a point in the flow</li>
+  <li>hierarchical storage (also accessible from Java or any language based on the JVM), which
+can store values in a tree easily accessible through a hierarchy of keys specified as a collection.</li>
+</ul>
 
   
     <footer>

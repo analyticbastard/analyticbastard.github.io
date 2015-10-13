@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Computation | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/computation/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-10T22:29:25+02:00</updated>
+  <updated>2015-10-13T19:51:17+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -515,7 +515,9 @@ existing libraries will need time to be adapted to Python.</p>
 
 <p>I found the following paragraph of particular interest (read more <a href="http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800">here</a>):</p>
 
-<p><blockquote><p>By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language’s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft’s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.</p></blockquote></p>
+<p>{% blockquote %}
+By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language’s fortunes, despite the significant benefits it provides. I have previously opined that Microsoft’s contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence. 
+{% endblockquote %}</p>
 
 <p>I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90’s when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody’s experience, is that programmer’s time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).</p>
 

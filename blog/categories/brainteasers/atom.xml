@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Brainteasers | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/brainteasers/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-10T22:29:25+02:00</updated>
+  <updated>2015-10-13T19:51:17+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Max Subsequence Problem]]></title>
+    <link href="http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem/"/>
+    <updated>2015-05-02T21:05:23+02:00</updated>
+    <id>http://analyticbastard.github.io/blog/2015/05/02/max-subsequence-problem</id>
+    <content type="html"><![CDATA[<p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence.
+We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p>
+
+<p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves,
+using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two
+parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when
+we find either two or only one element in the sequence (odd or even super sequence), at which point
+we return the information we need (we’ll talk about this later on).</p>
+
+<p>&#8220;` Clojure
+(defn best [myseq]
+  (let [N (count myseq)]
+    (case N
+      1 nil
+      2 nil
+      (let [n (Math/round (double (/ N 2)))
+            m (- N n)
+            s1 (take n myseq)
+            s2 (take-last m myseq)
+            m1 (best s1)
+            m2 (best s2)
+            ]</p>
+
+<pre><code>    ))
+)) ``` 
+</code></pre>
+
+<p>This was the basic recursion skeleton. Now we need to return and process the interesting information
+about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary
+search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be
+negative because they would otherwise increase the sum). For example, the sequence <code>[-1 -1 3 4 -2]</code> would
+produce a best subsequence <code>[3 4]</code>, a discarded left sequence <code>[-1 -1]</code> and a discarded right sequence
+[-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that
+we don’t need to recompute at the upper-levels (when returning from the call). The information retrieved from
+the lower levels is a map with this structure (using the previous example):</p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>where the first three keys are the sums, and the last three keys are the proper sequences. We now build
+the information according to the sequence we recieve as input. When there is only one element, it is easy to
+see that we need to return empty discarded sequences, and the input number as the best sequence. If we get
+two elements, we need to check whether both are positive, in which case, we return both as the best sequence
+(and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence,
+and return the other as either the left or right discarded sequence depending on whether it was the first or
+second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is
+to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when
+we have two subsequences, we need to check if the total sum of both best subsequences and everything in the
+middle (the right discarded sequence from the left half and the left discarded sequence from the right half)
+is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose
+the left and right discarded sequences, and the best sequences up to this stage. This is the result:</p>
+
+<p><code>Clojure
+(defn best [myseq]
+  (let [N (count myseq)]
+    (case N
+      1 {:l 0 :r 0 :sl [] :sr [] :seq myseq :sum (first myseq)}
+      2 (if (and (&gt; (first myseq) 0) (&gt; (second myseq) 0))
+          {:l 0 :r 0 :sl [] :seq myseq :sr [] :sum (apply + myseq)}
+          (if (&lt; (first myseq) (second myseq))
+            {:l (first myseq) :r 0 :sl [(first myseq)] :sr [] :seq (rest myseq) :sum (second myseq)}
+            {:l 0 :r (second myseq) :sl [] :sr (rest myseq) :seq [(first myseq)] :sum (first myseq)}))
+      (let [n (Math/round (double (/ N 2)))
+            m (- N n)
+            s1 (take n myseq)
+            s2 (reverse (take m (reverse myseq)))
+            m1 (best s1)
+            m2 (best s2)
+            sum2 (+ (:sum m1) (:sum m2))
+            cost (+ (:r m1) (:l m2))
+            sumt (+ sum2 cost)
+            ]
+        (if (&gt; sumt (max (:sum m1) (:sum m2)))
+          {:l (:l m1) :r (:r m2) :sl (:sl m1) :sr (:sr m2) :seq (concat (:seq m1) (:sr m1) (:sl m2) (:seq m2)) :sum sumt}
+          (if (&gt; (:sum m1) (:sum m2))
+            {:l (:l m1) :r (+ (:r m1) (:l m2) (:sum m2) (:r m2)) :sl (:sl m1) :sr (concat (:sr m1) (:sl m2) (:seq m2) (:sr m2)) :seq (:seq m1) :sum (:sum m1)}
+            {:l (+ (:l m1) (:r m1) (:sum m1) (:l m2)) :r (:r m2) :sl (concat (:sl m1) (:seq m1) (:sr m1) (:sl m2)) :sr (:sr m2) :seq (:seq m2) :sum (:sum m2)}))
+        ))
+    ))
+</code></p>
+
+<p>As test data, we choose three sequences, one whose best subsequence is in the middle, separated by negative numbers
+(one in this case), another whose best subsequence is at the left side, and it is not worth to join it with another
+positive sequence at the right side, and one whose best subsequence is itself.</p>
+
+<p><code>Clojure
+(def ex-bestmiddle [-1 -3 -2 1 2 -1 3 -2 2 1 -1 -3])
+(def ex-bestleft [-1 3 2 1 -2 -5 -3 -3 2 3 -1 -3])
+(def ex-bestall [5 -3 -2 2 2 -1 3 -2 2 1 -1 3])
+</code></p>
+
+<p>For the last one:</p>
+
+<p><code>Clojure
+(best ex-bestall)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>For the best subsequence on the left side:</p>
+
+<p><code>Clojure
+(best ex-bestleft)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>And for the best subsequence in the middle:</p>
+
+<p><code>Clojure
+(best ex-bestmiddle)
+</code></p>
+
+<p>&#8220;` Clojure</p>
+<p>&#8220;`</p>
+
+<p>The code is on <a href="https://github.com/analyticbastard/java-exercises">Github</a> under <code>src/main/clj</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Monty Hall Problem (My Explanation)]]></title>

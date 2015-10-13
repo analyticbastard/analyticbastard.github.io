@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tools | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/tools/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-10T22:29:25+02:00</updated>
+  <updated>2015-10-13T19:51:17+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -343,28 +343,7 @@ apply the <em>gap</em> <em>NA</em> filling policy, which took the last valid val
 thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bootstrap Image Pop plugin</a>, of which I will
 talk in the following post).</p>
 
-<p><!-- Image -->
-<a id="img-12" class="imgModal floatRight" href="#imgModal-12" data-toggle="modal">
-  <img src="/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
-</a>
-<div style="float: none;"></div>
-
-<!-- Modal -->
-<div class="modal fade" id="imgModal-12" tabindex="-1" role="dialog" aria-labelledby="imgModal-12Label" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      </div>
-      <div class="modal-body">
-        <img src="/images/ipython-notebook.png" width="1366" height="771" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal --></p>
+<p>{% imgpopup /images/ipython-notebook.png 25% right %}</p>
 
 <p>As you can see, this makes it especially adequate for information propagation environments such as board presentations
 of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to
@@ -690,6 +669,54 @@ presents the results via a Python web server to multiple browsers.</p>
 technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of
 existing libraries will need time to be adapted to Python.</p>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[My New Blog in Github Pages + Octopress]]></title>
+    <link href="http://analyticbastard.github.io/blog/2014/11/01/my-new-blog/"/>
+    <updated>2014-11-01T23:19:40+01:00</updated>
+    <id>http://analyticbastard.github.io/blog/2014/11/01/my-new-blog</id>
+    <content type="html"><![CDATA[<p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that
+others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and
+instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to 
+follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit,
+for real).</p>
+
+<p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my
+personal set up, because the plugin at my job is definitely more functional.</p>
+
+<p>Now a code snippet. I follow the instructions at Octopress’ website.</p>
+
+<p><code>bash
+env x='() { :;}; echo vulnerable' bash -c "echo this is a test"
+</code></p>
+
+<p>Check. Beautiful. Lovin’ it.</p>
+
+<p>Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan’t
+to be able to edit in Latex. The lack of it is a no go. Luckily, I found
+<a href="http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/">this helpful blog post</a>, which describes how
+to do precisely that. Testing:</p>
+
+<script type="math/tex; mode=display">
+\int_a^b f(x) dx = F(b) - F(a)
+</script>
+
+<p>Check. Awesome! Sold!</p>
+
+<p>Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up
+by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.</p>
+
+<p>Let be it! I am moving to Github Pages + Octopress.</p>
+
+<p>Edit: I forgot to test Youtube video insertion. <del>Apparently you need a <a href="https://github.com/optikfluffel/octopress-responsive-video-embed">plugin</a></del> 
+This is done by pasting the <em>iframe</em> tag as given by youtube.
+OK, cloned, copied Ruby files and test (with current time position including <em>?start=253</em>):</p>
+
+<iframe width="560" height="315" src="//www.youtube.com/embed/X6s6YKlTpfw?start=253" frameborder="0" allowfullscreen=""></iframe>
+
+<p>No responsiveness as of yet, but it’s fine for now.</p>
 ]]></content>
   </entry>
   

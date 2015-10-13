@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Kaggle | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/kaggle/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-10T22:29:25+02:00</updated>
+  <updated>2015-10-13T19:51:17+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -67,29 +67,33 @@ def data_preprocess(input):
 <p><code>python
 orig_train = read_file('data/train.csv')
 orig_test =  read_file('data/test.csv')
-</code>
-x</p>
+</code></p>
+
+<p>Take both revenue and its logarithm so that we can build different models</p>
 
 <p><code>python
 revenue  = orig_train["revenue"].copy()
 logrevenue = pd.DataFrame(np.log(revenue))
 </code></p>
 
-<p>x</p>
+<p>We now remove the revenue column and append the test data, to have matching columns when preprocessing.
+Well take columns that actually convey information about the depdendent variable.</p>
 
 <p><code>python
 train_test = remove_revenue(orig_train).append(orig_test)
 train_test_proc = data_preprocess(train_test)
 </code></p>
 
-<p>x</p>
+<p>After that, we divide each dataset.</p>
 
 <p><code>python
 train = train_test_proc[:orig_train.shape[0]]
 test  = train_test_proc[orig_train.shape[0]:]
 </code></p>
 
-<p>x</p>
+<p>We now compute the PCA transform of the train dataset and transform both train and test
+(we could cheat by transforming everything and we would get higher accuracy because
+the subspaces would be closer to the true principal components)</p>
 
 <p><code>python
 pca = PCA()
@@ -97,17 +101,17 @@ train_pca = pca.fit_transform(np.log(train+1))
 test_pca  = pca.transform(np.log(test+1))
 </code></p>
 
-<p>x</p>
+<p>We now produce categories:</p>
 
 <p><code>python
 categories = get_categorical(train_test)
 train_mix = categories[:orig_train.shape[0]].join(pd.DataFrame(train_pca))
 categories_test = categories[orig_train.shape[0]:].reset_index(drop=True)
 test_mix  = categories_test.join(pd.DataFrame(test_pca))
-pca.explained_variance_ratio_
 </code></p>
 
-<p>x</p>
+<p>We now remove the last component, since we can see that its explained variance ratio
+is very close to zero, which does not happen with the rest of the components.</p>
 
 <p><code>python
 no_cols_to_remove = 1
@@ -115,44 +119,26 @@ train_x = train_mix.ix[:,:-no_cols_to_remove]
 test_x = test_mix.ix[:,:-no_cols_to_remove]
 </code></p>
 
-<p>x</p>
+<p>We now fit two models, estimating the logarithm of the revenue.</p>
 
-<p><code>python
+<p>&#8220;` python
 lm = ElasticNetCV(l1_ratio=0.09)
-lm.fit(train_x, logrevenue['revenue'])
-</code></p>
+lm.fit(train_x, logrevenue[‘revenue’])</p>
 
-<p>x</p>
-
-<p><code>python
-predicted = lm.predict(test_x)
+<p>predicted = lm.predict(test_x)
 test_revenue = np.exp(predicted)
-</code></p>
+&#8220;`</p>
 
-<p>x</p>
-
-<p><code>python
-pl.hist(test_revenue)
-pl.show()
-</code></p>
-
-<p>x</p>
-
-<p><code>python
-test_revenue.mean()
-</code></p>
-
-<p>x</p>
-
-<p><code>python
-mean_squared_error(revenue, np.exp(lm.predict(train_x)))
-</code></p>
+<p>Finally, produce the results:</p>
 
 <p><code>python
 submission = pd.DataFrame(test_revenue, columns=['Prediction'])
 submission.index.name = 'Id'
 submission.to_csv('submissions/pca-elastic-search-cv.csv')
 </code></p>
+
+<p>We could also predict the untransformed revenue and mix the model, which would probably
+have less variance and be more accurate in out-of-sample data.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Data Analysis | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/data-analysis/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-13T19:51:17+02:00</updated>
+  <updated>2015-10-13T22:17:00+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -168,7 +168,28 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 <p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
-<p>{% imgpopup /images/plot_faces_decomposition_002.png 50% right %}</p>
+<p><!-- Image -->
+<a id="img-11" class="imgModal floatRight" href="#imgModal-11" data-toggle="modal">
+  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-11" tabindex="-1" role="dialog" aria-labelledby="imgModal-11Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
 
 <p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
 
@@ -284,7 +305,7 @@ X = np.vstack((cintc,cmsft)).T
 plot(X)
 </code></p>
 
-<p>{% img /images/pca_intc_msft_stocks.png %}</p>
+<p><img src="/images/pca_intc_msft_stocks.png"></p>
 
 <p>Build the object</p>
 
@@ -311,7 +332,7 @@ pca.explained_variance_ratio_
 plot(T)
 </code></p>
 
-<p>{% img /images/pca_intc_msft_transform.png %}</p>
+<p><img src="/images/pca_intc_msft_transform.png"></p>
 ]]></content>
   </entry>
   
@@ -348,7 +369,28 @@ apply the <em>gap</em> <em>NA</em> filling policy, which took the last valid val
 thanks to the <a href="https://github.com/rayfaddis/octopress-BootstrapModal">Bootstrap Image Pop plugin</a>, of which I will
 talk in the following post).</p>
 
-<p>{% imgpopup /images/ipython-notebook.png 25% right %}</p>
+<p><!-- Image -->
+<a id="img-12" class="imgModal floatRight" href="#imgModal-12" data-toggle="modal">
+  <img src="/images/ipython-notebook.png" width="342" height="193" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-12" tabindex="-1" role="dialog" aria-labelledby="imgModal-12Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/ipython-notebook.png" width="1366" height="771" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
 
 <p>As you can see, this makes it especially adequate for information propagation environments such as board presentations
 of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to

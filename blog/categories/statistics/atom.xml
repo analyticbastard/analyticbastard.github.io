@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Statistics | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/statistics/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-13T19:51:17+02:00</updated>
+  <updated>2015-10-13T22:17:00+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -12,135 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Kaggle TFI Restaurants: Beat the Benchmark With PCA and Elastic Net]]></title>
-    <link href="http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net/"/>
-    <updated>2015-04-05T23:03:15+02:00</updated>
-    <id>http://analyticbastard.github.io/blog/2015/04/05/kaggle-tfi-restaurants-beat-the-benchmark-with-pca-and-elastic-net</id>
-    <content type="html"><![CDATA[<p>This competition is about predicting the revenue of prospective restaurants of the TFI corporation (parent company of Burger King, apparently). They are interested in predicting the revenue as accurately as possible for the purpose of opening new restaurants. In my opinion, this has more limited utility than it seems, because open a new restaurant will drain customers from existing onesm and, at the same time, a new restaurant will not respond to the predicted revenue in the presence of other equivalent restarants. Nevertheless, this issue is not a big concern if we want to predict the best spot to invest in.</p>
-
-<p>As a first approximation, we can use elasticnet (L1 and L2 norm regularization) with PCA as input preprocessing, to make nicer orthogonal features and remove potentially unwanted noise.</p>
-
-<p>This method got me to position one hundred something I believe.</p>
-
-<p>First, we import all the methods we require:</p>
-
-<ul>
-  <li>Numpy: For numeric array</li>
-  <li>Pandas: For dataframes</li>
-  <li>Pylab: For matplotlib and graphic visualization</li>
-  <li>Sklearn: For Statistical/Machine Learning methods</li>
-</ul>
-
-<p><code>python
-import numpy as np
-import pandas as pd
-import pylab as pl
-from sklearn.cross_validation import cross_val_score
-from sklearn.linear_model import ElasticNetCV
-from sklearn.decomposition import PCA
-from sklearn.metrics import mean_squared_error
-</code></p>
-
-<p>We define auxiliary functions. For this iteration we want to get rid of specific attributes such as the city or features that need further processing before they are used such as the restaurant opening date, city type or restaurant type.</p>
-
-<p>&#8220;` python
-def data_preprocess(input):
-    data = input[[col for col in input.columns if not col in [“revenue”, “City”, “City Group”, “Id”, “Open Date”, “Type”]]]
-    return data</p>
-
-<p>def get_categorical(input):
-    ctyp = pd.DataFrame((input.Type.values[:,np.newaxis] == input.Type.unique()).astype(int),columns=[‘T1’,’T2’,’T3’,’T4’])
-    city = pd.DataFrame((input[“City Group”].values[:,np.newaxis] == input[“City Group”].unique()).astype(int),columns=[‘C1’,’C2’])
-    return city.join(ctyp)</p>
-
-<p>def remove_revenue(input):
-    return input[[col for col in input.columns if not col in [“revenue”]]]</p>
-
-<p>def read_file(input_file):
-    return pd.read_csv(input_file)
-&#8220;`</p>
-
-<p>Load up train and test data</p>
-
-<p><code>python
-orig_train = read_file('data/train.csv')
-orig_test =  read_file('data/test.csv')
-</code></p>
-
-<p>Take both revenue and its logarithm so that we can build different models</p>
-
-<p><code>python
-revenue  = orig_train["revenue"].copy()
-logrevenue = pd.DataFrame(np.log(revenue))
-</code></p>
-
-<p>We now remove the revenue column and append the test data, to have matching columns when preprocessing.
-Well take columns that actually convey information about the depdendent variable.</p>
-
-<p><code>python
-train_test = remove_revenue(orig_train).append(orig_test)
-train_test_proc = data_preprocess(train_test)
-</code></p>
-
-<p>After that, we divide each dataset.</p>
-
-<p><code>python
-train = train_test_proc[:orig_train.shape[0]]
-test  = train_test_proc[orig_train.shape[0]:]
-</code></p>
-
-<p>We now compute the PCA transform of the train dataset and transform both train and test
-(we could cheat by transforming everything and we would get higher accuracy because
-the subspaces would be closer to the true principal components)</p>
-
-<p><code>python
-pca = PCA()
-train_pca = pca.fit_transform(np.log(train+1))
-test_pca  = pca.transform(np.log(test+1))
-</code></p>
-
-<p>We now produce categories:</p>
-
-<p><code>python
-categories = get_categorical(train_test)
-train_mix = categories[:orig_train.shape[0]].join(pd.DataFrame(train_pca))
-categories_test = categories[orig_train.shape[0]:].reset_index(drop=True)
-test_mix  = categories_test.join(pd.DataFrame(test_pca))
-</code></p>
-
-<p>We now remove the last component, since we can see that its explained variance ratio
-is very close to zero, which does not happen with the rest of the components.</p>
-
-<p><code>python
-no_cols_to_remove = 1
-train_x = train_mix.ix[:,:-no_cols_to_remove]
-test_x = test_mix.ix[:,:-no_cols_to_remove]
-</code></p>
-
-<p>We now fit two models, estimating the logarithm of the revenue.</p>
-
-<p>&#8220;` python
-lm = ElasticNetCV(l1_ratio=0.09)
-lm.fit(train_x, logrevenue[‘revenue’])</p>
-
-<p>predicted = lm.predict(test_x)
-test_revenue = np.exp(predicted)
-&#8220;`</p>
-
-<p>Finally, produce the results:</p>
-
-<p><code>python
-submission = pd.DataFrame(test_revenue, columns=['Prediction'])
-submission.index.name = 'Id'
-submission.to_csv('submissions/pca-elastic-search-cv.csv')
-</code></p>
-
-<p>We could also predict the untransformed revenue and mix the model, which would probably
-have less variance and be more accurate in out-of-sample data.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Monty Hall Problem (My Explanation)]]></title>
@@ -191,7 +62,7 @@ functions and array transformations, and this job will be quick)</p>
 peppers = imread('peppers.png');
 </code></p>
 
-<p>{% img center /images/peppers.png ‘Original image’ ‘images’ %}</p>
+<p><img class="center" src="/images/peppers.png" title="‘Original image’ ‘images’" ></p>
 
 <p>Now we simulate uniband (grayscale) and multiband (downscaled) imagery</p>
 
@@ -202,11 +73,11 @@ uniband = rgb2gray(peppers);
 
 <p>The multiband image looks like this</p>
 
-<p>{% img center /images/multiband.png ‘Multiband image’ ‘images’ %}</p>
+<p><img class="center" src="/images/multiband.png" title="‘Multiband image’ ‘images’" ></p>
 
 <p>And the high resolution (low band) image looks like this</p>
 
-<p>{% img center /images/uniband.png ‘High resolution image’ ‘images’ %}</p>
+<p><img class="center" src="/images/uniband.png" title="‘High resolution image’ ‘images’" ></p>
 
 <p>In the first case, we resize the image to a quarter of its size <strong><em>in both dimensions</em></strong>.
 This means we loose 15/16 of the information! In the second case we compute a grayscale
@@ -225,7 +96,7 @@ resolution image (adjust its dimensions)</p>
 interpolated=imresize(multiband,[size(uniband,1) size(uniband,2)]);
 </code></p>
 
-<p>{% img center /images/interpolated.png ‘Interpolated image from the low resolution, hight band image’ ‘images’ %}</p>
+<p><img class="center" src="/images/interpolated.png" title="‘Interpolated image from the low resolution, hight band image’ ‘images’" ></p>
 
 <p>The missing information from this image with respect to the original is noticeable
 to the eye in form of blur.</p>
@@ -292,7 +163,7 @@ merged = reshape(I, size(interpolated));
 
 <p>The result shows that, effectively, we enjoy the best part of the two worlds</p>
 
-<p>{% img center /images/merged.png ‘Merged image’ ‘images’ %}</p>
+<p><img class="center" src="/images/merged.png" title="‘Merged image’ ‘images’" ></p>
 
 <p>As mentioned, we could play with the luminiscence levels to attain a color more loyal
 to the original.</p>
@@ -327,7 +198,28 @@ coefficient vector is of norm one) so that it is of maximum square norm.</p>
 <p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average
 for example, the first <a href="http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html">eigenface</a> .</p>
 
-<p>{% imgpopup /images/plot_faces_decomposition_002.png 50% right %}</p>
+<p><!-- Image -->
+<a id="img-13" class="imgModal floatRight" href="#imgModal-13" data-toggle="modal">
+  <img src="/images/plot_faces_decomposition_002.png" width="300" height="226" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-13" tabindex="-1" role="dialog" aria-labelledby="imgModal-13Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/plot_faces_decomposition_002.png" width="600" height="451" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
 
 <p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p>
 
@@ -443,7 +335,7 @@ X = np.vstack((cintc,cmsft)).T
 plot(X)
 </code></p>
 
-<p>{% img /images/pca_intc_msft_stocks.png %}</p>
+<p><img src="/images/pca_intc_msft_stocks.png"></p>
 
 <p>Build the object</p>
 
@@ -470,7 +362,7 @@ pca.explained_variance_ratio_
 plot(T)
 </code></p>
 
-<p>{% img /images/pca_intc_msft_transform.png %}</p>
+<p><img src="/images/pca_intc_msft_transform.png"></p>
 ]]></content>
   </entry>
   
@@ -488,9 +380,7 @@ its difficulty.</p>
 
 <p>My little sister could not understand the meaning of (talking about box plots):</p>
 
-<p>{% blockquote %}
-If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.
-{% endblockquote %}</p>
+<p><blockquote><p>If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level.</p></blockquote></p>
 
 <p>Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.</p>
 

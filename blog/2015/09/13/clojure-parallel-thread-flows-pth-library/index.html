@@ -1,0 +1,43 @@
+<p>I developed a new library that solves the problem of the need to disrupt a Clojure thread
+flow because two quantities need to be computed from the current value of the thread
+flow, for example, using the current value as the index to two arrays which need to be
+merged.</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class="clojure"><span class="line"><span class="p">(</span><span class="nf">use</span> <span class="ss">&#39;pth</span><span class="p">)</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">map1</span> <span class="p">{</span><span class="ss">:1</span> <span class="ss">:a</span> <span class="ss">:2</span> <span class="ss">:b</span> <span class="ss">:3</span> <span class="ss">:c</span><span class="p">}</span>
+</span><span class="line">        <span class="nv">map2</span> <span class="p">{</span><span class="ss">:1</span> <span class="mi">1</span> <span class="ss">:2</span> <span class="mi">2</span> <span class="ss">:3</span> <span class="mi">3</span><span class="p">}</span>
+</span><span class="line">        <span class="nv">combine</span> <span class="p">(</span><span class="nb">partial apply </span><span class="nv">interleave</span><span class="p">)</span>
+</span><span class="line">        <span class="nv">into-map</span> <span class="p">(</span><span class="nb">partial apply </span><span class="nv">array-map</span><span class="p">)</span>
+</span><span class="line">        <span class="p">]</span>
+</span><span class="line">    <span class="p">(</span><span class="nb">-&gt; </span><span class="p">[</span><span class="ss">:1</span> <span class="ss">:2</span><span class="p">]</span>
+</span><span class="line">        <span class="p">(</span><span class="nf">-&lt;&lt;</span> <span class="p">(</span><span class="nb">map </span><span class="nv">map1</span><span class="p">)</span>
+</span><span class="line">             <span class="p">(</span><span class="nb">map </span><span class="nv">map2</span><span class="p">))</span>
+</span><span class="line">        <span class="nv">combine</span>
+</span><span class="line">        <span class="nv">into-map</span>
+</span><span class="line">        <span class="p">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Observe that in the second step of the thread, we compute two values without structurally
+breaking the flow or needing an overly complex construct such as</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="clojure"><span class="line"><span class="p">(</span><span class="o">#</span><span class="p">(</span><span class="k">do </span><span class="p">[(</span><span class="nb">map </span><span class="nv">map1</span> <span class="nv">%</span><span class="p">)</span> <span class="p">(</span><span class="nb">map </span><span class="nv">map2</span> <span class="nv">%</span><span class="p">)]))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Do not worry about the utility functions combine and into map, I will create extra macros
+that are argument-first and argument-last, so that you will be completely free regarding
+which outer thread form you want to use, and then pick up the incoming value.</p>

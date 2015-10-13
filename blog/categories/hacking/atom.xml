@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Hacking | The Analytic Bastard]]></title>
   <link href="http://analyticbastard.github.io/blog/categories/hacking/atom.xml" rel="self"/>
   <link href="http://analyticbastard.github.io/"/>
-  <updated>2015-10-13T19:51:17+02:00</updated>
+  <updated>2015-10-13T22:17:00+02:00</updated>
   <id>http://analyticbastard.github.io/</id>
   <author>
     <name><![CDATA[Analytic Bastard]]></name>
@@ -115,7 +115,28 @@ this point I was desperate. I decided to run Multibeast once again against my OS
 any appealing driver. This (albeit some minor problems with the PS/2 drivers causing a halt in the boot process, solved
 my manually deleting the drivers -and updating the cache!!!) granted me full graphics acceleration.</p>
 
-<p>{% imgpopup /images/yosemite.png 25% right %}</p>
+<p><!-- Image -->
+<a id="img-14" class="imgModal floatRight" href="#imgModal-14" data-toggle="modal">
+  <img src="/images/yosemite.png" width="342" height="192" title="Click for larger view." />
+</a>
+<div style="float: none;"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="imgModal-14" tabindex="-1" role="dialog" aria-labelledby="imgModal-14Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img src="/images/yosemite.png" width="1366" height="768" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal --></p>
 
 <p>The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any
 hacker done so. I got hold of an AR5B97 which is compatible, and installing the <a href="http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html">toledaARPT.kext</a>

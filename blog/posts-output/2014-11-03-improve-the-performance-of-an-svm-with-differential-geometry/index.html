@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: Improve the performance of an SVM with differential geometry</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/blog/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/blog/">Home</a></li>
+                <li
+                ><a href="/blog/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/blog/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/blog/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">November 3, 2014</div>
+        
+    </div>
+    <h2>Improve the performance of an SVM with differential geometry</h2>
+</div>
+<div>
+    
+    <p>Though I am not very wise concerning differential geometry (others aren't either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p><p><a href='http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf'>Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p><p>$$ ds^ 2 = \sum&#95;{i,j} g&#95;{i,j} dx&#95;i dx&#95;j $$</p><p>We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job</p><p>$$ \tilde{g}&#95;{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g&#95;{i,j} (\mathbf{x}) $$</p><p>This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying</p><p>$$ \tilde{K}(\mathbf{x&#95;1},\mathbf{x&#95;2}) = c(\mathbf{x&#95;1}) c(\mathbf{x&#95;2}) K(\mathbf{x&#95;1},\mathbf{x&#95;2}) $$</p><p>where $c(\mathbf{x})$ is a positive function, that can be built from the data as</p><p>$$ c(\mathbf{x}) = \sum&#95;{i \in SV} h&#95;i e^ {\frac{\| \mathbf{x} - \mathbf{x}\|^ 2}{2\tau^ 2}} $$</p><p>where $h&#95;i$ is a parameter of the $i$-th support vector.</p><p>Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.</p><p>The authors report higher classification accuracy and less support vectors than with standard kernels.</p><p><sub>This post is part of my old blog. See the original <a href='http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html'>here</a></sub></p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/blog/tags-output/Mathematics/">Mathematics</a>
+    
+    <a href="/blog/tags-output/Machine Learning/">Machine Learning</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/blog/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">&laquo; A gentle introduction to RKHS and Kernel Methods</a>
+        
+        
+        <a class="right" href="/blog/posts-output/2014-11-02-the-gaussian-kernel-maps-data-onto-the-sphere/">The Gaussian kernel maps data onto the sphere &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/blog/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/blog/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/blog/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/blog/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/blog/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/blog/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/blog/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/blog/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/blog/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/blog/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/blog/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/blog/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Installing Theano on Windows</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/blog/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/blog/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/blog/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/blog/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/blog/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/blog/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: Principal Component Analysis</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2015-01-01-principal-component-analysis/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/blog/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/blog/">Home</a></li>
+                <li
+                ><a href="/blog/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/blog/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/blog/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">January 1, 2015</div>
+        
+    </div>
+    <h2>Principal Component Analysis</h2>
+</div>
+<div>
+    
+    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p><p>$$ \max&#92;_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^ 2 &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average for example, the first <a href='http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html'>eigenface</a> .</p><p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p><p>Since the scalar product induces a norm, $ \mathbf{w}^ T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p><p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^ T \mathbf{X}$ be the covariance matrix.</p><p>$$ \max&#95;{\|\mathbf{w}\|=1}  \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the solution. This can be written as the optimization of a Rayleigh quotient.</p><p>$$ \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^ 2} &#92; \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^ T \mathbf{w}} &#92; $$</p><p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite).  Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^ 2 = \mathbf{w}^ T \mathbf{w} = 1$. The same result can be computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p><p>$$ \frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^ T \mathbf{w} - 1\right) \right) = 0 &#92; \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0 $$</p><p>We arrive at</p><p>$$ \mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w} $$</p><p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p><p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of $\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal, I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts to stacking up the vectors $\mathbf{w}$ in columns).</p><p>$$ \mathbf{W} = \mathbf{U} \mathbf{D}^ {\frac{1}{2}} $$</p><p>And the transformation of the data is</p><p>$$ \mathbf{Z} = \mathbf{X} \mathbf{W} $$</p><h3><a name="probabilistic&#95;derivation"></a>Probabilistic derivation</h3><p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following this approach. The seminal paper is <a href='http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf'>"Probabilistic Principal Component Analysis", by M. E. Tipping and C. M. Bishop</a>, published in The Journal of the Royal Statistical Society, Series B.</p><p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain transformations even in the presence of missing attributes. This, however, has been rarely implemented on software packages.  The <a href='http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&d=R_BC'>Probabilistic PCA R Package</a> supports incomplete data.</p><h3><a name="playground&#95;with&#95;sklearn&#95;and&#95;r"></a>Playground with Sklearn and R</h3><p>In IPython Notebook, open up a new sheet and import the necessary modules</p><pre><code class="python">import matplotlib
+import datetime
+from matplotlib.finance import quotes&#95;historical&#95;yahoo
+from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+import numpy as np
+</code></pre><p>Define the date range that we are going to extract prices from</p><pre><code class="python">date1 = datetime.date&#40;2004, 1, 1&#41;
+date2 = datetime.date&#40;2013, 1, 6&#41;
+</code></pre><p>Get the historical data</p><pre><code class="python">intc = quotes&#95;historical&#95;yahoo&#40;&quot;INTC&quot;, date1, date2&#41;
+msft = quotes&#95;historical&#95;yahoo&#40;&quot;MSFT&quot;, date1, date2&#41;
+</code></pre><p>Extract the closing price from the data</p><pre><code class="python">cintc = np.array&#40;&#91;q&#91;2&#93; for q in intc&#93;&#41;
+cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
+</code></pre><p>Build a data matrix to be fed to the PCA implementation in a suitable format</p><pre><code class="python">X = np.vstack&#40;&#40;cintc,cmsft&#41;&#41;.T
+</code></pre><p>Plot both closing prices so that we can visually compare them with the transforms</p><pre><code class="python">plot&#40;X&#41;
+</code></pre><p>{% img /images/pca<i>intc</i>msft_stocks.png %}</p><p>Build the object</p><pre><code class="python">pca = PCA&#40;&#41;
+</code></pre><p>Transform the data</p><pre><code class="python">T = pca.fit&#95;transform&#40;X&#41;
+</code></pre><p>Let's examine the variance ratio explained by each of the components. Notice that the first component explains a lot of the price movement of both stocks.</p><pre><code class="python">pca.explained&#95;variance&#95;ratio&#95;
+</code></pre><p>with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation</p><pre><code class="python">plot&#40;T&#41;
+</code></pre><p>{% img /images/pca<i>intc</i>msft_transform.png %}</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/blog/tags-output/Mathematics/">Mathematics</a>
+    
+    <a href="/blog/tags-output/Statistics/">Statistics</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/blog/posts-output/2015-01-06-hackintosh/">&laquo; Hackintosh up my Asus K55V</a>
+        
+        
+        <a class="right" href="/blog/posts-output/2014-12-30-equality-of-means-statistical-test/">Equality of means statistical test made easy &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/blog/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/blog/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/blog/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/blog/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/blog/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/blog/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/blog/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/blog/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/blog/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/blog/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/blog/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/blog/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Installing Theano on Windows</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/blog/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/blog/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/blog/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/blog/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/blog/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/blog/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+</body>
+</html>

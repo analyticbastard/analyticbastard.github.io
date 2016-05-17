@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: Naive Bayes implemented with Map/Reduce operations</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/blog/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/blog/">Home</a></li>
+                <li
+                ><a href="/blog/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/blog/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/blog/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">November 5, 2014</div>
+        
+    </div>
+    <h2>Naive Bayes implemented with Map/Reduce operations</h2>
+</div>
+<div>
+    
+    <p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p><p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p><ul><li>emit the label as key</li><li>for each variable (attribute) emit its index (for example, column index) also as key</li></ul><p>We only need to emit the category (attribute value) as the value</p><p>In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes</p><p>$$ P(X&#95;i=x&#95;{i,0}|y=y&#95;0) $$</p><p>for which we emit a triplet</p><ul><li>emit the label as key</li><li>for each variable (attribute) emit its index (for example, column index) also as key</li><li>emit the category for this attribute of this example</li></ul><p>As value we only need to emit the previous division.</p><p>To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.</p><p>I've just implemented this in MyML. </p><p>As an example its usage, we consider two random uniform variables $$&#91;0,1&#93;$$ and its classification depends on the sum  being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding information loss in the process.</p><pre><code class="python">import numpy as np
+Xd=np.random.random&#40;&#40;256,2&#41;&#41;
+X=1&#42;&#40;Xd&lt;.5&#41;
+y=1&#42;&#40;Xd.sum&#40;axis=1&#41;&lt;.5&#41;
+
+from myml.supervised import bayes
+
+
+reload&#40;bayes&#41;
+nb = bayes.NaiveBayes&#40;&#41;
+nb.fit&#40;X, y&#41;
+nb.predict&#40;X&#91;0,:&#93;&#41;
+pred=nb.predict&#40;X&#41;
+
+#Now we predict the &#40;whole&#41; dataset 
+1.0&#42;np.sum&#40;1.0&#42;&#40;pred&gt;.5&#41;.reshape&#40;&#40;1,len&#40;y&#41;&#41;&#41;&#91;0&#93;==y&#41;/len&#40;y&#41; 
+
+0.89453125
+
+</code></pre>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/blog/tags-output/Python/">Python</a>
+    
+    <a href="/blog/tags-output/Programming/">Programming</a>
+    
+    <a href="/blog/tags-output/Machine Learning/">Machine Learning</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/blog/posts-output/2014-11-06-pythagorean-theorem/">&laquo; Pythagorean theorem</a>
+        
+        
+        <a class="right" href="/blog/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">A gentle introduction to RKHS and Kernel Methods &raquo;</a>
+        
+    </div>
+
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/blog/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/blog/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/blog/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/blog/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/blog/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/blog/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/blog/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/blog/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/blog/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/blog/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/blog/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/blog/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript</a></li>
+                        
+                        <li><a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Installing Theano on Windows</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/blog/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/blog/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/blog/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/blog/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/blog/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/blog/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/blog/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/blog/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/blog/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/blog/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+</body>
+</html>

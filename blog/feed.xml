@@ -1,0 +1,673 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss version='2.0' xmlns:atom='http://www.w3.org/2005/Atom'>
+<channel>
+<atom:link href='http://analyticbastard.github.io' rel='self' type='application/rss+xml'/>
+<title>
+The Analytic Bastard
+</title>
+<link>
+http://analyticbastard.github.io
+</link>
+<description>
+Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
+</description>
+<lastBuildDate>
+Wed, 18 May 2016 00:39:03 +0200
+</lastBuildDate>
+<generator>
+clj-rss
+</generator>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-03-30-new-blog-with-cryogen/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-03-30-new-blog-with-cryogen/
+</link>
+<title>
+New blog using Cryogen
+</title>
+<description>
+&lt;p&gt;Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.&lt;/p&gt;&lt;p&gt;Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?&lt;/p&gt;&lt;p&gt;Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.&lt;/p&gt;&lt;p&gt;What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 30 Mar 2016 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/
+</link>
+<title>
+Clojure parallel thread flows: pth library
+</title>
+<description>
+&lt;p&gt;I developed a new library that solves the problem of the need to disrupt a Clojure thread flow because two quantities need to be computed from the current value of the thread flow, for example, using the current value as the index to two arrays which need to be merged.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;use 'pth&amp;#41;
+
+&amp;#40;let &amp;#91;map1 {:1 :a :2 :b :3 :c}
+        map2 {:1 1 :2 2 :3 3}
+        combine &amp;#40;partial apply interleave&amp;#41;
+        into-map &amp;#40;partial apply array-map&amp;#41;
+        &amp;#93;
+    &amp;#40;-&amp;gt; &amp;#91;:1 :2&amp;#93;
+        &amp;#40;-&amp;lt;&amp;lt; &amp;#40;map map1&amp;#41;
+             &amp;#40;map map2&amp;#41;&amp;#41;
+        combine
+        into-map
+        &amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Observe that in the second step of the thread, we compute two values without structurally breaking the flow or needing an overly complex construct such as&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;#&amp;#40;do &amp;#91;&amp;#40;map map1 %&amp;#41; &amp;#40;map map2 %&amp;#41;&amp;#93;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Do not worry about the utility functions combine and into map, I will create extra macros that are argument-first and argument-last, so that you will be completely free regarding which outer thread form you want to use, and then pick up the incoming value.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 13 Sep 2015 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-05-02-max-subsequence-problem/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-05-02-max-subsequence-problem/
+</link>
+<title>
+Max subsequence problem
+</title>
+<description>
+&lt;p&gt;The following brainteaser is about finding the maximum-sum subsequence within a given sequence. We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.&lt;/p&gt;&lt;p&gt;We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves, using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when we find either two or only one element in the sequence (odd or even super sequence), at which point we return the information we need (we'll talk about this later on).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn best &amp;#91;myseq&amp;#93;
+  &amp;#40;let &amp;#91;N &amp;#40;count myseq&amp;#41;&amp;#93;
+    &amp;#40;case N
+      1 nil
+      2 nil
+      &amp;#40;let &amp;#91;n &amp;#40;Math/round &amp;#40;double &amp;#40;/ N 2&amp;#41;&amp;#41;&amp;#41;
+            m &amp;#40;- N n&amp;#41;
+            s1 &amp;#40;take n myseq&amp;#41;
+            s2 &amp;#40;take-last m myseq&amp;#41;
+            m1 &amp;#40;best s1&amp;#41;
+            m2 &amp;#40;best s2&amp;#41;
+            &amp;#93;
+
+        &amp;#41;&amp;#41;
+    &amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This was the basic recursion skeleton. Now we need to return and process the interesting information about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be negative because they would otherwise increase the sum). For example, the sequence ```[-1 -1 3 4 -2]``` would produce a best subsequence ```[3 4]```, a discarded left sequence ```[-1 -1]``` and a discarded right sequence [-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that we don't need to recompute at the upper-levels (when returning from the call). The information retrieved from the lower levels is a map with this structure (using the previous example):&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;{:l -2 :sum 7 :r &amp;#91;-2&amp;#93; :sl &amp;#91;-1 -1&amp;#93; :seq &amp;#91;3 4&amp;#93; :sr &amp;#91;-2&amp;#93;}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;where the first three keys are the sums, and the last three keys are the proper sequences. We now build the information according to the sequence we recieve as input. When there is only one element, it is easy to see that we need to return empty discarded sequences, and the input number as the best sequence. If we get two elements, we need to check whether both are positive, in which case, we return both as the best sequence (and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence, and return the other as either the left or right discarded sequence depending on whether it was the first or second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when we have two subsequences, we need to check if the total sum of both best subsequences and everything in the middle (the right discarded sequence from the left half and the left discarded sequence from the right half) is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose the left and right discarded sequences, and the best sequences up to this stage. This is the result:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn best &amp;#91;myseq&amp;#93;
+  &amp;#40;let &amp;#91;N &amp;#40;count myseq&amp;#41;&amp;#93;
+    &amp;#40;case N
+      1 {:l 0 :r 0 :sl &amp;#91;&amp;#93; :sr &amp;#91;&amp;#93; :seq myseq :sum &amp;#40;first myseq&amp;#41;}
+      2 &amp;#40;if &amp;#40;and &amp;#40;&amp;gt; &amp;#40;first myseq&amp;#41; 0&amp;#41; &amp;#40;&amp;gt; &amp;#40;second myseq&amp;#41; 0&amp;#41;&amp;#41;
+          {:l 0 :r 0 :sl &amp;#91;&amp;#93; :seq myseq :sr &amp;#91;&amp;#93; :sum &amp;#40;apply + myseq&amp;#41;}
+          &amp;#40;if &amp;#40;&amp;lt; &amp;#40;first myseq&amp;#41; &amp;#40;second myseq&amp;#41;&amp;#41;
+            {:l &amp;#40;first myseq&amp;#41; :r 0 :sl &amp;#91;&amp;#40;first myseq&amp;#41;&amp;#93; :sr &amp;#91;&amp;#93; :seq &amp;#40;rest myseq&amp;#41; :sum &amp;#40;second myseq&amp;#41;}
+            {:l 0 :r &amp;#40;second myseq&amp;#41; :sl &amp;#91;&amp;#93; :sr &amp;#40;rest myseq&amp;#41; :seq &amp;#91;&amp;#40;first myseq&amp;#41;&amp;#93; :sum &amp;#40;first myseq&amp;#41;}&amp;#41;&amp;#41;
+      &amp;#40;let &amp;#91;n &amp;#40;Math/round &amp;#40;double &amp;#40;/ N 2&amp;#41;&amp;#41;&amp;#41;
+            m &amp;#40;- N n&amp;#41;
+            s1 &amp;#40;take n myseq&amp;#41;
+            s2 &amp;#40;reverse &amp;#40;take m &amp;#40;reverse myseq&amp;#41;&amp;#41;&amp;#41;
+            m1 &amp;#40;best s1&amp;#41;
+            m2 &amp;#40;best s2&amp;#41;
+            sum2 &amp;#40;+ &amp;#40;:sum m1&amp;#41; &amp;#40;:sum m2&amp;#41;&amp;#41;
+            cost &amp;#40;+ &amp;#40;:r m1&amp;#41; &amp;#40;:l m2&amp;#41;&amp;#41;
+            sumt &amp;#40;+ sum2 cost&amp;#41;
+            &amp;#93;
+        &amp;#40;if &amp;#40;&amp;gt; sumt &amp;#40;max &amp;#40;:sum m1&amp;#41; &amp;#40;:sum m2&amp;#41;&amp;#41;&amp;#41;
+          {:l &amp;#40;:l m1&amp;#41; :r &amp;#40;:r m2&amp;#41; :sl &amp;#40;:sl m1&amp;#41; :sr &amp;#40;:sr m2&amp;#41; :seq &amp;#40;concat &amp;#40;:seq m1&amp;#41; &amp;#40;:sr m1&amp;#41; &amp;#40;:sl m2&amp;#41; &amp;#40;:seq m2&amp;#41;&amp;#41; :sum sumt}
+          &amp;#40;if &amp;#40;&amp;gt; &amp;#40;:sum m1&amp;#41; &amp;#40;:sum m2&amp;#41;&amp;#41;
+            {:l &amp;#40;:l m1&amp;#41; :r &amp;#40;+ &amp;#40;:r m1&amp;#41; &amp;#40;:l m2&amp;#41; &amp;#40;:sum m2&amp;#41; &amp;#40;:r m2&amp;#41;&amp;#41; :sl &amp;#40;:sl m1&amp;#41; :sr &amp;#40;concat &amp;#40;:sr m1&amp;#41; &amp;#40;:sl m2&amp;#41; &amp;#40;:seq m2&amp;#41; &amp;#40;:sr m2&amp;#41;&amp;#41; :seq &amp;#40;:seq m1&amp;#41; :sum &amp;#40;:sum m1&amp;#41;}
+            {:l &amp;#40;+ &amp;#40;:l m1&amp;#41; &amp;#40;:r m1&amp;#41; &amp;#40;:sum m1&amp;#41; &amp;#40;:l m2&amp;#41;&amp;#41; :r &amp;#40;:r m2&amp;#41; :sl &amp;#40;concat &amp;#40;:sl m1&amp;#41; &amp;#40;:seq m1&amp;#41; &amp;#40;:sr m1&amp;#41; &amp;#40;:sl m2&amp;#41;&amp;#41; :sr &amp;#40;:sr m2&amp;#41; :seq &amp;#40;:seq m2&amp;#41; :sum &amp;#40;:sum m2&amp;#41;}&amp;#41;&amp;#41;
+        &amp;#41;&amp;#41;
+    &amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As test data, we choose three sequences, one whose best subsequence is in the middle, separated by negative numbers (one in this case), another whose best subsequence is at the left side, and it is not worth to join it with another positive sequence at the right side, and one whose best subsequence is itself.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;def ex-bestmiddle &amp;#91;-1 -3 -2 1 2 -1 3 -2 2 1 -1 -3&amp;#93;&amp;#41;
+&amp;#40;def ex-bestleft &amp;#91;-1 3 2 1 -2 -5 -3 -3 2 3 -1 -3&amp;#93;&amp;#41;
+&amp;#40;def ex-bestall &amp;#91;5 -3 -2 2 2 -1 3 -2 2 1 -1 3&amp;#93;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For the last one:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;best ex-bestall&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;{:l 0, :r 0, :sl &amp;#91;&amp;#93;, :sr &amp;#91;&amp;#93;, :seq &amp;#40;5 -3 -2 2 2 -1 3 -2 2 1 -1 3&amp;#41;, :sum 9}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For the best subsequence on the left side:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;best ex-bestleft&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;{:l -1, :r -12, :sl &amp;#91;-1&amp;#93;, :sr &amp;#40;-2 -5 -3 -3 2 3 -1 -3&amp;#41;, :seq &amp;#40;3 2 1&amp;#41;, :sum 6}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And for the best subsequence in the middle:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;best ex-bestmiddle&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;{:l -6, :r -4, :sl &amp;#40;-1 -3 -2&amp;#41;, :sr &amp;#40;-1 -3&amp;#41;, :seq &amp;#40;1 2 -1 3 -2 2 1&amp;#41;, :sum 6}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The code is on &lt;a href='https://github.com/analyticbastard/java-exercises'&gt;Github&lt;/a&gt; under ```src/main/clj```.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 02 May 2015 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/
+</link>
+<title>
+Manipulating SVG images from browser Javascript
+</title>
+<description>
+&lt;p&gt;SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.&lt;/p&gt;&lt;p&gt;I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.&lt;/p&gt;&lt;p&gt;In particular, I could convert a collection of labels whose XML tag was &quot;text&quot; within the SVG image to a Javascript array in this way:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;var labelArray = &amp;#91;&amp;#93;.slice.call&amp;#40;document.getElementsByTagName&amp;#40;&amp;quot;text&amp;quot;&amp;#41;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then I used the Functional Javascript library, which is cool, to select the element I was looking for&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;var label = fjs.first&amp;#40;function&amp;#40;elem&amp;#41; {
+                    // textContent is an attribute of SVG element type
+                    return elem.textContent === &amp;quot;ad&amp;quot;;
+}&amp;#41;&amp;#40;labelsArray&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then set special properties on it, so it would be distinguishable from the rest of the elements:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;label.style.fontSize = &amp;quot;20px&amp;quot;;
+label.style.fontWeight = &amp;quot;bold&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Otherwise, elements with specific ID could be accessed firstly by getting the SVG file content from the SVG DOM element first, then accessing the internal element by ID:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;javascript&quot;&gt;var a = document.getElementById&amp;#40;&amp;quot;imagesvg&amp;quot;&amp;#41;;
+a.addEventListener&amp;#40;&amp;quot;load&amp;quot;,function&amp;#40;&amp;#41;{
+            var svgDoc = a.contentDocument; //get the inner DOM of image.svg
+            var delta = svgDoc.getElementById&amp;#40;&amp;quot;delta&amp;quot;&amp;#41;; //get the inner element by id
+},false&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that the file is called image.svg and that the browser can load it asynchronously, and that's the reason for the load event handler.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 09 Apr 2015 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-03-25-installing-theano-on-windows/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-03-25-installing-theano-on-windows/
+</link>
+<title>
+Installing Theano on Windows
+</title>
+<description>
+&lt;p&gt;Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.&lt;/p&gt;&lt;p&gt;In this post I assume you are going with &lt;a href='http://www.lfd.uci.edu/~gohlke/pythonlibs/'&gt;Cristoph Gohlke's packages&lt;/a&gt; (for reasons, read &lt;a href='blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/'&gt;here&lt;/a&gt;)&lt;/p&gt;&lt;p&gt;Make sure you also have MS Visual C++ and the NVidia CUDA Toolkit. If you don't have it, add the Visual C++ cl.exe compiler's directory to the path. Mine was under C:\Program Files (x86)\Microsoft Visual Studio 10\VC\bin.&lt;/p&gt;&lt;p&gt;First think you need, after installing Theano, is the nose package, since Gohlke's build needs it at initialization time. Download it and install it from Gohlke's site along with Theano.&lt;/p&gt;&lt;p&gt;Next, you need this .theanorc to be put under your home directory under ```C:\USER\&lt;yourname&gt;```&lt;/p&gt;&lt;pre&gt;&lt;code&gt;&amp;#91;global&amp;#93;device = gpu
+&amp;#91;nvcc&amp;#93;compiler&amp;#95;bindir=C:\Program Files &amp;#40;x86&amp;#41;\Microsoft Visual Studio 10.0\VC\bin# flags=-m32 # we have this hard coded for now
+&amp;#91;blas&amp;#93;ldflags =# ldflags = -lopenblas # placeholder for openblas support
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I am not very sure how to use OpenBLAS from here. I assume that if all CPU operations are done via Numpy and SciPy, then their default BLAS routines are used, and no direct call to a third BLAS implementation is made, but who knows! (Well, I looked into it a little bit and it seems Theano calls BLAS directly, I guess you may want to install OpenBLAS).&lt;/p&gt;&lt;p&gt;OK, we have the NVidia compiler and tools, the MS compiler that nvcc needs and the configuration. The last thing we need is to install a GNU C and C++ compiler that supports 64 bit Windows binary creation. There is a project called MinGW-w64 that does that. I recommend to download a &lt;a href='http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/rubenvb/gcc-4.8-release/'&gt;private build from the user rubenvb&lt;/a&gt; that does not come along with the Python environment embedded as the more official build does. Put the bin directory (where GCC is located) of that installation in the Path (Control panel, etc). Theano needs this to compile the symbolic operations to object code and then to CUDA kernels if applicable, I presume.&lt;/p&gt;&lt;p&gt;If you run into errors of type &quot;GCC: sorry, unimplemented: 64-bit mode not compiled in&quot;, then your MinGW is not x86_64 compliant. The NVidia compiler nvcc can also complain if it finds no cl.exe in the path.&lt;/p&gt;&lt;p&gt;By the way, all of this was to use deep learning techniques for Kaggle competitions, so the intended consequence was to install PyLearn2. This is not listed under Gohlke's libraries, but it is not low level and all is based on Theano and maybe other numerical packages such as Numpy. Being a pure Python package, you need to clone it from Github:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git clone git://github.com/lisa-lab/pylearn2.git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And then perform&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;cd pylearn2
+python setup.py install
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;There is an easier procedure that will not require you to manually perform the git operations, and it is through pip&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;pip install git+git://github.com/lisa-lab/pylearn2.git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You have pip under your Python installation, within the Scripts directory, in the case it came with Python, or if you got Gohlke's installer.&lt;/p&gt;&lt;p&gt;This will also leave the module correctly accessible through Python.&lt;/p&gt;&lt;p&gt;Pylearn2's tutorial test is a little bit complicated to be a &quot;hello world&quot; test, so I looked for another quick example to see if my installation was finished. A very nice one popped up in &lt;a href='http://www.arngarden.com/2013/07/29/neural-network-example-using-pylearn2/'&gt;this link&lt;/a&gt;. But first I have to tell that this made me realize that Gohlke's Theano is missing three files, something very, very strange since they are called from within Theano. In particular, the module missing is everything under theano.compat. In this case, just copy the contents from Theano's &lt;a href='https://github.com/Theano/Theano/blob/master/theano/compat'&gt;Github repository&lt;/a&gt; directory compat to a compat directory created on your local theano installation under Python 2.7 (mine C:\Python27\Lib\site-packages\theano).&lt;/p&gt;&lt;p&gt;After that, run the code in &lt;a href='https://gist.github.com/arngarden/6087798'&gt;this link&lt;/a&gt;, which is a neural network solving the XOR problem. And we are done.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 25 Mar 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/
+</link>
+<title>
+The Monty Hall problem (my explanation)
+</title>
+<description>
+&lt;p&gt;If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.&lt;/p&gt;&lt;p&gt;This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R &quot;right choice&quot; V &quot;visible incorrect wallet&quot; and S &quot;your choice&quot;. We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).&lt;/p&gt;&lt;p&gt;$$P(R=3|V=2,S=1)=$$ $$\quad\frac{P(V=2,S=1|R=3)P(R=3)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}=$$ $$\quad\frac{1\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=2/3$$ $$P(V=2,S=1|R=3)=1$$&lt;/p&gt;&lt;p&gt;is the probability that, given R=3, then I was forced to show you the incorrect wallet remaining  (you already chose one incorrect wallet). $$P(V=2,S=1|R=1)=1/2$$ because there are two possible   incorrect wallets (since you selected the correct one) that I can choose from to show you.&lt;/p&gt;&lt;p&gt;Let's compute the same posterior for the case I decide not to change wallet: $$P(R=1|V=2,S=1)=$$ $$\quad\frac{P(V=2,S=1|R=1)P(R=1)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}$$ $$\quad\frac{1/2\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=1/3$$&lt;/p&gt;&lt;p&gt;Therefore if you change you have more chances of winning the 1000 bitcoins.&lt;/p&gt;&lt;p&gt;Needless to say, this works for every possible combination of $R$, $S$ and $V$. This happens, as I mentioned, because of the way I was influenced (forced) to show you the incorrect remaining wallets. To see it intuitively, imagine 100 wallets, and that you chose one amongst them, and I am forced to show you 98 incorrect wallets, leaving your choice and another one. Is it more likely that this particular wallet is the correct one (that your choice forced me to leave it) or that you chose wisely amongst 100 wallets? If you choose 99 incorrect wallets, the set that I show you is the same, except for the chosen incorrect wallets each time, and will never contain the particular correct wallet.&lt;/p&gt;&lt;p&gt;There is a cool &lt;a href='https://play.google.com/store/apps/details?id=us.steveo.montyhall'&gt;Android app&lt;/a&gt;  in case you want to check how the law of large numbers works for this problem.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 08 Mar 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/
+</link>
+<title>
+Powering up python as a data analysis platform
+</title>
+<description>
+&lt;p&gt;When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.&lt;/p&gt;&lt;p&gt;Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.&lt;/p&gt;&lt;p&gt;Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.&lt;/p&gt;&lt;p&gt;The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;r&quot;&gt;B=read.csv&amp;#40;&amp;quot;B.csv&amp;quot;,header=F&amp;#41;
+st=proc.time&amp;#40;&amp;#41;; eigB=eigen&amp;#40;B,symmetric=T&amp;#41;; en=proc.time&amp;#40;&amp;#41;
+&amp;gt; en-st
+   user  system elapsed
+   0.58    0.00    0.58 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In Python:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;from time import time
+import numpy
+B=numpy.loadtxt&amp;#40;&amp;quot;B.csv&amp;quot;, delimiter=&amp;quot;,&amp;quot;&amp;#41;
+st = time&amp;#40;&amp;#41;; U, E = numpy.linalg.eigh&amp;#40;B&amp;#41;; en = time&amp;#40;&amp;#41;
+&amp;gt;&amp;gt;&amp;gt; en-st
+0.13400006294250488
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.&lt;/p&gt;&lt;p&gt;Link to the positive definite matrix used in the experiments &lt;a href='https://www.dropbox.com/s/uxijs3jckckafra/B.7z'&gt;here&lt;/a&gt;. Link to Christoph Gohlke's page &lt;a href='http://www.lfd.uci.edu/~gohlke/pythonlibs/'&gt;here&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Despite the fact that I've been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.&lt;/p&gt;&lt;p&gt;I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.&lt;/p&gt;&lt;p&gt;Regarding data analysis, it is a little more complicated than Matlab's clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='https://sites.google.com/site/pythonforscientists/python-vs-matlab'&gt;https://sites.google.com/site/pythonforscientists/python-vs-matlab&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='http://www.stat.washington.edu/~hoytak/blog/whypython.html'&gt;http://www.stat.washington.edu/~hoytak/blog/whypython.html&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='http://stevetjoa.com/305/'&gt;http://stevetjoa.com/305/&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Data preprocessors, including text vectorizers and TF IDF preprocessors&lt;/li&gt;&lt;li&gt;SVM implementations&lt;/li&gt;&lt;li&gt;Stochastic Gradient Descent algorithms for fast regression and classification&lt;/li&gt;&lt;li&gt;Random Forest and other ensemble methods for robust regression and classification&lt;/li&gt;&lt;li&gt;Clustering algorithms&lt;/li&gt;&lt;li&gt;Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings&lt;/li&gt;&lt;li&gt;Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble...). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.&lt;/p&gt;&lt;p&gt;One of the lead programmers of the project, &lt;a href='peekaboo-vision.blogspot.com.es'&gt;Andreas Müller&lt;/a&gt; has a very insightful blog.&lt;/p&gt;&lt;p&gt;I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.&lt;/p&gt;&lt;p&gt;Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;a href='http://www.cs.toronto.edu/~tijmen/gnumpy.html'&gt;Gnumpy&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='http://deeplearning.net/tutorial/DBN.html'&gt;Deep Belief Networks&lt;/a&gt;&lt;/li&gt;&lt;li&gt;&lt;a href='http://documen.tician.de/pycuda/tutorial.html'&gt;PyCUDA&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 26 Feb 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/
+</link>
+<title>
+Image pan-sharpening with PCA
+</title>
+<description>
+&lt;p&gt;There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.&lt;/p&gt;&lt;p&gt;This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.&lt;/p&gt;&lt;p&gt;To play with this, we will use Matlab (since I've worked a little bit with its image functions and array transformations, and this job will be quick)&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;data&amp;#95;preparation&quot;&gt;&lt;/a&gt;Data preparation&lt;/h2&gt;&lt;p&gt;We first load original image (included in Matlab)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;peppers = imread&amp;#40;'peppers.png'&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/peppers.png&quot; alt=&quot;Original image&quot; /&gt;&lt;/p&gt;&lt;p&gt;Now we simulate uniband (grayscale) and multiband (downscaled) imagery&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;multiband = imresize&amp;#40;peppers, 0.25&amp;#41;;
+uniband = rgb2gray&amp;#40;peppers&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The multiband image looks like this&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/uniband.png&quot; alt=&quot;Multiband image&quot; /&gt;&lt;/p&gt;&lt;p&gt;And the high resolution (low band) image looks like this&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/uniband.png&quot; alt=&quot;High resolution image&quot; /&gt;&lt;/p&gt;&lt;p&gt;In the first case, we resize the image to a quarter of its size ***in both dimensions***. This means we loose 15/16 of the information! In the second case we compute a grayscale image, loosing complementary information.&lt;/p&gt;&lt;p&gt;These two images are the ones we are interested in combining.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;image&amp;#95;pan-sharp&amp;#95;with&amp;#95;pca&quot;&gt;&lt;/a&gt;Image pan-sharp with PCA&lt;/h2&gt;&lt;p&gt;We still need to prepare the data one more time.  We need to upscale multiband image (again, color image and same size than original but with the information from the downscaled version) so that we can combine it with the hight resolution image (adjust its dimensions)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;interpolated=imresize&amp;#40;multiband,&amp;#91;size&amp;#40;uniband,1&amp;#41; size&amp;#40;uniband,2&amp;#41;&amp;#93;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{% img center /images/interpolated.png 'Interpolated image from the low resolution, hight band image' 'images' %}&lt;/p&gt;&lt;p&gt;The missing information from this image with respect to the original is noticeable to the eye in form of blur.&lt;/p&gt;&lt;p&gt;We will now perform PCA on the images. To do that we need to convert the images to the relevant variables we want to consider in the analysis. In this case, we want to extract the bands of the images, so that we linearize the images, thus turning matrices into unidimensional vectors. In case of the grayscale image, this is easily done by just using the ```(:)``` operator. Bit in case of the RGB image, we will need to reshape into a three-dimensional multivariate X = (R, G, B)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;X=double&amp;#40;reshape&amp;#40;interpolated,numel&amp;#40;interpolated&amp;#41;/3,3&amp;#41;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;where we have also converted the data type to double so that we can use Matlab functions.&lt;/p&gt;&lt;p&gt;Now we can compute the components and the projections onto the PCA space&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;&amp;#91;C,Y&amp;#93;=pca&amp;#40;X&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;where ```C``` is the matrix of loadings and ```Y``` is the projections of the data onto the PCA space.&lt;/p&gt;&lt;p&gt;At this point, out of curiosity, we can compute correlations. Notice that the first projection will correlate a lot with the univariate, since both capture mean luminosity levels, which is an indicator of which component can be substituted by the higher resolution grayscale image.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;corrcoef&amp;#40;Y&amp;#40;:,1&amp;#41;,double&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;&amp;#41;
+corrcoef&amp;#40;Y&amp;#40;:,2&amp;#41;,double&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;&amp;#41;
+corrcoef&amp;#40;Y&amp;#40;:,3&amp;#41;,double&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The first one yields around ```0.98```. Substitute the component now&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;Z=Y;
+Z&amp;#40;:,1&amp;#41;=&amp;#40;double&amp;#40;uniband&amp;#40;:&amp;#41;-min&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;&amp;#41;./double&amp;#40;max&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;-min&amp;#40;uniband&amp;#40;:&amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#42;&amp;#40;max&amp;#40;Y&amp;#40;:,1&amp;#41;&amp;#41;-min&amp;#40;Y&amp;#40;:,1&amp;#41;&amp;#41;&amp;#41;+min&amp;#40;Y&amp;#40;:,1&amp;#41;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We are adapting the maximum and minimum luminosity of the grayscale image to match that of the first component.&lt;/p&gt;&lt;p&gt;We now project the new components back to the original RGB space. The matrix ```C``` is not orthonormal, so that we don't get a properly scaled representation, so we do it manually (we could also make the matrix ```C``` orthonormal, though the effect of changing the first component would have impacted the final luminosity levels and thus we still would have needed to rescale the colors)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;G=Z&amp;#42;C';
+I = &amp;#40;G - min&amp;#40;G&amp;#40;:&amp;#41;&amp;#41;&amp;#41;/&amp;#40;max&amp;#40;G&amp;#40;:&amp;#41;&amp;#41;-min&amp;#40;G&amp;#40;:&amp;#41;&amp;#41;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Lastly we reshape from (R, G, B) multivariate to an RGB image&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;matlab&quot;&gt;merged = reshape&amp;#40;I, size&amp;#40;interpolated&amp;#41;&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The result shows that, effectively, we enjoy the best part of the two worlds&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/merged.png&quot; alt=&quot;Merged image&quot; /&gt;&lt;/p&gt;&lt;p&gt;As mentioned, we could play with the luminiscence levels to attain a color more loyal to the original.&lt;/p&gt;&lt;p&gt;The reason why this works is that the first PCA component takes most of the information, thus creating a sort of best fit for all colors in the RGB spectrum. This is a kind of luminiscence, which is what the grayscape image is and what we substitute it by.&lt;/p&gt;&lt;p&gt;Donwload full Matlab program form &lt;a href='https://github.com/analyticbastard/pansharpening-pca'&gt;Github&lt;/a&gt;&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Fri, 20 Feb 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-02-08-google-original-page-rank/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-02-08-google-original-page-rank/
+</link>
+<title>
+Google's original Page Rank implementation
+</title>
+<description>
+&lt;p&gt;Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.&lt;/p&gt;&lt;p&gt;Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n&amp;#95;i}$, where $n&amp;#95;i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.&lt;/p&gt;&lt;p&gt;$$ \mathbf{G} = \beta \mathbf{M} + (1-\beta) \frac{\mathbf{1} \mathbf{1}^ T}{N} $$&lt;/p&gt;&lt;p&gt;where $N$ is the total number of web pages in the system and $\mathbf{1}$ is the vector of all ones of size $N$.&lt;/p&gt;&lt;p&gt;$\mathbf{G}$, being a stochastic matrix, has one as the largest eigenvalue (in module). This can be proved by taking $\mathbf{G}^ T \mathbf{1}=\mathbf{1}$, and since $\mathbf{G}^ T = (\mathbf{P}^ {-1})^ {-T} \mathbf{D} \mathbf{P}^ {-T}$, where $\mathbf{P}$ diagonalizes $\mathbf{G}$ and $\mathbf{D}$ is the resulting diagonal matrix with the eigenvalues of both $\mathbf{G}$ and $\mathbf{G^ {T}}$. Thus one is also the largest eigenvalue of $\mathbf{G}$. Proving that this is in fact the largest can be done by applyting the &lt;a href='http://en.wikipedia.org/wiki/Gershgorin_circle_theorem'&gt;Gershgoring circle theorem&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Intuitively, applyting $$\mathbf{G}$$ several times has the effect of building a power matrix $\mathbf{G}^ M$ whose largest eigenvalue is also one, but the rest are the power of elements less than one, meaning that each power decreases all the eigenvalues except the first one. This has the effect of minimizing the component of any vector (the projection) in the subspace spanned by the eigenvector corresponding to any eigenvalue except the first one. Eventually, all of them reach zero, leaving only the component of the original vector in the subspace of the eigenvector corresponding to the largest eigenvalue. This means $\mathbf{G}^ M \mathbf{x} \rightarrow \mathbf{w}$, as $M$ tends to infinite, where $\mathbf{w}$ is the dominant eigenvector (the one corresponding to the eigenvalue one).&lt;/p&gt;&lt;p&gt;The elements of this vectors are the important for all the pages registered on the database by the crawlers or robots.&lt;/p&gt;&lt;p&gt;Obviously this demands a lot of computation since the web is ever changing and this power method would need to be performed in batch intermitently, so efficient implementations are needed (based on Map Reduce or not).&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 08 Feb 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-01-10-my-git-workflow/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-01-10-my-git-workflow/
+</link>
+<title>
+My Git workflow
+</title>
+<description>
+&lt;p&gt;In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can &lt;strong&gt;always&lt;/strong&gt; go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;concepts&quot;&gt;&lt;/a&gt;Concepts&lt;/h3&gt;&lt;p&gt;The concepts, from basic qto more complex, and also sorted by the first time you are likely to come across them, is:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;&lt;strong&gt;Tracked file&lt;/strong&gt;: A file that is under version control. You specifically told Git to track it at some point of its life.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Woring directory&lt;/strong&gt;: This is the classical concept, your working copy of the project, including the files you   modify, the ones that are tracked and others that you want to leave untracked (such as IDE files or personal notes).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Local repository&lt;/strong&gt;: This is &lt;em&gt;the Git repository stored on your local computer&lt;/em&gt;. It is &lt;em&gt;not&lt;/em&gt; your local working   directory, but the files stored in the ```.git``` directory within your working copy.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;remote&lt;/strong&gt;: A remote is a remote Git server that stores our project. Several remotes can exist for a project and we   always need to specify the remote to which we are going to send our changes.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Remote repository&lt;/strong&gt;: The remote repository that stores the version of the project that everybody can see.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Branch&lt;/strong&gt;: This is the usual concept of branch. Branches of the project may evolve in an independent way from each   other. All commits are attached to a branch. Local branches may not exist in the remote repository and remote branches   may have not been updated in your local repository at some point. The default branch is called &lt;em&gt;master&lt;/em&gt;.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Conflict&lt;/strong&gt;: Incompatible changes from a source were incorporated to a dirty copy (meaning that you modify something   that had been already modified), or you have a commit that modifies something already modified in the source you are   applying. You will need to resolve this by hand.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;stash&lt;/strong&gt;: Shelve your local changes. In other words, pack your dirty working copy and leave a clean working directory   that matches the contents of your local repository. This is important if you want to do operations on files that you   have changed on your working copy, since Git will complain otherwise.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;unstash&lt;/strong&gt;: Get the changes from the stash into your local copy, making it dirty if it was not. If it was not dirty   or you got changes from another branch or from the remote repository, you are likely to have conflicts and will need   to resolve them.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;pull&lt;/strong&gt;: Update remote changes in your local repository (and your working copy so you can see them). If you have   a dirty working copy you will need to stash your local changes.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Dirty local copy&lt;/strong&gt;: Tracked files in the working directory that have been changed.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;commit&lt;/strong&gt;: A change in a tracked file (dirty local copy) that gets added to the local repository. You commit to a   branch.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;push&lt;/strong&gt;: The commits (local changes that now form part of your local repository) get sent to the remote repository   so that everybody can finally access them. This updates the remote branch.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;merge&lt;/strong&gt;: This happens when two members have changed the same tracked files on a branch in the the remote   repository. The last user in pushing the changes (&lt;em&gt;B&lt;/em&gt;) will need to pull the changes that the first one (&lt;em&gt;A&lt;/em&gt;) already pushed,   so that the official history was written firstly by &lt;em&gt;A&lt;/em&gt;. The conflicts will most likely need to be resolved by   hand by &lt;em&gt;B&lt;/em&gt;, since Git does not understand any particular language (and is not intelligent to decide on the conflicts   or have criteria to do so). Once merged, &lt;em&gt;B&lt;/em&gt; ends up with a dirty working copy, that he needs to commit and then push.   This last push will be accepted by the remote repository server (if no one has put new stuff in the meantime).&lt;/li&gt;&lt;li&gt;&lt;strong&gt;rebase&lt;/strong&gt;: This is a especially useful type of merge in which a user has not pulled down changes for a while and there   are a number of commits in the remote repository. If the user commits, then he can rebase the remote branch onto his,   so that his commit is merged on top of the remote commits. The user can then push to the remote branch and see his   changes reflected there. The rebase command is very versatile since it allows us to modify previous commits in our   repository.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;reset&lt;/strong&gt;: Set your branch to any commit in your repository. At this point a &lt;strong&gt;VERY IMPORTANT NOTE&lt;/strong&gt; must be mentioned:   any repository, including the local one, stores commits. This means that commits &lt;em&gt;ALWAYS&lt;/em&gt; survive, they are always   present, and one can always reset a branch head to a particular commit if the commit hash is available. It does not   matter that the commit had been &quot;lost&quot; in the branch chain.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;cherry-pick&lt;/strong&gt;: One can also cherry-pick a commit in the repository, given its hash, from any branch and apply it   to any other branch. Again, it does not matter that the picked commit does not currently appear on any branch, it   suffices for it to have been stored in the repository at some point.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;log&lt;/strong&gt;: This command is useful since it shows the chain of commits we have on our &lt;em&gt;local&lt;/em&gt; repository that end up   in our current state. This does not show all the commits that once belonged to a branch if the branch was reset and   then new commits arrived (in a similar way to when we undo something in MS Word and then write new stuff, we cannot   redo). Useful for rebasing stuff.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;reflog&lt;/strong&gt;: This is &lt;strong&gt;ALL&lt;/strong&gt; the repository history, including committed stuff, branch changes, pulled changes, etc.   You can find &lt;strong&gt;EVERYTHING&lt;/strong&gt; here, even commits that were apparently &quot;lost&quot; from a branch. If you feel you have lost   a commit, just issue ```git reflog``` and cherry-pick from there.&lt;/li&gt;&lt;/ul&gt;&lt;h3&gt;&lt;a name=&quot;my&amp;#95;workflow&quot;&gt;&lt;/a&gt;My workflow&lt;/h3&gt;&lt;p&gt;When you are developing a new feature for your project, want you want to do is branch the master branch (or any other, but it makes sense to pick up the official state of the project and start from there).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git checkout -b newfeature
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This creates a &lt;strong&gt;local branch&lt;/strong&gt;. We are interested in storing our changes remotely so that if something happens to our local copy (major Git messup that is easy to just ignore and pull the remote, hard drive issues, computer issues, get your stuff done in some other computer, etc), we have our changes in the remote server too.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git push origin newfeature
+git branch --set-origin=origin/newfeature
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This creates the &lt;strong&gt;remote branch&lt;/strong&gt; and sets the default link to our local branch, so that we can push to it.&lt;/p&gt;&lt;p&gt;After this, we can do our changes. I normally spend some time with a feature and by the time I want to commit to master (when the changes are not enough to be peer reviewed in a pull request to the master branch), some other workmate has committed something, which forces me to &lt;strong&gt;pull&lt;/strong&gt; and &lt;strong&gt;rebase&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;Imagine that I am working on newfeature and I notice that master has changed. It is better to incorporate the remote changes sooner so that conflicts are minimal. I first &lt;strong&gt;stash&lt;/strong&gt; my local changes, since I will need to change branch to pull master (you can do it from newfeature branch, but I like it this way).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git stash
+git checkout master
+git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now we have the remote latest changes. We switch to the newfeature branch&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git checkout newfeature
+git rebase -i master
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This tells git to get (local, which was just updated) commits onto the current branch, newfeature. Now newfeature is updated with the latest master state. We can keep on working. Get our latest changes, the ones we stashed.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git stash apply
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This applies the top of the stash to the current clean local branch, and does not remove them from the stash. I am normally interested in keeping these changes just in case. I can later remove them with ```git stash drop```. I sometimes use ```git stash pop``` which applies changes &lt;em&gt;and&lt;/em&gt; removes them from the stash. If I need to refer to the stash to get a change that I know was there but am not sure it is on the top, then I use ```git stash show &amp;ndash;name-only```, which gives me the names of the changed files.&lt;/p&gt;&lt;p&gt;When I feel I can commit (because I am done or because I want to store remotely)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git commit -m &amp;quot;Message&amp;quot;
+git push origin newfeature
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which saves my commits in the remote branch (remote repository).&lt;/p&gt;&lt;p&gt;I sometimes need to modify something that I committed, because I forgot to include it (and we want our master history to be clean of mistakes and easy to follow), I prepare my local changes (tracked files) for commit fixup. First I use the ```git add``` command to add these files to the subsequent commit. This commit will be done in a special manner: using the ```&amp;ndash;fixup=``` modifier, which accepts the hash of the commit to be modified. This is an extremely versatile modifier, since it allows us to modify commits buried deep beneath our current head. This creates a new commit chain with the fixed commit and all the commits that followed it, with new versions adapted to the changes we have introduced (and of course, all with new hashes, since they are all new commits).&lt;/p&gt;&lt;p&gt;I came across a very easy command pipe to do this, since adding files one by one is a time waster:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git status | grep modified | cut -d: -f2 | xargs git add
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The command ```status``` gives us the modified files, among other stuff (untracked files, etc). I filter the modified files (getting only the file name) and then add them as an argument to ```git add```.&lt;/p&gt;&lt;p&gt;We now fix the particular commit. In this case, I get the commit hash with ```git log```.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git commit --fixup=24ee1df941679953529aabc3d0eef5727a44c094
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This creates a &lt;em&gt;new&lt;/em&gt; commit on top of the rest. We need to squash everything so that git creates the new commit chain, wich entirely different commits and with the fixing and fixed commits merged into one. If the commit is buried below the head, you would use the commit previous to the one being fixed. Imagine this chain&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When you create the fixup commit, it will appear on top of the chain&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;f36806a856994c8365e199a72501a5461ca99497 fixup! First commit to my-source
+c0cf52f4a914641efdc635bbc6195b6bef084cdc Categories and other plugin stuff
+021086446698443ee57858872e14e7ee8ca9e2e5 Remove deploy stuff that got added by mistake
+24ee1df941679953529aabc3d0eef5727a44c094 First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then you autosquash the chain, selecting the commit previous to the fix&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git rebase -i --autosquash 7f49807d5c5651baccb6d66c504549713a7ae7d7
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The result is a new chain&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;c927d675189eedd89d972663e2ef0ffe1438f4f7 Categories and other plugin stuff
+e08ef8e27b3fd3c15e07a5e032e66a67a533ca3d Remove deploy stuff that got added by mistake
+7d94aace9629272848382abfc217282c676f108e First commit to my-source
+7f49807d5c5651baccb6d66c504549713a7ae7d7 Site updated at 2015-01-05 15:12:45 UTC
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Where the new ```7d94aace9629272848382abfc217282c676f108e``` contains the modifications needed.&lt;/p&gt;&lt;p&gt;In case the commit we want to fix is on top of the chain, the autosquash is simpler:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git rebase -i --autosquash HEAD&amp;#126;2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If I had pushed my branch to the remote repository, then I would have to force push, since there is no way my local branch and the remote one are compatible. To do that, you need to be pretty sure nobody is in the process of committing anything to that particular branch (this is not a problem if you are working on this feature on your own), and issue&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;git push origin newfeature -f
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Where origin is my remote repository name and ```-f``` overwrites the remote contents.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;final&amp;#95;thoughts&quot;&gt;&lt;/a&gt;Final thoughts&lt;/h3&gt;&lt;p&gt;We can see that we can modify our commit chain (resetting our branch head or fixing commits). Some people say it changes the history, but I don't see it that way). The true history is in the &lt;strong&gt;reflog&lt;/strong&gt;.&lt;/p&gt;&lt;p&gt;Also, people might find it difficult to think of the usefulness of having several remote repositories. For example, this blog has a remote which is, obviously, Github pages, and it is where the stuff under ```_deploy``` gets sebt.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 10 Jan 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-01-06-hackintosh/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-01-06-hackintosh/
+</link>
+<title>
+Hackintosh up my Asus K55V
+</title>
+<description>
+&lt;p&gt;I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.&lt;/p&gt;&lt;p&gt;I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.&lt;/p&gt;&lt;p&gt;Well, you must know that surfing the world of Hackintosh is overwhelming. The hacking is so volatile and the dependency on each piece of hardware so extreme, that it becomes a pain in the ass for anybody. I don't know whether to praise or take pity of the Hackintosh scene such as Tonymacx86, RehabMan, Niresh, etc.&lt;/p&gt;&lt;p&gt;Well, I had a Mac virtual machine on my other laptop, so I downloaded Yosemite and created an installation USB. First problem, my USB is not bootable. I don't know whether this problem came from creating it from the virtual machine (which needs to access the hardware in a non-native way through the host OS), but this was solved by using my Ubuntu installation to create a HFS+ bootable partition with gParted (subsequent retries with Apple's disk utility crashed my OSX VM). With a bootable USB HFS+ partition, I could create a Yosemite installation USB with &lt;a href='http://www.tonymacx86.com/445-unibeast-install-os-x-yosemite-any-supported-intel-based-pc.html'&gt;Unibeast&lt;/a&gt;. I must add that I got the Niresh distribution of Mountain Lion and Mavericks, but could not make it work either (I don't remember what the problem was).&lt;/p&gt;&lt;p&gt;Now, booting into the setup, I had some problems with my laptop keyboard and mouse not being recognized, so there was no possibility of installing the software. What I did was installing &lt;a href='http://www.tonymacx86.com/multibeast/'&gt;Multibeast&lt;/a&gt; &lt;strong&gt;on the USB drive&lt;/strong&gt;, adding PS/2 Mouse and Keyboard support in the Multibeast menu (again from the  virtual machine, to the created USB). With a workable-enough USB installation drive, I removed my previous Windows partition and installed the vanilla Mac OSX. Then I added the same multibeast support. After booting, my motherboard would not show my OSX installation as a boot option. I could only boot with my USB and choosing the installation as partition to start from. I decided to use the &lt;a href='http://sourceforge.net/projects/cloverefiboot/'&gt;Clover&lt;/a&gt; bootloader, which allowed my motherboard to show an EFI startup partition. After some more tweaking, this allowed me to boot from my Mac OS X installation. Full resolution, no sound. To get sound, I installed VoodooHDA, which created audio feedback. To solve this, the iGain setting from the VoodooHDA config panel must be set to low or zero. The configuration does not persist, so one might choose to edit the kext ```Config.plist``` and set it there (and rebuild the caches!!!) or use the VoodooHDA panel config (I don't quite remember the details of this so you better google it).&lt;/p&gt;&lt;p&gt;I noticed a blinking effect when the computer showed the login screen, and investigating it further revealed that I had no graphics acceleration. Injecting the 0x01660003 code in Clover had no effect, nor did using any other boot flag. At this point I was desperate. I decided to run Multibeast once again against my OS X installation and install pretty much any appealing driver. This (albeit some minor problems with the PS/2 drivers causing a halt in the boot process, solved my manually deleting the drivers -and updating the cache!!!) granted me full graphics acceleration.&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/yosemite.png&quot; alt=&quot;Yosemite&quot; /&gt;&lt;/p&gt;&lt;p&gt;The Wifi card of this laptop (AR5B925) is not compatible since Apple has not released kexts for this chip, nor has any hacker done so. I got hold of an AR5B97 which is compatible, and installing the &lt;a href='http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html'&gt;toledaARPT.kext&lt;/a&gt; with the Kext Helper. It is wonderful now to have Internet conectivity, though the Bluetooth is nowhere to be seen, despite this card having it.&lt;/p&gt;&lt;p&gt;This is it, a process that spanned several days summarized in a small post. I hope it provides you with clues if your issues are simmilar, but then again, everybody gets different symptoms when dealing with his own Hackintosh.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 06 Jan 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2015-01-01-principal-component-analysis/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2015-01-01-principal-component-analysis/
+</link>
+<title>
+Principal Component Analysis
+</title>
+<description>
+&lt;p&gt;Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented &quot;information&quot; about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the &quot;information&quot; and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.&lt;/p&gt;&lt;p&gt;We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.&lt;/p&gt;&lt;p&gt;$$ \max&amp;#92;_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^ 2 &amp;#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&amp;#95;i} = 0 $$&lt;/p&gt;&lt;p&gt;Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average for example, the first &lt;a href='http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html'&gt;eigenface&lt;/a&gt; .&lt;/p&gt;&lt;p&gt;where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.&lt;/p&gt;&lt;p&gt;Since the scalar product induces a norm, $ \mathbf{w}^ T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes&lt;/p&gt;&lt;p&gt;Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^ T \mathbf{X}$ be the covariance matrix.&lt;/p&gt;&lt;p&gt;$$ \max&amp;#95;{\|\mathbf{w}\|=1}  \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} &amp;#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&amp;#95;i} = 0 $$&lt;/p&gt;&lt;p&gt;For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the solution. This can be written as the optimization of a Rayleigh quotient.&lt;/p&gt;&lt;p&gt;$$ \max&amp;#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^ 2} &amp;#92; \max&amp;#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^ T \mathbf{w}} &amp;#92; $$&lt;/p&gt;&lt;p&gt;This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite).  Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^ 2 = \mathbf{w}^ T \mathbf{w} = 1$. The same result can be computed from Lagrangian constrained optimization. Taking derivatives and equating to zero&lt;/p&gt;&lt;p&gt;$$ \frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^ T \mathbf{w} - 1\right) \right) = 0 &amp;#92; \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0 $$&lt;/p&gt;&lt;p&gt;We arrive at&lt;/p&gt;&lt;p&gt;$$ \mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w} $$&lt;/p&gt;&lt;p&gt;Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.&lt;/p&gt;&lt;p&gt;Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of $\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal, I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts to stacking up the vectors $\mathbf{w}$ in columns).&lt;/p&gt;&lt;p&gt;$$ \mathbf{W} = \mathbf{U} \mathbf{D}^ {\frac{1}{2}} $$&lt;/p&gt;&lt;p&gt;And the transformation of the data is&lt;/p&gt;&lt;p&gt;$$ \mathbf{Z} = \mathbf{X} \mathbf{W} $$&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;probabilistic&amp;#95;derivation&quot;&gt;&lt;/a&gt;Probabilistic derivation&lt;/h3&gt;&lt;p&gt;I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following this approach. The seminal paper is &lt;a href='http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf'&gt;&quot;Probabilistic Principal Component Analysis&quot;, by M. E. Tipping and C. M. Bishop&lt;/a&gt;, published in The Journal of the Royal Statistical Society, Series B.&lt;/p&gt;&lt;p&gt;The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain transformations even in the presence of missing attributes. This, however, has been rarely implemented on software packages.  The &lt;a href='http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&amp;d=R_BC'&gt;Probabilistic PCA R Package&lt;/a&gt; supports incomplete data.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;playground&amp;#95;with&amp;#95;sklearn&amp;#95;and&amp;#95;r&quot;&gt;&lt;/a&gt;Playground with Sklearn and R&lt;/h3&gt;&lt;p&gt;In IPython Notebook, open up a new sheet and import the necessary modules&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;import matplotlib
+import datetime
+from matplotlib.finance import quotes&amp;#95;historical&amp;#95;yahoo
+from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+import numpy as np
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Define the date range that we are going to extract prices from&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;date1 = datetime.date&amp;#40;2004, 1, 1&amp;#41;
+date2 = datetime.date&amp;#40;2013, 1, 6&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Get the historical data&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;intc = quotes&amp;#95;historical&amp;#95;yahoo&amp;#40;&amp;quot;INTC&amp;quot;, date1, date2&amp;#41;
+msft = quotes&amp;#95;historical&amp;#95;yahoo&amp;#40;&amp;quot;MSFT&amp;quot;, date1, date2&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Extract the closing price from the data&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;cintc = np.array&amp;#40;&amp;#91;q&amp;#91;2&amp;#93; for q in intc&amp;#93;&amp;#41;
+cmsft = np.array&amp;#40;&amp;#91;q&amp;#91;2&amp;#93; for q in msft&amp;#93;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Build a data matrix to be fed to the PCA implementation in a suitable format&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;X = np.vstack&amp;#40;&amp;#40;cintc,cmsft&amp;#41;&amp;#41;.T
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Plot both closing prices so that we can visually compare them with the transforms&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;plot&amp;#40;X&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{% img /images/pca&lt;i&gt;intc&lt;/i&gt;msft_stocks.png %}&lt;/p&gt;&lt;p&gt;Build the object&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;pca = PCA&amp;#40;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Transform the data&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;T = pca.fit&amp;#95;transform&amp;#40;X&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let's examine the variance ratio explained by each of the components. Notice that the first component explains a lot of the price movement of both stocks.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;pca.explained&amp;#95;variance&amp;#95;ratio&amp;#95;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;plot&amp;#40;T&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{% img /images/pca&lt;i&gt;intc&lt;/i&gt;msft_transform.png %}&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 01 Jan 2015 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-12-30-equality-of-means-statistical-test/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-12-30-equality-of-means-statistical-test/
+</link>
+<title>
+Equality of means statistical test made easy
+</title>
+<description>
+&lt;p&gt;I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe, stating the null hypothesis, performing the computations and stating the results in the correct statistical language. I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of its difficulty.&lt;/p&gt;&lt;p&gt;My little sister could not understand the meaning of (talking about box plots):&lt;/p&gt;&lt;blockquote&gt;&lt;p&gt; If the notches overlap, we reject the null hypothesis (that the means are different) at the 95% level. &lt;/p&gt;&lt;/blockquote&gt;&lt;p&gt;Even more, the textbook was talking about medians, which made the whole thing a lot more convoluted.&lt;/p&gt;&lt;p&gt;I was shocked, and certainly ashamed, I could not even begin to articulate any word. I was naked, I didn't know anything about it. &quot;OK&quot;, I thought, &quot;let's start from the beginning. What do you &lt;em&gt;really&lt;/em&gt; want to do? What you want to do is test if the two medians of both populations are equal or not, in a statistical sense&quot;. I located a perniciously hidden important constraint: The variables are normally distributed. &quot;OK, that's it&quot;. Since their distribution is normal,  which is symmetrically distributed around the mean, the median turns out to be the mean (and also the mode). The test is reduced to an equality of means. Now, what would I do with two averages of two samples taken from two normally distributed populations? For that, one must recall the difference between the average and the mathematical expectation of a probability distribution (the first moment). The average is an aggregate of the different values of a sample.&lt;/p&gt;&lt;p&gt;$$ \bar{x} = \frac{1}{N} \sum&amp;#95;{i=1}^ N x&amp;#95;i $$&lt;/p&gt;&lt;p&gt;Each of the values come from a distribution, which means that each of them is a random variable that acquires a particular value. This means that the aggregate is also normally distributed.&lt;/p&gt;&lt;p&gt;$$ \bar{X} = \frac{1}{N} \sum&amp;#95;{i=1}^ N X&amp;#95;i \sim N(\mu, \sigma) $$&lt;/p&gt;&lt;p&gt;This $\mu$ is the mathematical expectation. Recall that this is a linear operator in the functional analytic sense of the word &lt;em&gt;operator&lt;/em&gt;, that takes a function (probability density) and spits a number in the field the distribution domain is a subset of (we assume it is the real numbers).&lt;/p&gt;&lt;p&gt;If the random variable is discrete, the operator $E[\cdot] : \ell \rightarrow \mathbb{R}$ is defined as&lt;/p&gt;&lt;p&gt;$$ E[X] = \sum&amp;#95;{i \in \mathbb{I}} x&amp;#95;i p&amp;#95;i $$&lt;/p&gt;&lt;p&gt;If it is otherwise continuous, $E[\cdot] : \mathbb{F} \rightarrow \mathbb{R}$ is:&lt;/p&gt;&lt;p&gt;$$ E[X] = \int&amp;#95;{\mathbb{X}} x p(x) dx $$&lt;/p&gt;&lt;p&gt;Where $\ell$ (for the lack of a better symbol) is a set of number sequences and $\mathbb{F}$ is a space of functions whose analysis lies beyond the purpose of this post (just treat them as sets that contain respectively discrete and continuous density functions). And $p$ (and $p&amp;#95;i$) is the probability density function or the density frequencies.&lt;/p&gt;&lt;p&gt;Then, we know by the law of large numbers that the average converges to the mathematical expectation as the number of data $N$ tends to infinity.&lt;/p&gt;&lt;p&gt;$$ \bar{x} \rightarrow E[X] = \mu $$&lt;/p&gt;&lt;p&gt;Now, with two random variables $X$ and $Y$, under the null hypothesis, their mathematical expectation, or population means, are the same:&lt;/p&gt;&lt;p&gt;$$ H_0 : \mu&amp;#95;X = \mu&amp;#95;Y $$&lt;/p&gt;&lt;p&gt;So that $\mu&amp;#95;0 - \mu&amp;#95;1 = 0$. This is, the difference must be zero. Now, this is a technicality: The difference is a new random variable $F=X-Y$ with $E[X-Y]=E[X]-E[Y]=0$ because the operator is linear and the variables come from the same distribution. &lt;em&gt;This difference is what we use in the test&lt;/em&gt;. If we knew more about how it is distributed, &lt;em&gt;we could query it for possible values to statistically validate the null hypothesis&lt;/em&gt; $H&amp;#95;0$.&lt;/p&gt;&lt;p&gt;It turns out that this new difference random variable is also normally distributed and centered around zero. We can then compute te standard deviation and fix the shape of the distribution, and place a confidence interval so that the value resulting of the difference of means falls within the 95% of probability density around zero. This means that if the sample difference is larger that the percentile enclosing this 95% of probability, we are not &lt;em&gt;accepting&lt;/em&gt; the null hypothesis (remember, that $\mu&amp;#95;X = \mu&amp;#95;Y$). Note that with probability 0.05, we are going to get a sample difference larger than that percentile. For this reason, one does not say &lt;em&gt;reject&lt;/em&gt;: There is a chance that the population means are truly different, bit there is also a small (0.05 probability) chance that, being the population means the same, we got difference of averages larger than the boundary percentile).&lt;/p&gt;&lt;p&gt;Of course, *the true statistical test is divided by a kind of standard deviation made up of an aggregate of the variances of both samples, which makes the statistic be distributed as a t distribution. Otherwise the test would have no power.*&lt;/p&gt;&lt;p&gt;To sum up, the statistical test for equality of means is:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Two samples from two populations.&lt;/li&gt;&lt;li&gt;I want to know whether the means are equal.&lt;/li&gt;&lt;li&gt;Under the hypothesis that they are equal (constrained to normality of populations and independence of samples):&lt;ul&gt;&lt;li&gt;The difference of means is zero&lt;/li&gt;&lt;li&gt;Therefore, the difference between sample averages must be small, and it is a random variable itself that must be        normally distributed around zero.&lt;/li&gt;&lt;li&gt;Once we compute the standard deviation, and hence the shape of this normal distribution of the difference, we        can select the interval to achieve the desired probability to find the value difference of means in the range,        say, 95%. If it falls outside, then we do not accept the null hypothesis (that the difference is zero). We do        this because it should be extremely rare for us to find two samples whose average difference falls ourside the        range (5%) if the null hypothesis is true.&lt;/li&gt;&lt;li&gt;If it falls inside the 95% range, then there is no statistical evidence against the null hypothesis.&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 30 Dec 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-12-14-ipython-notebook-for-data-analysis/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-12-14-ipython-notebook-for-data-analysis/
+</link>
+<title>
+Current computer language market
+</title>
+<description>
+&lt;p&gt;A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages, each of one contains data input lines in Python and their corresponding beautified output, which can include images and charts generated by &lt;em&gt;Matplotlib&lt;/em&gt; or any other library that produces graphical output.&lt;/p&gt;&lt;p&gt;In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to  implement your in-house algorithms for data munging, or at least turn you too lazy to look for them  (in the spirit of &quot;that'll only take me half an hour and then I'll devote my time to productive coding&quot;).&lt;/p&gt;&lt;p&gt;I felt picky today, so I opened up my IPython Notebook server. For data munging, as everything else, one must not re-invent the wheel, but let oneself use one of the excellent libraries out there. Pandas is an excellent example of data munging libraries. Here we are going to align two time series, and the problem is the same than in the previous post, i.e., align two time series with different time indices, such as two stock prices belonging to different markets, observing different holidays (see the full description and solution in my previous post).&lt;/p&gt;&lt;p&gt;To do that, we concluded that the alignment could be made by merging two Pandas' DataFrame objects, each containing a series data (which can be multidimensional, and whose cells will be mixed), which produces some &lt;em&gt;NA&lt;/em&gt;s. Then we could apply the &lt;em&gt;gap&lt;/em&gt; &lt;em&gt;NA&lt;/em&gt; filling policy, which took the last valid value on each series.&lt;/p&gt;&lt;p&gt;The result, prettified by IPy Notebook can be seen in the figure to the right (you can click on it, a pop up will show thanks to the &lt;a href='https://github.com/rayfaddis/octopress-BootstrapModal'&gt;Bootstrap Image Pop plugin&lt;/a&gt;, of which I will talk in the following post).  &lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/ipython-notebook.png&quot; alt=&quot;IPyhon Notebook&quot; /&gt;&lt;/p&gt;&lt;p&gt;As you can see, this makes it especially adequate for information propagation environments such as board presentations of data analytics or classroom interactive teaching. In the latter case, it is easy to imaging students connecting to the teacher's server and inputting their commands, while the teacher corrects them when they are wrong. To update items in real time, IPy Notebook should contemplate using websockets or any kind of server side events, which I believe does not so far.&lt;/p&gt;&lt;p&gt;Anyway, it is a great tool to present results in a very neat way.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 14 Dec 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-27-the-future-of-data-analysis-tools/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-27-the-future-of-data-analysis-tools/
+</link>
+<title>
+The future of data analysis tools: Python, web technologies
+</title>
+<description>
+&lt;p&gt;For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines involving data handling or processing. An easy example is this blog, which is made with  &lt;a href='http://octopress.org/'&gt;Octopress&lt;/a&gt;, a tool heavily based on &lt;em&gt;nerdy&lt;/em&gt; concepts such as compilation, version control, modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar to software development, as I hinted &lt;a href='/blog/blog/2014/11/01/my-new-blog/'&gt;on my first post on this blog&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;We find this shift to be a real convergence in the case of data analysis and software development, specifically, web software development and scripting with Python. This is almost self evident and has been noted previously, in fact, a blog entry talking about &lt;a href='http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/'&gt;pythonification of a scientist's data toolkit&lt;/a&gt; and thinking about my own data analysis toolkit got me writing about this.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;the&amp;#95;past&quot;&gt;&lt;/a&gt;The past&lt;/h3&gt;&lt;p&gt;Previously, I relied primarily on Matlab. Matlab mostly considers matrices as the primary building block in programs (cells are another very useful structure to consider when elements of a set do not share the same dimension or types). Everything is a matrix, a hyper-rectangle of things, from scalars to multi-dimensional matrices. This makes moving data in blocks very easy, since this constitutes an atomic vectorial operation. However, this reduction to the general case exposes several problems that one normally faces during the data analysis process. For example, one might be interested in correlating sells with the social sentiment about our product. This involves scraping candidate web pages, storing interesting parts of the text, performing sentiment analysis, aggregating by date and aligning with sells by date. This is an unbearable task to do by moving data blocks in Matlab.&lt;/p&gt;&lt;p&gt;R, as in &lt;a href='http://www.r-project.org/'&gt;GNU R-Project&lt;/a&gt; is a more complete framework for data munging, since it seeks to replicate the S statistical language in its origins. R, which has the concept of objects, defines a dataframe class that specifically considers column as attributes and rows as instances, defines a set of methods that allow us to deal with specialized tasks like sorting, filtering or rearranging. Although I have used R in the past, I never came to like it despite the hught support by the community. I feel that some piece is missing, and that is maybe the heavily typing for a data analysis language, poor language-level support for functional paradigms which are great for data munging (map, reduce, filter and the like). Algorithms must be implemented in an imperative setting, which isn't sometimes the best option.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;the&amp;#95;present&quot;&gt;&lt;/a&gt;The present&lt;/h3&gt;&lt;p&gt;Python comes in the middle of it all. It supports functional paradigms such as lambda functions (functions defined where they are used), functions as first-class objects, and classical operations on collections. On the other hand, Python has increasingly getting more support from the community and the amount of available libraries is astonishing. It is true that the support for statistical analysis in Python cannot be compared to that or R yet, but Python is steadily catching up, with ever increasing scientists switching in all disciplines. A number of mature projects exist in all the areas, ranging from general Statistics to Neuroimaging. Several bridges exist to R packages with no native counterpart. This, the language support for advanced features, optimized packages such as &lt;a href='www.lfd.uci.edu/~gohlke/pythonlibs/'&gt;Cristoph Golke's&lt;/a&gt; (which include NumPy and SciPy versions statically compiled against the highly efficient Intel's MKL BLAS distributions) and the extra toolset derived from years of using Python as a generalist scripting data (including a highly-productive web toolset), makes Python a worthy next-generation substitute for R.&lt;/p&gt;&lt;p&gt;Imagine that we collect two time series of stock prices that originated in two different markets. These two markets observe different holidays, so the raw time series that we get are unaligned (this is true for Yahoo Finance historical data, for example). Our data pre-processing task is to align the data, keeping the last valid price for holidays where the other market is open.&lt;/p&gt;&lt;p&gt;Pandas is a Python library that includes much of R functionality and is extremely handy for this kind of data munging tasks. By creating DataFrame objects from our raw data, we access the kind of functionality we need. In this case, once we have two DataFrame objects, &lt;em&gt;dt1&lt;/em&gt; and &lt;em&gt;dt2&lt;/em&gt;, where we simulates two weeks of data, by starting on Monday, 1st, and ending on Friday, 12th. The first market observes a holiday on Friday the 5th, while the second observes a holiday on Monday, 1st. We define the dataframes as follows:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;dt1 = DataFrame&amp;#40;{'date' : &amp;#91;1,2,3,4,8,9,10,11,12&amp;#93;, 'value' : &amp;#91;100,101,102,103,104,105,106,107,108&amp;#93;}&amp;#41;
+dt2 = DataFrame&amp;#40;{'date' : &amp;#91;1,2,3,4,5,9,10,11,12&amp;#93;, 'value' : &amp;#91;100,101,102,103,104,105,106,107,108&amp;#93;}&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To successfully mix the data toether, we can use the merge function on the column date, specifying the &lt;em&gt;outer&lt;/em&gt; merging method, which keeps data rows coming from both dataframes.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;dt1.merge&amp;#40;dt2, on=&amp;#91;'date'&amp;#93;, how='outer'&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will output&lt;/p&gt;&lt;pre&gt;&lt;code&gt;| 	| date | value&amp;#95;x | value&amp;#95;y |
+|---|:----:|--------:|--------:|
+|0 	|1     |100      |100      |
+|1 	|2     |101      |101      |
+|2 	|3     |102 	 |102      |
+|3 	|4     |103 	 |103      |
+|4 	|8     |104 	 |NaN      |
+|5 	|9     |105      |105      |
+|6 	|10    |106      |106      |
+|7 	|11    |107      |107      |
+|8 	|12    |108      |108      |
+|9 	|5     |NaN      |104      |
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We notice the dates are unsorted due to using the first dataframe, which skips friday (date 8 would be unsorted if we were to use the &lt;em&gt;dt2&lt;/em&gt; object). We sort on the &lt;em&gt;date&lt;/em&gt; column. However, there is a bigger problem, we see NaNs, Not a number values for column of a dataframe not defined in the other, since this is the usual outcome from the outer merge. In this case, the &lt;em&gt;fillna&lt;/em&gt; method of the DataFrame class with the &lt;em&gt;gap&lt;/em&gt; policy will fit our purposes (carry over the last valid value).&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;dt1.merge&amp;#40;dt2, on=&amp;#91;'date'&amp;#93;, how='outer'&amp;#41;.sort&amp;#40;columns=&amp;#91;'date'&amp;#93;&amp;#41;.fillna&amp;#40;method='pad'&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The result of all steps is&lt;/p&gt;&lt;pre&gt;&lt;code&gt;|---| date | value&amp;#95;x | value&amp;#95;y |
+|0 	|1     |100      |100      |
+|1 	|2     |101      |101      |
+|2 	|3     |102 	 |102      |
+|3 	|4     |103 	 |103      |
+|9 	|5     |103      |104      |
+|4 	|8     |104 	 |104      |
+|5 	|9     |105      |105      |
+|6 	|10    |106      |106      |
+|7 	|11    |107      |107      |
+|8 	|12    |108      |108      |
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Of course, we have excellent IDEs to work with, ranging from generalist tools and plugins for major IDE frameworks such as Eclipse and IntelliJ IDEA, to more specialized editors such as the Matlab-like Spyder, IPython Notebook (embedded in the IPython executable, which can be started with the option ```-notebook```). Also, emerging editors such as the celebrated Sublime Text and Light Table fully support Python.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;data&amp;#95;visualization:&amp;#95;past&amp;#95;and&amp;#95;present&quot;&gt;&lt;/a&gt;Data visualization: past and present&lt;/h3&gt;&lt;p&gt;An often overlooked side is data visualization. As people coming from the engineering side, where doing ugly and hard to use things is almost a badge of pride, we never care about how our results look as long as they are correct (in a sense that they fulfill their functional requirements). Presentation is not only important from the aesthetic point of view, but can also help the experts discover patterns in the data that offer previously unknown clues about the nature of our data.&lt;/p&gt;&lt;p&gt;Plotting Matlab graphs and pasting them on a Word document was the normal. R has an impressive set of graphical tools that cope with the most exigent user. For the presentations, using PowerPoint was the thing to do in corporate environments and the most adventurous could embark on the quest of using Latex Beamer for this purpose. Not any more.&lt;/p&gt;&lt;p&gt;The new normal will be web technologies. Web browsers are the most advanced graphical tool available to any user in the world. The dynamic capabilities achieved by both CSS and Javascript make any other technology pale. To easy the burden of dealing with raw CSS and Javascript, a number of libraries have been built on top of the browser native support. Some of these rise above the others. I must mention &lt;a href='http://d3js.org'&gt;D3js&lt;/a&gt;, an impressive graphical library with anything a data scientist with graphical needs might need. Visit their examples page to get a glance of the capabilities.&lt;/p&gt;&lt;p&gt; &lt;iframe width=&quot;720&quot; height=&quot;480&quot; marginheight=&quot;-500&quot; marginwidth=&quot;-300&quot; src=&quot;http://mbostock.github.io/d3/talk/20111018/collision.html&quot;&gt;&lt;/iframe&gt; &lt;/p&gt;&lt;p&gt;Lastly, PowerPoint and Latex Beamer users with professional needs will both shift to browser presentation technologies such as &lt;a href='http://lab.hakim.se/reveal-js/#/'&gt;RevealJS&lt;/a&gt;, which can be complemented with Latex renderers to achieve perfect results for the mathematical formulae, on top of superior interactions.&lt;/p&gt;&lt;p&gt; &lt;iframe width=&quot;720&quot; height=&quot;480&quot; src=&quot;http://lab.hakim.se/reveal-js/#/&quot;&gt;&lt;/iframe&gt;   &lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;the&amp;#95;future&quot;&gt;&lt;/a&gt;The future&lt;/h3&gt;&lt;p&gt;A large shift towards Python can be expected, especially in rapid prototyping. Even though R is not going away soon, Python bindings will relegate R to a second class language, so to speak, in the same way as Fortran is today, this is, there are many classical algorithms written in Fortran in the 70's and 80's still being in production today. This includes a huge number of well-known and widely-used linear algebra libraries such as Netlib's BLAS and LAPACK, which are currently interfaced to other languages such as R.&lt;/p&gt;&lt;p&gt;Also, functional programming should play a role in data analysis. Lisps variants have an important advantage over imperative paradigms such as working naturally with monads. This makes the use of the monad &lt;em&gt;some&lt;/em&gt; very useful for list processing. For example, in closure we can write&lt;/p&gt;&lt;pre&gt;&lt;code&gt;clojure
+&amp;#40;def data &amp;#91;1 2 3 4&amp;#93;&amp;#41;
+
+&amp;#40;some-&amp;gt; data
+        process1
+        process2
+        process3&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which prevents us from using a large chain of nested if blocks for this conditional processing. However, Lisp syntax is not well suited for rapid prototyping, where data scientists prefer a more imperative approach to define global variables for later processing&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;X = np.array&amp;#40;&amp;#91;1,2,3,4&amp;#93;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Functional languages might become, if not a rapid prototyping choice, indeed a data system deployment choice, since a lot more data processing and state handling will need to be done. It is worth mentioning &lt;a href='http://clojure.github.io/clojure/clojure.zip-api.html'&gt;zippers&lt;/a&gt;, &lt;a href='https://clojure.github.io/clojure/clojure.walk-api.html'&gt;walkers&lt;/a&gt; and &lt;a href='https://github.com/clojure/core.match'&gt;match&lt;/a&gt;, three libraries that make the programmer's life easier by orders of magnitude when dealing with data processing, but I will devote an article to them.&lt;/p&gt;&lt;p&gt;Regarding data visualization, it will be done primarily with web technologies on the browser, with AJAX data requests to the server were the data processing and storage are done. Here, technologies such as D3js will be a must.&lt;/p&gt;&lt;h3&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h3&gt;&lt;p&gt;In the future, it is conceivable to use an integrated framework that analyzes data with Python libraries and then presents the results via a Python web server to multiple browsers.&lt;/p&gt;&lt;p&gt;As well as Java will not totally go away in the enterprise software development world, neither will current data processing technologies such as Excel, PowerPoint, Matlab or R, since they have die hard niches. In particular, the huge amount of existing libraries will need time to be adapted to Python.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 27 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-08-current-computer-language-market/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-08-current-computer-language-market/
+</link>
+<title>
+Current computer language market
+</title>
+<description>
+&lt;p&gt;There is an interesting series of articles on &lt;a href='http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192'&gt;Dr. Dobb's&lt;/a&gt; essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief's article.&lt;/p&gt;&lt;p&gt;They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.&lt;/p&gt;&lt;p&gt;I found the following paragraph of particular interest (read more &lt;a href='http://www.drdobbs.com/jvm/the-rise-and-fall-of-languages-in-2012/240145800'&gt;here&lt;/a&gt;):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;By all measures, C++ use declined last year, demonstrating that C++11 was not enough to reanimate the language's fortunes, despite the significant benefits it provides. I have previously opined that Microsoft's contention of a return to native languages being led by C++ was unsupported by evidence. It is now clearly contradicted by the evidence.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;I feel encouraged by this statement. I believed C++ is an awful language, and always has been. Back in the late 90's when I started programming and my teenage budget in a remote outpost included a non-disposable 486 DX2 with DOS, we had no choice but to get mainstream technical stuff, and that included C++ as the only advanced systems language. My experience, and I believe everybody's experience, is that programmer's time is more important than running time, and even hardcore C++ programmers recognize they put themselves in pain when facing non-standard tasks with the language. Some would argue that pain is what you pay for system performance, but that is not true (see the paragraph below). C++ will never grow on Big Data (data processing), mobile development or cloud computing, and I would expect that performance computing to also cut C++ usage in favor of more modern, maintainable system languages, such as the D language (or the one I describe below).&lt;/p&gt;&lt;p&gt;Another option they did not mention in the area of systems programming, more than the D language, is Nimrod. It has cool features such as pointers that are traced by a lightweight garbage collector and others that directly translate to C++ pointers. Templates that can be called as operators are included, supporting metaprogramming, it supports immutable objects, a number of syntactic sugars (such as being able to call len(x), x.len or x.len if there is only one argument, command and function-like calls like echo(&quot;hello&quot;) and echo &quot;hello&quot;...), first class functions and a very good mixture between Python indentation-defined blocks and Scala function definitions, as opposed to D's C-like syntax. Nimrod compiles to C, C++, Objective C and JavaScript. Definitely a good candidate to learn and to watch.&lt;/p&gt;&lt;p&gt;On the functional but high-performant side of the market we have Erlang, Haskell, Scala and Clojure. The first three are older, especially the first two ones. In my opinion, Clojure is simplest, especially when compared to Scala. This is evident when examining a source code listing in both languages. Clojure lifts the programmer's productivity to new heights. It is worth mentioning at this point that there is a new promising contender in the field. It is &lt;a href='http://drmeister.wordpress.com/2014/09/18/announcing-clasp/'&gt;Clasp&lt;/a&gt;, a Common Lisp 2.0 compliant language that works with native C++ libraries with interoperability via the LLVM compiler framework. It is still in its inception and in a very alpha stage, but the prospective of using functional tools in a Lisp way with native C++ objects promises to raise productivity whenever time is of the essence. &lt;/p&gt;&lt;p&gt;&lt;sub&gt;This post is part of my old blog. See the original &lt;a href='http://machinomics.blogspot.com.es/2014/02/on-computer-languages-market.html'&gt;here&lt;/a&gt;&lt;/sub&gt;&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 08 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-06-pythagorean-theorem/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-06-pythagorean-theorem/
+</link>
+<title>
+Pythagorean theorem
+</title>
+<description>
+&lt;p&gt;The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove it. Here is a proof that I consider to be the easiest one. It's very analytic and avoids any geometric complications  such as triangle similarity considerations.&lt;/p&gt;&lt;p&gt;Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right triangles.&lt;/p&gt;&lt;p&gt;Let a (large) square, be cut by a reflecting straight line such as the line builds an inner square and four right  triangles, such as in the figure below. &lt;/p&gt;&lt;p&gt;Let one of the segments cut by the reflecting line be called $a$, and let the other be called $b$, which makes the side of the large outer triangle $(a+b)$. In the smaller square, let the side of the inner square be called $c$. These are the legs and the hypotenuse of the four right triangles.&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/pythagorean.png&quot; alt=&quot;Pythagorean theorem&quot; /&gt;&lt;/p&gt;&lt;p&gt;Now, we know that the area $L$ of the large is its side squared, if arithmetic holds&lt;/p&gt;&lt;p&gt;$$L = (a+b)^ 2 = a^ 2 + b^ 2 + 2ab$$&lt;/p&gt;&lt;p&gt;On the other hand, the large outer square is made up of four right triangles, whose individual area is $\frac{ab}{2}$ and the inner square, whose area is $c&lt;sup&gt;2$.&lt;/sup&gt; Thus $$ L=4 \times \frac{ab}{2} + c ^2 $$&lt;/p&gt;&lt;p&gt;Equating both expressions, we can arrive at the result of the theorem&lt;/p&gt;&lt;p&gt;$$ a^ 2 + b ^2 + 2ab = 4 \frac{ab}{2} + c ^2 &amp;#92;&amp;#92; a^ 2 + b ^2 + 2ab = 2 \times ab + c ^2&amp;#92;&amp;#92; a^ 2 + b ^2 = c ^2 $$&lt;/p&gt;&lt;p&gt;Notice that only axioms about angle reflection and straight lines are needed for this theorem (for example, we need to establish that a straight line reflects on another straight line with the complementary angle of both straight lines).&lt;/p&gt;&lt;p&gt;I made the image above and it is copylefted. If you want to use the SVG version, feel free to drop me an email.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 06 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/
+</link>
+<title>
+Naive Bayes implemented with Map/Reduce operations
+</title>
+<description>
+&lt;p&gt;I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.&lt;/p&gt;&lt;p&gt;This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;emit the label as key&lt;/li&gt;&lt;li&gt;for each variable (attribute) emit its index (for example, column index) also as key&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;We only need to emit the category (attribute value) as the value&lt;/p&gt;&lt;p&gt;In the reducer, we need to scan each category and find out how many of the elements in the current key belong to to a category, and divide by the sum of all its categories (which are our values) all which constitutes&lt;/p&gt;&lt;p&gt;$$ P(X&amp;#95;i=x&amp;#95;{i,0}|y=y&amp;#95;0) $$&lt;/p&gt;&lt;p&gt;for which we emit a triplet&lt;/p&gt;&lt;ul&gt;&lt;li&gt;emit the label as key&lt;/li&gt;&lt;li&gt;for each variable (attribute) emit its index (for example, column index) also as key&lt;/li&gt;&lt;li&gt;emit the category for this attribute of this example&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;As value we only need to emit the previous division.&lt;/p&gt;&lt;p&gt;To find out a new instance, we look into the dictionary entry corresponding to its attributes and return the bayes quotient.&lt;/p&gt;&lt;p&gt;I've just implemented this in MyML. &lt;/p&gt;&lt;p&gt;As an example its usage, we consider two random uniform variables $$&amp;#91;0,1&amp;#93;$$ and its classification depends on the sum  being more than one. Now we compute the observed variables by rounding the originals up or down, with the corresponding information loss in the process.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;import numpy as np
+Xd=np.random.random&amp;#40;&amp;#40;256,2&amp;#41;&amp;#41;
+X=1&amp;#42;&amp;#40;Xd&amp;lt;.5&amp;#41;
+y=1&amp;#42;&amp;#40;Xd.sum&amp;#40;axis=1&amp;#41;&amp;lt;.5&amp;#41;
+
+from myml.supervised import bayes
+
+
+reload&amp;#40;bayes&amp;#41;
+nb = bayes.NaiveBayes&amp;#40;&amp;#41;
+nb.fit&amp;#40;X, y&amp;#41;
+nb.predict&amp;#40;X&amp;#91;0,:&amp;#93;&amp;#41;
+pred=nb.predict&amp;#40;X&amp;#41;
+
+#Now we predict the &amp;#40;whole&amp;#41; dataset 
+1.0&amp;#42;np.sum&amp;#40;1.0&amp;#42;&amp;#40;pred&amp;gt;.5&amp;#41;.reshape&amp;#40;&amp;#40;1,len&amp;#40;y&amp;#41;&amp;#41;&amp;#41;&amp;#91;0&amp;#93;==y&amp;#41;/len&amp;#40;y&amp;#41; 
+
+0.89453125
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Wed, 05 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/
+</link>
+<title>
+A gentle introduction to RKHS and Kernel Methods
+</title>
+<description>
+&lt;p&gt;A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional &lt;em&gt;at a location&lt;/em&gt; as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,&lt;/p&gt;&lt;p&gt;$$\delta&amp;#95;x(\alpha f + \beta g) = \alpha \delta&amp;#95;x(f) + \beta\delta&amp;#95;x(g)$$&lt;/p&gt;&lt;p&gt;for a location $x$, and two real (or complex) numbers $\alpha$ and $\beta$.&lt;/p&gt;&lt;p&gt;This theory was originally developed as a functional analytic abstraction to solve a linear differential equations (as were Hilbert and Banach spaces) of positive (or negative) kind, but made their way to data analysis first in the theory of splines and later became the engine of multiple abstract machines, based on more general reproducing kernels.&lt;/p&gt;&lt;p&gt;Let $\mathbf{X}$ be a compact set or a manifold. The linear property of the evaluation functional implies, by the Riesz representation theorem, that it has a representer within the space, in contrast, for example, to the Dirac's $\delta$ evaluation functional of the Hilbert space of squared-integrable functions (equivalence classes of functions) $L^ {2} (\mathbf{X})$, which is a generalized function and, thus, does not belong to $L^ {2}(\mathbf{X})$. The Riesz representation theorem implies that there is an element &lt;em&gt;within&lt;/em&gt; the space of functions that yields the same results when operating it with the rest of the elements of that space than a certain linear functional. Note that this, alone, does not say that all functionals that are evaluation functionals are linear.  It is only when they are linear that the Riesz theorem applies and they can be associatited to certain elements within the space, and we find ourselves with a RKHS.&lt;/p&gt;&lt;p&gt;A function $f$ belonging to a RKHS $H&amp;#95;k$ can then be evaluated, at any point $\mathbf{x}$ in the set on which the functions in $H&amp;#95;k$ are defined, with the &lt;em&gt;reproducing property&lt;/em&gt; $$ f(\mathbf{x}) = \delta&amp;#95;{\mathbf{x}} (f) = \langle k&amp;#95;{\mathbf{x}}, f \rangle&amp;#95;{H&amp;#95;k} $$ where we call $\delta&amp;#95;x$ to the linear evaluation functional at location $\mathbf{x}$ for $H&amp;#95;k$, belonging to $H&amp;#95;k*$, the algebraic dual of $H&amp;#95;k$, whose representer element in $H&amp;#95;k$ is $k&amp;#95;x$. The notation $k&amp;#95;x = k(\cdot, x) \in H&amp;#95;k$ means that we fix the second argument to $\mathbf{x}$ so that $k$ is a function only on the first argument, and then it belongs to the very space $H&amp;#95;k$ it can reproduce pointwise via inner products. We work with real RKHS henceforth.&lt;/p&gt;&lt;p&gt;This function with two arguments, $k:\mathbf{X} \times \mathbf{X} \rightarrow \mathbb{R}$, is the &lt;em&gt;kernel&lt;/em&gt; of the positive linear integral operator&lt;/p&gt;&lt;p&gt;$$ T&amp;#95;k : L^ {2}(\mathbf{X}) \rightarrow H&amp;#95;k $$&lt;/p&gt;&lt;p&gt;such that the bi-linear form&lt;/p&gt;&lt;p&gt;$$ \langle f, T&amp;#95;k f \rangle_{L^ {2}(\mathbf{X})} = \int&amp;#95;{\mathbf{X}} \int&amp;#95;{\mathbf{X}} k(\mathbf{x}&amp;#95;1,\mathbf{x}&amp;#95;2) f(\mathbf{x}&amp;#95;2) dP&amp;#95;X(\mathbf{x}&amp;#95;2) f(\mathbf{x}&amp;#95;1) dP&amp;#95;X(\mathbf{x}&amp;#95;1) $$&lt;/p&gt;&lt;p&gt;is positive, where $P&amp;#95;X$ is a finite Borel measure endowing $\mathbf{X}$ and $f \in L&amp;#95;{2&amp;#95;{P&amp;#95;X}}(\mathbf{X})$, the Hilbert space of square-integrable functions under measure $P&amp;#95;X$. Such a kernel is called positive-definite. This of this as the infinite-dimensional equivalent of a matrix, which instead of finite dimensional vectors, operates functions in a linear fashion (the kernel itself does not depend on the function it is operated with under the integral sign). This is the functional-analytic way of solving differential equations, since we can invert the linear differential operator with these kind of integral operators, and this get the solution. &lt;/p&gt;&lt;p&gt;A particularly important class of linear operator kernels are positive-definite kernels, and of particular interest is that of Mercer's kernels. Given a Mercer's kernel $k$, it holds that&lt;/p&gt;&lt;p&gt;$$ k(\mathbf{x}&amp;#95;1,\mathbf{x}&amp;#95;2)=\Phi(\mathbf{x}&amp;#95;1)^ {T}\Phi(\mathbf{x}&amp;#95;2) = \sum&amp;#95;{j=1}^ {\infty} \lambda&amp;#95;j \phi&amp;#95;j(\mathbf{x}&amp;#95;1) \phi&amp;#95;j(\mathbf{x}&amp;#95;2) $$&lt;/p&gt;&lt;p&gt;where $\lambda&amp;#95;j$ and $\phi&amp;#95;j$ are the eigenvalues and eigenfunctions of the linear integral operator $T&amp;#95;k$, which is compact. This iduces a map $\Phi: \mathbf{X} \rightarrow \ell^ 2$, the space of square-summable sequences. This map $\Phi = (\sqrt{\lambda&amp;#95;1} \phi&amp;#95;1, \sqrt{\lambda&amp;#95;2} \phi&amp;#95;2, \ldots)^ T$ is the so-called &lt;em&gt;kernel embedding&lt;/em&gt; and allows the practitioner to map the data to a definite dimension (possibly infinite), where the learning task is likely to become linear. This map, however, needs not be computed explicitly in Kernel Learning methods and is defined, as seen above, by the kernel we are using and, in practice, we are restricted to a finite number of training points. This map can be written as a vector $\mathbf{z} \in \mathbb{R}^ D$ for each datum, with a dimension $D \leq N$. The collection for $N$ data can be written as a matrix $\mathbf{Z} \in \mathbb{R}^ {N \times D}$ of vectors $\mathbf{z}$ vertically stacked, and the finite version of the Mercer kernel expansion, yields the finite-dimensional embedding $\mathbf{Z}$ and the so-called &lt;em&gt;kernel trick&lt;/em&gt; $$ \mathbf{K} = \mathbf{Z} \mathbf{Z}^ T $$ where $\mathbf{K} \in \mathbb{R}^ {N \times N}$ is the Gram matrix of kernel evaluations on the dataset $$&amp;#123;\mathbf{x}&amp;#95;1, \mathbf{x}&amp;#95;2, \ldots, \mathbf{x}&amp;#95;N&amp;#125;$$ built so that each entry of the matrix correspond to the kernel evaluation at two points, $\mathbf{K}&amp;#95;{i,j} = k(\mathbf{x}&amp;#95;i, \mathbf{x}&amp;#95;j)$. This embedding constituted the breakthrough in Machine Learning in the late 90s and early new century. Notice that this feature space is &lt;strong&gt;not&lt;/strong&gt; the RKHS, since it is a subspace of $\ell&lt;sup&gt;2$,&lt;/sup&gt; their elements being sequences, whereas the RKHS is a subspace if $L^ 2$, its elements being functions.&lt;/p&gt;&lt;p&gt;Let $f,g \in H&amp;#95;k$ be expressed as a linear combination of the eigenfunctions of $T&amp;#95;k$, $$f = \sum&amp;#95;{j=1}^ {\infty} \alpha&amp;#95;j \phi&amp;#95;j$$ and $$g = \sum&amp;#95;{j=1}^ {\infty} \beta&amp;#95;j \phi&amp;#95;j$$. The inner product in $H&amp;#95;k$ is defined as&lt;/p&gt;&lt;p&gt;$$ \langle f,  g \rangle&amp;#95;{H&amp;#95;k} = \sum&amp;#95;{j=1}^ {\infty} \frac{\alpha&amp;#95;j \beta&amp;#95;j}{\lambda&amp;#95;j} $$&lt;/p&gt;&lt;p&gt;Which is equal to the equation above, i.e., &lt;/p&gt;&lt;p&gt;$$ \langle f,  g \rangle&amp;#95;{H&amp;#95;k} = \langle f, T&amp;#95;k g \rangle&amp;#95;{L^ 2(\mathbf{X})} $$.&lt;/p&gt;&lt;p&gt;This induces a norm&lt;/p&gt;&lt;p&gt;$$ \|f\|&amp;#95;{H&amp;#95;k}^ 2 = \langle f,  f \rangle&amp;#95;{H&amp;#95;k} =  \|P f\|&amp;#95;{L^ 2 (\mathbf{X})}^ 2 $$&lt;/p&gt;&lt;p&gt;Where $P$ is a pseudo-differential operator and $P ^{&amp;#42;}$ is its adjoint such that $T&amp;#95;k = P^ {&amp;#42;} P$.&lt;/p&gt;&lt;p&gt;The learning task in kernel methods consist on computing a function that can approximate certain pre-defined data with certain desired properties, namely, that it is &quot;simple&quot; enough, simplicity measured by the norm in the space, the smaller norm, the better, as this requirement tries to overcome the overfitting and noise presence (the less &quot;wiggly&quot; the function, the less it responds to noise). So given a kernel function $k$ and a finite data sample of size $N$, the Representer theorem ensures that the subspace of functions spanned by finite linear combinations of the form $f=\sum&amp;#95;j^ {n}{\alpha&amp;#95;j k(\cdot, \mathbf{x}&amp;#95;j)}$ is the solution to a regularization problem of the form $$ \min&amp;#95;{f \in H&amp;#95;k}  \sum&amp;#95;{j=1}^ {n} (y&amp;#95;i - f(\mathbf{x}&amp;#95;i))^ 2 + \lambda \|f\|&amp;#95;{H_k}^ 2 $$ where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.&lt;/p&gt;&lt;p&gt;Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N&gt;10000$ is unmanageable for most computers, and the $N&lt;sup&gt;2$&lt;/sup&gt; scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation&lt;/p&gt;&lt;p&gt;$$ \int&amp;#95;{\mathbf{X}} k(\mathbf{x}&amp;#95;1,\mathbf{x}&amp;#95;2) \phi&amp;#95;i(\mathbf{x}&amp;#95;2) dP&amp;#95;X(\mathbf{x}&amp;#95;2) = \lambda&amp;#95;i \phi&amp;#95;i(\mathbf{x}&amp;#95;1) $$&lt;/p&gt;&lt;p&gt;holds, so that uniformly sampling $\mathbf{x}$ from $P&amp;#95;X$, we can make the approximation of the kernel matrix&lt;/p&gt;&lt;p&gt;$$ \mathbf{K} \mathbf{u} = \lambda \mathbf{u} $$&lt;/p&gt;&lt;p&gt;with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector approximation. Then, one can obtain an approximation to the first eigenvectors of the matrix, which have the following expressions&lt;/p&gt;&lt;p&gt;$$ \phi&amp;#95;i(\mathbf{x}) \approx \sqrt{q} \mathbf{u}&amp;#95;i^ {(q)} \quad\quad \lambda&amp;#95;i \approx \frac{\lambda&amp;#95;i^ {(q)}}{q} $$&lt;/p&gt;&lt;p&gt;Another well-known approximation is the random features technique, this time only for translation invariant kernels (i.e., those which can be written $k(\mathbf{x}&amp;#95;1,\mathbf{x}&amp;#95;2)=k(\mathbf{x}&amp;#95;1-\mathbf{x}&amp;#95;2)$, abusing notation and writing $k$ for both functions) was developed by Rahimi and Rech. Bochner's theorem is a result from classical harmonic analysis and applies to the mentioned kernel types. A continuous function $k \in L^ 1(\mathbb{R}^ N)$ is positive definite if and only if it is the Fourier transform of a non-negative measure $\Lambda$.&lt;/p&gt;&lt;p&gt;$$ k(\mathbf{x}&amp;#95;1-\mathbf{x}&amp;#95;2)=\int&amp;#95;{\mathbb{R}^ N}{e^ {i\mathbf{\omega}^ T (\mathbf{x}&amp;#95;1-\mathbf{x}&amp;#95;2)}d \Lambda(\mathbf{\omega})} $$&lt;/p&gt;&lt;p&gt;The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^ {-i\mathbf{\omega}^ T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P&amp;#95;X$, whereas random features proceed independently of $P&amp;#95;X$. This idea has also been used in Gaussian Processes with success.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 04 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/
+</link>
+<title>
+Improve the performance of an SVM with differential geometry
+</title>
+<description>
+&lt;p&gt;Though I am not very wise concerning differential geometry (others aren't either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.&lt;/p&gt;&lt;p&gt;&lt;a href='http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf'&gt;Amari and Wu&lt;/a&gt; are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold&lt;/p&gt;&lt;p&gt;$$ ds^ 2 = \sum&amp;#95;{i,j} g&amp;#95;{i,j} dx&amp;#95;i dx&amp;#95;j $$&lt;/p&gt;&lt;p&gt;We need it to be large along the border of $f(\mathbf{x})=0$ and small between points of the same class. In practice, the boundary is not known, so we use the points the we know are closest to the boundary: the support vectors. A conformal transformation does the job&lt;/p&gt;&lt;p&gt;$$ \tilde{g}&amp;#95;{i,j}(\mathbf{x}) = \Omega (\mathbf{x}) g&amp;#95;{i,j} (\mathbf{x}) $$&lt;/p&gt;&lt;p&gt;This is very difficult to realize practically, so we consider a quasi-conformal transformation to induce the a similar map by directly modifying&lt;/p&gt;&lt;p&gt;$$ \tilde{K}(\mathbf{x&amp;#95;1},\mathbf{x&amp;#95;2}) = c(\mathbf{x&amp;#95;1}) c(\mathbf{x&amp;#95;2}) K(\mathbf{x&amp;#95;1},\mathbf{x&amp;#95;2}) $$&lt;/p&gt;&lt;p&gt;where $c(\mathbf{x})$ is a positive function, that can be built from the data as&lt;/p&gt;&lt;p&gt;$$ c(\mathbf{x}) = \sum&amp;#95;{i \in SV} h&amp;#95;i e^ {\frac{\| \mathbf{x} - \mathbf{x}\|^ 2}{2\tau^ 2}} $$&lt;/p&gt;&lt;p&gt;where $h&amp;#95;i$ is a parameter of the $i$-th support vector.&lt;/p&gt;&lt;p&gt;Thus, if you first train a SVM with a standard kernel, and then you compute $c(x)$ and make a new kernel with the previous expressions, your SVM will behave better.&lt;/p&gt;&lt;p&gt;The authors report higher classification accuracy and less support vectors than with standard kernels.&lt;/p&gt;&lt;p&gt;&lt;sub&gt;This post is part of my old blog. See the original &lt;a href='http://machinomics.blogspot.co.uk/2012/09/improve-performance-of-your-svm.html'&gt;here&lt;/a&gt;&lt;/sub&gt;&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Mon, 03 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-02-the-gaussian-kernel-maps-data-onto-the-sphere/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-02-the-gaussian-kernel-maps-data-onto-the-sphere/
+</link>
+<title>
+The Gaussian kernel maps data onto the sphere
+</title>
+<description>
+&lt;p&gt;It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel&lt;/p&gt;&lt;p&gt;$$k(x,y)=\exp(-\gamma \| x-y\|^ 2)$$&lt;/p&gt;&lt;p&gt;defined on the domain $X$, inducing a map $\Phi: X \rightarrow F$, where $F$ is the associated feature space.&lt;/p&gt;&lt;p&gt;We have that $k(x,x)=1$ for all $x \in X$. Therefore what we have is clearly the sphere, since all $x$ are one unit await from zero in the feature space $\|\Phi(x)\| ^2 = \sum&amp;#95;i \lambda&amp;#95;i \phi&amp;#95;i(x) \phi&amp;#95;i(x) = k(x,x)=1$. Is there any possible refinement to this? There is! Remember that the Fourier transform of a Gaussian is a Gaussian (with inverted paramers, etc), so we have that the Fourier coefficient 0 (i.e., the power of the constant function, or $cos(0)$) is positive (and maximum among the coefficients). This means that all data have a positive first entry (the constant function is positive and its coefficient is positive), which means that the map actually is from the domain to the positive half of the infinite hypersphere. Other basis functions (for coefficients other than zero) are sines and cosines and thus may change points. Further characteristics of the mapping depend on the data probability measure.&lt;/p&gt;&lt;p&gt;If you have been trying to apply Differential Geometry to kernel methods and have worked with the Gaussian without noticing it, please stop your research and do something else. A good review and analysis on the induced manifold is &lt;a href='http://www.google.co.uk/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CCcQFjAA&amp;url=http%3A%2F%2Fwww.cs.bris.ac.uk%2F~flach%2FECMLPKDD2012papers%2F1125537.pdf&amp;ei=pxxWVLi-DuqV7AbphYGYDA&amp;usg=AFQjCNEjkgsLMO-6S5NxErGrCjRdrI8W2w&amp;bvm=bv.78677474,d.ZGU'&gt;Geodesic Analysis on the Gaussian RKHS hypersphere&lt;/a&gt;, where the authors make again the same mistake many people do: Naming the feature space as the RKHS (it is not so, the RKHS is a space of point-defined functions that belongs to $L&lt;sup&gt;2$&lt;/sup&gt; and the feature space is a sequence space that belongs to $\ell&lt;sup&gt;2$).&lt;/sup&gt; In that paper, they show that the maximum angle between a pair of points is $\pi/2$, which makes the largest possible embedding a quadrant.&lt;/p&gt;&lt;p&gt;&lt;sub&gt;This post is part of my old blog. See the original &lt;a href='http://machinomics.blogspot.co.uk/search/label/kernel%20methods'&gt;here&lt;/a&gt;&lt;/sub&gt;&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 02 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2014-11-01-my-new-blog/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2014-11-01-my-new-blog/
+</link>
+<title>
+My new blog in Github Pages + Octopress
+</title>
+<description>
+&lt;p&gt;Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that others call a &lt;em&gt;blog for hackers&lt;/em&gt;. It is called like that, I believe, because no online, fancy wysiwyg editor is used and instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to  follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit, for real).&lt;/p&gt;&lt;p&gt;Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my personal set up, because the plugin at my job is definitely more functional.&lt;/p&gt;&lt;p&gt;Now a code snippet. I follow the instructions at Octopress' website.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;bash&quot;&gt;env x='&amp;#40;&amp;#41; { :;}; echo vulnerable' bash -c &amp;quot;echo this is a test&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Check. Beautiful. Lovin' it.&lt;/p&gt;&lt;p&gt;Now for my second prerequisite which was a big concern for me regarding moving to a blogging platform: maths! I wan't to be able to edit in Latex. The lack of it is a no go. Luckily, I found &lt;a href='http://www.idryman.org/blog/2012/03/10/writing-math-equations-on-octopress/'&gt;this helpful blog post&lt;/a&gt;, which describes how to do precisely that. Testing:&lt;/p&gt;&lt;p&gt;$$ \int_a&lt;sup&gt;b&lt;/sup&gt; f(x) dx = F(b) - F(a) $$&lt;/p&gt;&lt;p&gt;Check. Awesome! Sold!&lt;/p&gt;&lt;p&gt;Apparently, you write your post in this markdown file, which you compile with the provided tool, which gets sucked up by a local web server that helps you visualize your results, before pushing it up to your Github repo. I like that.&lt;/p&gt;&lt;p&gt;Let be it! I am moving to Github Pages + Octopress.&lt;/p&gt;&lt;p&gt;Edit: I forgot to test Youtube video insertion. &lt;del&gt;Apparently you need a &lt;a href='https://github.com/optikfluffel/octopress-responsive-video-embed'&gt;plugin&lt;/a&gt;&lt;/del&gt;  This is done by pasting the &lt;em&gt;iframe&lt;/em&gt; tag as given by youtube. OK, cloned, copied Ruby files and test (with current time position including &lt;em&gt;?start=253&lt;/em&gt;):&lt;/p&gt;&lt;p&gt;&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;/blog//www.youtube.com/embed/X6s6YKlTpfw?start=253&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;&lt;/p&gt;&lt;p&gt;No responsiveness as of yet, but it's fine for now.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sat, 01 Nov 2014 00:00:00 +0100
+</pubDate>
+</item>
+</channel>
+</rss>

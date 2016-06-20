@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8"/>
     <title>The Analytic Bastard</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/">
+    <link rel="canonical" href="http://analyticbastard.github.io">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
-    <link href="css/screen.css" rel="stylesheet" type="text/css" />
+    <link href="/blog/css/screen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
@@ -52,34 +52,80 @@
             <div id="content">
                 
 <div id="post">
+    
     <div class="post-header">
-    <div id="post-meta" class="row">
-        <div class="col-lg-6">March 30, 2016</div>
-        
+        <h2>Building a Machine Learning-based automated trading system</h2>
+        <div id="post-meta">
+            
+            <div class="date">June 9, 2016</div>
+        </div>
     </div>
-    <h2>New blog using Cryogen</h2>
-</div>
-<div>
+    <p>There are many hedge funds and trading houses currently using automated algorithms to place directional bets on the market.</p><p>While they can access immensely more vast resources than us, the average Joe (namely: better and much larger datasets), they need to essentially fight the same kind of problem (if the fractal market theory holds): Statistical independence.</p>
+    <a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Continue reading &#8594;</a>
+    <hr>
     
-    <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p><p>Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.</p><p>What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.</p>
-</div>
+    <div class="post-header">
+        <h2>JFF: a reactive web application with reagent, re-frame and datascript</h2>
+        <div id="post-meta">
+            
+            <div class="date">May 29, 2016</div>
+        </div>
+    </div>
+    <p>Essensys, the last company I worked for in London, use to do something called Junk Food Friday, which, as you can guess, implies that each friday, one of us would order food for everybody else, be it pizza, burgers, Mexican, you name it. The process used to be a mess, with the organizer receiving emails with the requests, having an Excel sheet to organize him/herself, etc. That is why I developed the JFF app, which was an update from the coffee app (which was aimed at getting coffee from the local coffee shop, essentially the same use case).</p><p>I decided to give the new cool Clojure(Script) technologies a go and I was quite impressed (coming from working only with Reagent, Figwheel and a little bit of Datascript). Re-frame really adds value by providing a controller and a better model than just bare reagent atoms.</p>
+    <a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>New blog using Cryogen</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 30, 2016</div>
+        </div>
+    </div>
+    <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p>
+    <a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Clojure parallel thread flows: pth library</h2>
+        <div id="post-meta">
+            
+            <div class="date">September 13, 2015</div>
+        </div>
+    </div>
+    <p>I developed a new library that solves the problem of the need to disrupt a Clojure thread flow because two quantities need to be computed from the current value of the thread flow, for example, using the current value as the index to two arrays which need to be merged.</p><pre><code class="clojure">(use 'pth)
 
-<div id="post-tags">
-    <b>Tags: </b>
+(let [map1 {:1 :a :2 :b :3 :c}
+        map2 {:1 1 :2 2 :3 3}
+        combine (partial apply interleave)
+        into-map (partial apply array-map)
+        ]
+    (-> [:1 :2]
+        (-<< (map map1)
+             (map map2))
+        combine
+        into-map
+        ))
+</code></pre>
+    <a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Continue reading &#8594;</a>
+    <hr>
     
-    <a href="/blog/tags-output/Clojure/">Clojure</a>
-    
-    <a href="/blog/tags-output/Tools/">Tools</a>
-    
-</div>
-
-
+    <div class="post-header">
+        <h2>Max subsequence problem</h2>
+        <div id="post-meta">
+            
+            <div class="date">May 2, 2015</div>
+        </div>
+    </div>
+    <p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence. We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p><p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves, using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when we find either two or only one element in the sequence (odd or even super sequence), at which point we return the information we need (we'll talk about this later on).</p>
+    <a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Continue reading &#8594;</a>
+    <hr>
     
 
     <div id="prev-next">
         
         
-        <a class="right" href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library &raquo;</a>
+        <a class="right" href="/blog/p/2/">Next &raquo;</a>
         
     </div>
 </div>
@@ -122,15 +168,15 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Building a Machine Learning-based automated trading system</a></li>
+                        
+                        <li><a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">JFF: a reactive web application with reagent, re-frame and datascript</a></li>
+                        
                         <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
                         
                         <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
                         
                         <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Installing Theano on Windows</a></li>
                         
                     </ul>
                 </div>
@@ -173,7 +219,7 @@
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="js/highlight.pack.js" type="text/javascript"></script>
+<script src="/blog/js/highlight.pack.js" type="text/javascript"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 <script type="text/x-mathjax-config">

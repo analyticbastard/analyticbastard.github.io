@@ -61,7 +61,7 @@
 </div>
 <div>
     
-    <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p><p>Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.</p><p>What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.</p>
+    <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p><p>Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.</p><p>It took me a while to figure out how to port the Mathjax equations. It looks like the Markdown parser like to mess up with the sub and super indices of Latex. You need to either use a space between the variable and the super index, as in x ^2, or escape the subindex with backslash.</p><p>What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.</p>
 </div>
 
 <div id="post-tags">
@@ -76,11 +76,22 @@
 
     <div id="prev-next">
         
+        <a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">&laquo; JFF: a reactive web application with reagent, re-frame and datascript</a>
+        
         
         <a class="right" href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library &raquo;</a>
         
     </div>
 
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
     
 
 
@@ -124,15 +135,15 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Building a Machine Learning-based automated trading system</a></li>
+                        
+                        <li><a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">JFF: a reactive web application with reagent, re-frame and datascript</a></li>
+                        
                         <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
                         
                         <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
                         
                         <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Installing Theano on Windows</a></li>
                         
                     </ul>
                 </div>

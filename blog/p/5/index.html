@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: C, C++ and others</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/pages-output/c/">
+    <title>The Analytic Bastard</title>
+    <link rel="canonical" href="http://analyticbastard.github.io">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,22 +51,57 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="custom-page">
-    <div id="page-header">
-        <h2>C, C++ and others</h2>
-    </div>
+<div id="post">
     
-    <p>I've been programming in C since I was 13 years old with my first 486 PC. I've started using the Borland C compiler and moved to GCC C first by using DJGCC for DOS and then on Linux Debian 1.3.1. After college, I used GCC professionally during my time at Critical Path in Ireland, where I fixed bugs the mailing and communications suite had, and performing software forensics with several in-house tools that involved knowledge about memory management internals (such as malloc memory allocation pointers in case of corruption).</p><p>I've had some acquaintance in the past with C++, but I never got to use it professionally.</p><p>I also used it C# to build a Microsoft Academic Search graph data retriever.</p><p>I nowadays favour a functional/declarative approach to software development and I am interested in projects that bring Lisp-like languages to the native level.</p>
+    <div class="post-header">
+        <h2>A gentle introduction to RKHS and Kernel Methods</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 4, 2014</div>
+        </div>
+    </div>
+    <p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,</p><p>$$\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta\delta_x(g)$$</p>
+    <a href="/blog/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Improve the performance of an SVM with differential geometry</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 3, 2014</div>
+        </div>
+    </div>
+    <p>Though I am not very wise concerning differential geometry (others aren't either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p><p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf" shape="rect">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+    <a href="/blog/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>The Gaussian kernel maps data onto the sphere</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 2, 2014</div>
+        </div>
+    </div>
+    <p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p><p>$$k(x,y)=\exp(-\gamma \| x-y\|^ 2)$$</p>
+    <a href="/blog/posts-output/2014-11-02-the-gaussian-kernel-maps-data-onto-the-sphere/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>My new blog in Github Pages + Octopress</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 1, 2014</div>
+        </div>
+    </div>
+    <p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to  follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit, for real).</p><p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my personal set up, because the plugin at my job is definitely more functional.</p>
+    <a href="/blog/posts-output/2014-11-01-my-new-blog/">Continue reading &#8594;</a>
+    <hr>
+    
 
     <div id="prev-next">
         
-        <a href="/blog/pages-output/about/">&laquo; About</a>
+        <a class="left" href="/blog/p/4/">&laquo; Prev</a>
         
-        
-        ||
-        
-        
-        <a href="/blog/pages-output/clojure/">Clojure &raquo;</a>
         
     </div>
 </div>

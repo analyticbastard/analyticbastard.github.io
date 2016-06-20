@@ -12,11 +12,126 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Wed, 18 May 2016 00:39:03 +0200
+Mon, 20 Jun 2016 01:41:17 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-06-09-building-an-automated-trading-system/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-06-09-building-an-automated-trading-system/
+</link>
+<title>
+Building a Machine Learning-based automated trading system
+</title>
+<description>
+&lt;p&gt;There are many hedge funds and trading houses currently using automated algorithms to place directional bets on the market.&lt;/p&gt;&lt;p&gt;While they can access immensely more vast resources than us, the average Joe (namely: better and much larger datasets), they need to essentially fight the same kind of problem (if the fractal market theory holds): Statistical independence.&lt;/p&gt;&lt;p&gt;Let's lead some data from Yahoo Finance. Let's fetch the Apple Inc. data, get the EOD (adjusted close) price and compute the (absolute) returns.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;import pandas.io.data as web
+aapl = web.get&amp;#95;data&amp;#95;yahoo&amp;#40;'AAPL', '1/1/2005', '1/1/2016'&amp;#41;
+aaplprice = aapl&amp;#91;'Adj Close'&amp;#93;
+aaplreturns = aaplprice.diff&amp;#40;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/aaplprice.png&quot; alt=&quot;Apple Inc. price&quot; /&gt;&lt;/p&gt;&lt;p&gt;Check that the correlation is about 0.004:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;aaplreturns.corr&amp;#40;aaplreturns.shift&amp;#40;-1&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now let us study the distribution of the returns. First, import everything&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;from pylab import plot, hist, scatter, show
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If we observe financial data, any asset's returns will appear to have a Gaussian distribution. The following is a distribution of the returns, where we appreciate some Gaussianity, although the tails are just to heavy for the data to be Gaussian.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;hist&amp;#40;aaplreturns.dropna&amp;#40;&amp;#41;, bins=30&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/returns.png&quot; alt=&quot;Apple Inc. return distribution&quot; /&gt;&lt;/p&gt;&lt;p&gt;Any pair of data for any timeframe will appear to have a uncorrelated bivariate Gaussian distribution. We can safely assume that any chain of data for any period $X&amp;#95;t, X&amp;#95;{t+1}, \ldots , X&amp;#95;{t+n}$ will be distributed as an uncorrelated multivariate Gaussian which, as we know, imply statistical independence between variables. A fact that prevents us from gaining any knowledge of the future by using the past, no matter what method we use. In the image below, we plot a day's returns against those of the following day. We can tell that the data is not multivariate Gaussian since the data far from the center are just too frequent.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;scatter&amp;#40;aaplreturns, aaplreturns.shift&amp;#40;-1&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/scatter.png&quot; alt=&quot;Apple Inc. price of a day against the next day's price&quot; /&gt;&lt;/p&gt;&lt;p&gt;However, market data has been proven not to be normally distributed, but to follow a stable distribution with no second moment (see, for example, Mandelbrot's work). One can still expect that, despite normality not holding, correlation still implies independence, at least to an extent.&lt;/p&gt;&lt;p&gt;So that's a problem. We want to do a task that is fundamentally impossible: Learn patters that are valid for the future from statistically irrelevant information from the past.&lt;/p&gt;&lt;p&gt;But there is hope: if correlations are small and the data, not being Gaussian, invalidates the correlation-independence implication, then we might seek a transformation of the future that aggregates this correlation and that still is meaningful when trading. Now, I am currently investigating what profit this transformation can yield, but my intermediate results show a correlation of the predicted future as high as 0.35 for some assets, using only intra-asset information.&lt;/p&gt;&lt;p&gt;The prediction is a regression task in a high noise setting, so I used decision forests and avoided highly non-linear methods. I plan on stacking up regressors to capture inter-asset information. The output of this method will feed a Markowitz-style postfolio selection, though I need to work out the sparsity and integrity of the optimization problem. Based on the result, the account money needs to be allocated to assets, and this is a transportation-like task.&lt;/p&gt;&lt;p&gt;In the next post I will talk about data munging and data mining.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 09 Jun 2016 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/
+</link>
+<title>
+JFF: a reactive web application with reagent, re-frame and datascript
+</title>
+<description>
+&lt;p&gt;Essensys, the last company I worked for in London, use to do something called Junk Food Friday, which, as you can guess, implies that each friday, one of us would order food for everybody else, be it pizza, burgers, Mexican, you name it. The process used to be a mess, with the organizer receiving emails with the requests, having an Excel sheet to organize him/herself, etc. That is why I developed the JFF app, which was an update from the coffee app (which was aimed at getting coffee from the local coffee shop, essentially the same use case).&lt;/p&gt;&lt;p&gt;I decided to give the new cool Clojure(Script) technologies a go and I was quite impressed (coming from working only with Reagent, Figwheel and a little bit of Datascript). Re-frame really adds value by providing a controller and a better model than just bare reagent atoms.&lt;/p&gt;&lt;p&gt;Since the web app shows all the updated content from the server, I figured out the communication system was the same than an chat system but, in this case, the message is the state change induced by any of the clients. So, the design is as follows:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Datascript database in both the server and the client. The client'sDB is a reflection of the state of the server DB.&lt;/li&gt;&lt;li&gt;core.async maintains a general channel, a client channel (per client)and a listening channel which taps the general channel and redistributesany message generated by any client to all of the clients. Messagesare valid Datascript EDN. The client channel is connected to a websocket.&lt;/li&gt;&lt;li&gt;When the Datascript EDN is received by the client, it is transacted intothe local in-browser Datascript database. Changes in the database arelinked to re-frame subscriptions via declarative query functions,whose change (upon DB change) generate data that triggers a reagentcomponent refresh.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Perhaps this is best seen as a diagram&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;/blog/img/JFF.svg&quot; alt=&quot;Apple Inc. price&quot; /&gt;&lt;/p&gt;&lt;p&gt;Although you can see arrows in the previous diagrams, no specific calls are made to each of the components. In the client, whenever the user initiates a change, usually with the ```on-click``` handler of the web component, the re-frame handler generates the corresponding Datascript temporary transaction data according to the latest state (this means generating temporary IDs for the potentially new entitities), which will be a reflection of the server state.&lt;/p&gt;&lt;p&gt;That is sent via a core.async channel (ClojureScript version) which is attached to a websocket (Chord library, which directly returns a core.async channel).&lt;/p&gt;&lt;p&gt;On the server, there are three type of channels:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;One websocket channel per client&lt;/li&gt;&lt;li&gt;One general channel&lt;/li&gt;&lt;li&gt;One channel tapping the general channel per client&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;The first receives transaction data from its client and sends it permanent transaction data once the server has transacted the data into its own DB. The general channel gets permanent data that has just transacted into the server's DB which is distributed to each of the tapping channels. When the program gets the data from the tapping channels, it writes it back to the client channel it is handling, as mentioned at the beginning of the paragraph.&lt;/p&gt;&lt;p&gt;The most important clojure function is the following&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn ws-handler &amp;#91;{:keys &amp;#91;ws-channel&amp;#93; :as req} {:keys &amp;#91;chat-ch chat-mult&amp;#93;}&amp;#93;
+  &amp;#40;let &amp;#91;tapped-ch &amp;#40;a/chan&amp;#41;
+        conn &amp;#40;:conn @app-state&amp;#41;
+        init-tx   &amp;#40;mapv &amp;#40;comp op-eav datom-&amp;gt;vec&amp;#41; &amp;#40;d/datoms &amp;#40;d/db conn&amp;#41; :eavt&amp;#41;&amp;#41;&amp;#93;
+    &amp;#40;a/tap chat-mult tapped-ch&amp;#41;
+    &amp;#40;println &amp;#40;format &amp;quot;Opened connection from %s.&amp;quot;
+                     &amp;#40;:remote-addr req&amp;#41;&amp;#41;&amp;#41;
+    &amp;#40;go
+      &amp;#40;when &amp;#40;not-empty init-tx&amp;#41;
+        &amp;#40;send! ws-channel init-tx&amp;#41;&amp;#41;
+      &amp;#40;loop &amp;#91;&amp;#93;
+        &amp;#40;a/alt!
+          tapped-ch &amp;#40;&amp;#91;message&amp;#93; &amp;#40;if message
+                                 &amp;#40;do
+                                   &amp;#40;respond-to-tapped-ch ws-channel message&amp;#41;
+                                   &amp;#40;recur&amp;#41;&amp;#41;
+                                 &amp;#40;do
+                                   &amp;#40;println &amp;quot;NO msg&amp;quot;&amp;#41;
+                                   &amp;#40;a/close! ws-channel&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+
+          ws-channel &amp;#40;&amp;#91;ws-message&amp;#93; &amp;#40;if ws-message
+                                     &amp;#40;do &amp;#40;respond-server-channel chat-ch ws-message&amp;#41;
+                                         &amp;#40;recur&amp;#41;&amp;#41;
+                                     &amp;#40;do
+                                       &amp;#40;println &amp;quot;Exiting&amp;quot;&amp;#41;
+                                       &amp;#40;a/untap chat-mult tapped-ch&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+          &amp;#41;&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Where you can identify ws-channel as the client websocket channel, chat-ch (and its multiplexed version chat-multi) as the general channel and ```tapped-channel``` as the channel tapping the general channel.&lt;/p&gt;&lt;p&gt;Whenever ws-channel has a message, we transact it into the DB via the function respond-server-channel,&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn respond-server-channel &amp;#91;chat-ch ws-message&amp;#93;
+  &amp;#40;let &amp;#91;message &amp;#40;:message ws-message&amp;#41;
+        conn    &amp;#40;:conn @app-state&amp;#41;
+        tx-data &amp;#40;:datascript-tx message&amp;#41;
+        tx-data &amp;#40;when tx-data
+                  &amp;#40;:tx-data &amp;#40;d/transact! conn tx-data&amp;#41;&amp;#41;&amp;#41;
+        &amp;#93;
+    &amp;#40;if tx-data
+      &amp;#40;do
+        &amp;#40;spit session-file-name @conn&amp;#41;
+        &amp;#40;send! chat-ch &amp;#40;mapv &amp;#40;comp op-eav datom-&amp;gt;vec&amp;#41; tx-data&amp;#41;&amp;#41;&amp;#41;
+      &amp;#40;do
+        &amp;#40;process-command message&amp;#41;
+        &amp;#40;send! chat-ch message&amp;#41;&amp;#41;&amp;#41;
+    &amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This function will also put the resulting permanent transaction into the general channel. The tapping channels will pick this up and then send the permanent transactions to the clients via ws-channel. Notice that we create all of these channels upon client connection, except the general channel, which is created on server startup.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;        chat-ch &amp;#40;a/chan&amp;#41;
+        chat-mult &amp;#40;a/mult chat-ch&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At the client side we can divide the app into three sections: the model, the view and the controller. The view is seamlessly handled by reagent. The model and the controller are re-frame. The controller is made of handlers which are connected to the DOM components via the on-click callback, and that are of this form&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;register-handler :pre-add-section
+                  &amp;#40;fn &amp;#91;db &amp;#91;&amp;#95; section-name&amp;#93;&amp;#93;
+                    &amp;#40;let &amp;#91;server-ch &amp;#40;:server-ch db&amp;#41;
+                          tx-data   &amp;#91;{:db/id -1 :section/name section-name}&amp;#93;&amp;#93;
+                      &amp;#40;send-datascript-tx! server-ch tx-data&amp;#41;
+                      &amp;#41;
+                    db&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;As we can see, it is the controller the one building the temporary transaction data (see the negative id) and send it to the server.&lt;/p&gt;&lt;p&gt;The model is made of subscriptions which contain queries for the local datascript DB. When we receive data from the websocket channel on the client, we insert it into the local, in-browser DB. The change on the DB triggers a change in the subscription DB query value.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;register-sub :post-user-names
+              &amp;#40;fn &amp;#91;db &amp;#95;&amp;#93;
+                &amp;#40;query-&amp;gt;reaction db
+                                 '&amp;#91;:find &amp;#91;?name ...&amp;#93;
+                                   :where
+                                   &amp;#91;&amp;#95; :user/name ?name&amp;#93;
+                                   &amp;#93;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This change, then, triggers a refresh in the reagent components (the view) that have subscribed to it, such as this one&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn user-selection-component &amp;#91;user-name&amp;#93;
+  &amp;#40;let &amp;#91;choice-names @&amp;#40;subscribe &amp;#91;:post-user-choices user-name&amp;#93;&amp;#41;&amp;#93;
+    &amp;#91;:li.list-group-item
+     &amp;#91;:div
+      user-name
+      &amp;#40;vec
+        &amp;#40;concat &amp;#91;:div&amp;#93;
+                &amp;#40;for &amp;#91;choice-name choice-names&amp;#93;
+                  &amp;#91;:div choice-name&amp;#93;&amp;#41;&amp;#41;&amp;#41;&amp;#93;&amp;#93;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The source code is fully available on &lt;a href='https://github.com/analyticbastard/jff'&gt;Github&lt;/a&gt;.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Sun, 29 May 2016 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/blog/posts-output/2016-03-30-new-blog-with-cryogen/
@@ -28,7 +143,7 @@ http://analyticbastard.github.io/blog/posts-output/2016-03-30-new-blog-with-cryo
 New blog using Cryogen
 </title>
 <description>
-&lt;p&gt;Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.&lt;/p&gt;&lt;p&gt;Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?&lt;/p&gt;&lt;p&gt;Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.&lt;/p&gt;&lt;p&gt;What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.&lt;/p&gt;
+&lt;p&gt;Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.&lt;/p&gt;&lt;p&gt;Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?&lt;/p&gt;&lt;p&gt;Cryogen uses Leiningen and EDN config files for your setup. The automatic compiler, which listens to file changes, generates your pages which can then be refreshed into the browser. I need to investigate if I can automate the refreshing further.&lt;/p&gt;&lt;p&gt;It took me a while to figure out how to port the Mathjax equations. It looks like the Markdown parser like to mess up with the sub and super indices of Latex. You need to either use a space between the variable and the super index, as in x ^2, or escape the subindex with backslash.&lt;/p&gt;&lt;p&gt;What I don't like is that it is a little basic at the moment. Nevertheless, it fits my needs perfectly. Another drawback is that generating web pages is an expensive process that takes a lot of CPU and disk processing. You can notice this and, as a developer or blog author, this is not ideal. Anyhow, it is a good tool. Now I will be able to push my blog source to Bitbucket, which will live completely independent of the web page generator (unlike Octopress), and the generated pages to Github pages.&lt;/p&gt;
 </description>
 <enclosure>
 

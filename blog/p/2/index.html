@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: C, C++ and others</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/pages-output/c/">
+    <title>The Analytic Bastard</title>
+    <link rel="canonical" href="http://analyticbastard.github.io">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,22 +51,70 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="custom-page">
-    <div id="page-header">
-        <h2>C, C++ and others</h2>
-    </div>
+<div id="post">
     
-    <p>I've been programming in C since I was 13 years old with my first 486 PC. I've started using the Borland C compiler and moved to GCC C first by using DJGCC for DOS and then on Linux Debian 1.3.1. After college, I used GCC professionally during my time at Critical Path in Ireland, where I fixed bugs the mailing and communications suite had, and performing software forensics with several in-house tools that involved knowledge about memory management internals (such as malloc memory allocation pointers in case of corruption).</p><p>I've had some acquaintance in the past with C++, but I never got to use it professionally.</p><p>I also used it C# to build a Microsoft Academic Search graph data retriever.</p><p>I nowadays favour a functional/declarative approach to software development and I am interested in projects that bring Lisp-like languages to the native level.</p>
+    <div class="post-header">
+        <h2>Manipulating SVG images from browser Javascript</h2>
+        <div id="post-meta">
+            
+            <div class="date">April 9, 2015</div>
+        </div>
+    </div>
+    <p>SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.</p><p>I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.</p>
+    <a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Installing Theano on Windows</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 25, 2015</div>
+        </div>
+    </div>
+    <p>Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.</p><p>In this post I assume you are going with <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/" shape="rect">Cristoph Gohlke's packages</a> (for reasons, read <a href="blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/" shape="rect">here</a>)</p>
+    <a href="/blog/posts-output/2015-03-25-installing-theano-on-windows/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>The Monty Hall problem (my explanation)</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 8, 2015</div>
+        </div>
+    </div>
+    <p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p><p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R "right choice" V "visible incorrect wallet" and S "your choice". We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).</p>
+    <a href="/blog/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Powering up python as a data analysis platform</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 26, 2015</div>
+        </div>
+    </div>
+    <p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p><p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+    <a href="/blog/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Image pan-sharpening with PCA</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 20, 2015</div>
+        </div>
+    </div>
+    <p>There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.</p><p>This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.</p>
+    <a href="/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
+    <hr>
+    
 
     <div id="prev-next">
         
-        <a href="/blog/pages-output/about/">&laquo; About</a>
+        <a class="left" href="/blog/">&laquo; Prev</a>
         
         
-        ||
-        
-        
-        <a href="/blog/pages-output/clojure/">Clojure &raquo;</a>
+        <a class="right" href="/blog/p/3/">Next &raquo;</a>
         
     </div>
 </div>

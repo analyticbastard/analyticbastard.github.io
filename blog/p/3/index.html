@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: C, C++ and others</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/pages-output/c/">
+    <title>The Analytic Bastard</title>
+    <link rel="canonical" href="http://analyticbastard.github.io">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,22 +51,70 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="custom-page">
-    <div id="page-header">
-        <h2>C, C++ and others</h2>
-    </div>
+<div id="post">
     
-    <p>I've been programming in C since I was 13 years old with my first 486 PC. I've started using the Borland C compiler and moved to GCC C first by using DJGCC for DOS and then on Linux Debian 1.3.1. After college, I used GCC professionally during my time at Critical Path in Ireland, where I fixed bugs the mailing and communications suite had, and performing software forensics with several in-house tools that involved knowledge about memory management internals (such as malloc memory allocation pointers in case of corruption).</p><p>I've had some acquaintance in the past with C++, but I never got to use it professionally.</p><p>I also used it C# to build a Microsoft Academic Search graph data retriever.</p><p>I nowadays favour a functional/declarative approach to software development and I am interested in projects that bring Lisp-like languages to the native level.</p>
+    <div class="post-header">
+        <h2>Google&#39;s original Page Rank implementation</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 8, 2015</div>
+        </div>
+    </div>
+    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n_i}$, where $n_i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p>
+    <a href="/blog/posts-output/2015-02-08-google-original-page-rank/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>My Git workflow</h2>
+        <div id="post-meta">
+            
+            <div class="date">January 10, 2015</div>
+        </div>
+    </div>
+    <p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.</p><h3><a name="concepts" shape="rect"></a>Concepts</h3>
+    <a href="/blog/posts-output/2015-01-10-my-git-workflow/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Hackintosh up my Asus K55V</h2>
+        <div id="post-meta">
+            
+            <div class="date">January 6, 2015</div>
+        </div>
+    </div>
+    <p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p><p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.</p>
+    <a href="/blog/posts-output/2015-01-06-hackintosh/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Principal Component Analysis</h2>
+        <div id="post-meta">
+            
+            <div class="date">January 1, 2015</div>
+        </div>
+    </div>
+    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p>
+    <a href="/blog/posts-output/2015-01-01-principal-component-analysis/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Equality of means statistical test made easy</h2>
+        <div id="post-meta">
+            
+            <div class="date">December 30, 2014</div>
+        </div>
+    </div>
+    <p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe, stating the null hypothesis, performing the computations and stating the results in the correct statistical language. I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of its difficulty.</p><p>My little sister could not understand the meaning of (talking about box plots):</p>
+    <a href="/blog/posts-output/2014-12-30-equality-of-means-statistical-test/">Continue reading &#8594;</a>
+    <hr>
+    
 
     <div id="prev-next">
         
-        <a href="/blog/pages-output/about/">&laquo; About</a>
+        <a class="left" href="/blog/p/2/">&laquo; Prev</a>
         
         
-        ||
-        
-        
-        <a href="/blog/pages-output/clojure/">Clojure &raquo;</a>
+        <a class="right" href="/blog/p/4/">Next &raquo;</a>
         
     </div>
 </div>

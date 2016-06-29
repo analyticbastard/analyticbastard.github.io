@@ -54,6 +54,28 @@
 <div id="post">
     
     <div class="post-header">
+        <h2>PHP should die for good</h2>
+        <div id="post-meta">
+            
+            <div class="date">June 28, 2016</div>
+        </div>
+    </div>
+    
+    <a href="/blog/posts-output/2016-06-28-PHP-should-die-for-good/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Oxidative stress: its causes, its consequences and its solution</h2>
+        <div id="post-meta">
+            
+            <div class="date">June 27, 2016</div>
+        </div>
+    </div>
+    <p>I used to get the flu twice a year in average, and many more common colds. Since I started taking chinese green tea and, later, other supplements, my cold and flu have gone away for good. This is nothing but a noticeable consequece mainly of oxidative stress.</p><h2><a name="causes" shape="rect"></a>Causes</h2>
+    <a href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
         <h2>Building a Machine Learning-based automated trading system</h2>
         <div id="post-meta">
             
@@ -84,41 +106,6 @@
     </div>
     <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p>
     <a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Clojure parallel thread flows: pth library</h2>
-        <div id="post-meta">
-            
-            <div class="date">September 13, 2015</div>
-        </div>
-    </div>
-    <p>I developed a new library that solves the problem of the need to disrupt a Clojure thread flow because two quantities need to be computed from the current value of the thread flow, for example, using the current value as the index to two arrays which need to be merged.</p><pre><code class="clojure">(use 'pth)
-
-(let [map1 {:1 :a :2 :b :3 :c}
-        map2 {:1 1 :2 2 :3 3}
-        combine (partial apply interleave)
-        into-map (partial apply array-map)
-        ]
-    (-> [:1 :2]
-        (-<< (map map1)
-             (map map2))
-        combine
-        into-map
-        ))
-</code></pre>
-    <a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Max subsequence problem</h2>
-        <div id="post-meta">
-            
-            <div class="date">May 2, 2015</div>
-        </div>
-    </div>
-    <p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence. We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p><p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves, using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when we find either two or only one element in the sequence (odd or even super sequence), at which point we return the information we need (we'll talk about this later on).</p>
-    <a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -170,15 +157,15 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/blog/posts-output/2016-06-28-PHP-should-die-for-good/">PHP should die for good</a></li>
+                        
+                        <li><a href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Oxidative stress: its causes, its consequences and its solution</a></li>
+                        
                         <li><a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Building a Machine Learning-based automated trading system</a></li>
                         
                         <li><a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">JFF: a reactive web application with reagent, re-frame and datascript</a></li>
                         
                         <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
                         
                     </ul>
                 </div>
@@ -189,6 +176,8 @@
                     <ul>
                         
                         <li><a href="/blog/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/blog/tags-output/Lifestyle, supplements, nootropics and biohacking/">Lifestyle, supplements, nootropics and biohacking</a></li>
                         
                         <li><a href="/blog/tags-output/Mathematics/">Mathematics</a></li>
                         
@@ -239,5 +228,16 @@ MathJax.Hub.Config({
   "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
 });
 </script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
 </body>
 </html>

@@ -54,6 +54,28 @@
 <div id="post">
     
     <div class="post-header">
+        <h2>Powering up python as a data analysis platform</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 26, 2015</div>
+        </div>
+    </div>
+    <p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p><p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+    <a href="/blog/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Image pan-sharpening with PCA</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 20, 2015</div>
+        </div>
+    </div>
+    <p>There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.</p><p>This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.</p>
+    <a href="/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
         <h2>Google&#39;s original Page Rank implementation</h2>
         <div id="post-meta">
             
@@ -84,28 +106,6 @@
     </div>
     <p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p><p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.</p>
     <a href="/blog/posts-output/2015-01-06-hackintosh/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Principal Component Analysis</h2>
-        <div id="post-meta">
-            
-            <div class="date">January 1, 2015</div>
-        </div>
-    </div>
-    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p>
-    <a href="/blog/posts-output/2015-01-01-principal-component-analysis/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Equality of means statistical test made easy</h2>
-        <div id="post-meta">
-            
-            <div class="date">December 30, 2014</div>
-        </div>
-    </div>
-    <p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe, stating the null hypothesis, performing the computations and stating the results in the correct statistical language. I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of its difficulty.</p><p>My little sister could not understand the meaning of (talking about box plots):</p>
-    <a href="/blog/posts-output/2014-12-30-equality-of-means-statistical-test/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -159,15 +159,15 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/blog/posts-output/2016-06-28-PHP-should-die-for-good/">PHP should die for good</a></li>
+                        
+                        <li><a href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Oxidative stress: its causes, its consequences and its solution</a></li>
+                        
                         <li><a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Building a Machine Learning-based automated trading system</a></li>
                         
                         <li><a href="/blog/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">JFF: a reactive web application with reagent, re-frame and datascript</a></li>
                         
                         <li><a href="/blog/posts-output/2016-03-30-new-blog-with-cryogen/">New blog using Cryogen</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Clojure parallel thread flows: pth library</a></li>
-                        
-                        <li><a href="/blog/posts-output/2015-05-02-max-subsequence-problem/">Max subsequence problem</a></li>
                         
                     </ul>
                 </div>
@@ -178,6 +178,8 @@
                     <ul>
                         
                         <li><a href="/blog/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/blog/tags-output/Lifestyle, supplements, nootropics and biohacking/">Lifestyle, supplements, nootropics and biohacking</a></li>
                         
                         <li><a href="/blog/tags-output/Mathematics/">Mathematics</a></li>
                         
@@ -228,5 +230,16 @@ MathJax.Hub.Config({
   "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
 });
 </script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
 </body>
 </html>

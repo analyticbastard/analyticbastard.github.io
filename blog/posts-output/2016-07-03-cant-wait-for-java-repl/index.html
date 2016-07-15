@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: Max subsequence problem</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2015-05-02-max-subsequence-problem/">
+    <title>The Analytic Bastard: Interactive, high throughput, low turnaround development: my setup</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2016-07-03-cant-wait-for-java-repl/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -54,85 +54,32 @@
 <div id="post">
     <div class="post-header">
     <div id="post-meta" class="row">
-        <div class="col-lg-6">May 2, 2015</div>
+        <div class="col-lg-6">July 3, 2016</div>
         
     </div>
-    <h2>Max subsequence problem</h2>
+    <h2>Interactive, high throughput, low turnaround development: my setup</h2>
 </div>
 <div>
     
-    <p>The following brainteaser is about finding the maximum-sum subsequence within a given sequence. We will solve this problem in Clojure, sice this will involve less pain than doing it in Java.</p><p>We need to decompose the sequence in parts, and a natural way of doing it is dividing it in halves, using a binary tree. For this purpose, we take the sequence at the current stage, divide it in two parts, and call the same function recursively for each half. The recursion-stopping criteria are the point when we find either two or only one element in the sequence (odd or even super sequence), at which point we return the information we need (we'll talk about this later on).</p><pre><code class="clojure">&#40;defn best &#91;myseq&#93;
-  &#40;let &#91;N &#40;count myseq&#41;&#93;
-    &#40;case N
-      1 nil
-      2 nil
-      &#40;let &#91;n &#40;Math/round &#40;double &#40;/ N 2&#41;&#41;&#41;
-            m &#40;- N n&#41;
-            s1 &#40;take n myseq&#41;
-            s2 &#40;take-last m myseq&#41;
-            m1 &#40;best s1&#41;
-            m2 &#40;best s2&#41;
-            &#93;
-
-        &#41;&#41;
-    &#41;&#41;
-</code></pre><p>This was the basic recursion skeleton. Now we need to return and process the interesting information about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be negative because they would otherwise increase the sum). For example, the sequence ```[-1 -1 3 4 -2]``` would produce a best subsequence ```[3 4]```, a discarded left sequence ```[-1 -1]``` and a discarded right sequence [-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that we don't need to recompute at the upper-levels (when returning from the call). The information retrieved from the lower levels is a map with this structure (using the previous example):</p><pre><code class="clojure">{:l -2 :sum 7 :r &#91;-2&#93; :sl &#91;-1 -1&#93; :seq &#91;3 4&#93; :sr &#91;-2&#93;}
-</code></pre><p>where the first three keys are the sums, and the last three keys are the proper sequences. We now build the information according to the sequence we recieve as input. When there is only one element, it is easy to see that we need to return empty discarded sequences, and the input number as the best sequence. If we get two elements, we need to check whether both are positive, in which case, we return both as the best sequence (and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence, and return the other as either the left or right discarded sequence depending on whether it was the first or second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when we have two subsequences, we need to check if the total sum of both best subsequences and everything in the middle (the right discarded sequence from the left half and the left discarded sequence from the right half) is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose the left and right discarded sequences, and the best sequences up to this stage. This is the result:</p><pre><code class="clojure">&#40;defn best &#91;myseq&#93;
-  &#40;let &#91;N &#40;count myseq&#41;&#93;
-    &#40;case N
-      1 {:l 0 :r 0 :sl &#91;&#93; :sr &#91;&#93; :seq myseq :sum &#40;first myseq&#41;}
-      2 &#40;if &#40;and &#40;&gt; &#40;first myseq&#41; 0&#41; &#40;&gt; &#40;second myseq&#41; 0&#41;&#41;
-          {:l 0 :r 0 :sl &#91;&#93; :seq myseq :sr &#91;&#93; :sum &#40;apply + myseq&#41;}
-          &#40;if &#40;&lt; &#40;first myseq&#41; &#40;second myseq&#41;&#41;
-            {:l &#40;first myseq&#41; :r 0 :sl &#91;&#40;first myseq&#41;&#93; :sr &#91;&#93; :seq &#40;rest myseq&#41; :sum &#40;second myseq&#41;}
-            {:l 0 :r &#40;second myseq&#41; :sl &#91;&#93; :sr &#40;rest myseq&#41; :seq &#91;&#40;first myseq&#41;&#93; :sum &#40;first myseq&#41;}&#41;&#41;
-      &#40;let &#91;n &#40;Math/round &#40;double &#40;/ N 2&#41;&#41;&#41;
-            m &#40;- N n&#41;
-            s1 &#40;take n myseq&#41;
-            s2 &#40;reverse &#40;take m &#40;reverse myseq&#41;&#41;&#41;
-            m1 &#40;best s1&#41;
-            m2 &#40;best s2&#41;
-            sum2 &#40;+ &#40;:sum m1&#41; &#40;:sum m2&#41;&#41;
-            cost &#40;+ &#40;:r m1&#41; &#40;:l m2&#41;&#41;
-            sumt &#40;+ sum2 cost&#41;
-            &#93;
-        &#40;if &#40;&gt; sumt &#40;max &#40;:sum m1&#41; &#40;:sum m2&#41;&#41;&#41;
-          {:l &#40;:l m1&#41; :r &#40;:r m2&#41; :sl &#40;:sl m1&#41; :sr &#40;:sr m2&#41; :seq &#40;concat &#40;:seq m1&#41; &#40;:sr m1&#41; &#40;:sl m2&#41; &#40;:seq m2&#41;&#41; :sum sumt}
-          &#40;if &#40;&gt; &#40;:sum m1&#41; &#40;:sum m2&#41;&#41;
-            {:l &#40;:l m1&#41; :r &#40;+ &#40;:r m1&#41; &#40;:l m2&#41; &#40;:sum m2&#41; &#40;:r m2&#41;&#41; :sl &#40;:sl m1&#41; :sr &#40;concat &#40;:sr m1&#41; &#40;:sl m2&#41; &#40;:seq m2&#41; &#40;:sr m2&#41;&#41; :seq &#40;:seq m1&#41; :sum &#40;:sum m1&#41;}
-            {:l &#40;+ &#40;:l m1&#41; &#40;:r m1&#41; &#40;:sum m1&#41; &#40;:l m2&#41;&#41; :r &#40;:r m2&#41; :sl &#40;concat &#40;:sl m1&#41; &#40;:seq m1&#41; &#40;:sr m1&#41; &#40;:sl m2&#41;&#41; :sr &#40;:sr m2&#41; :seq &#40;:seq m2&#41; :sum &#40;:sum m2&#41;}&#41;&#41;
-        &#41;&#41;
-    &#41;&#41;
-</code></pre><p>As test data, we choose three sequences, one whose best subsequence is in the middle, separated by negative numbers (one in this case), another whose best subsequence is at the left side, and it is not worth to join it with another positive sequence at the right side, and one whose best subsequence is itself.</p><pre><code class="clojure">&#40;def ex-bestmiddle &#91;-1 -3 -2 1 2 -1 3 -2 2 1 -1 -3&#93;&#41;
-&#40;def ex-bestleft &#91;-1 3 2 1 -2 -5 -3 -3 2 3 -1 -3&#93;&#41;
-&#40;def ex-bestall &#91;5 -3 -2 2 2 -1 3 -2 2 1 -1 3&#93;&#41;
-</code></pre><p>For the last one:</p><pre><code class="clojure">&#40;best ex-bestall&#41;
-</code></pre><pre><code class="clojure">{:l 0, :r 0, :sl &#91;&#93;, :sr &#91;&#93;, :seq &#40;5 -3 -2 2 2 -1 3 -2 2 1 -1 3&#41;, :sum 9}
-</code></pre><p>For the best subsequence on the left side:</p><pre><code class="clojure">&#40;best ex-bestleft&#41;
-</code></pre><pre><code class="clojure">{:l -1, :r -12, :sl &#91;-1&#93;, :sr &#40;-2 -5 -3 -3 2 3 -1 -3&#41;, :seq &#40;3 2 1&#41;, :sum 6}
-</code></pre><p>And for the best subsequence in the middle:</p><pre><code class="clojure">&#40;best ex-bestmiddle&#41;
-</code></pre><pre><code class="clojure">{:l -6, :r -4, :sl &#40;-1 -3 -2&#41;, :sr &#40;-1 -3&#41;, :seq &#40;1 2 -1 3 -2 2 1&#41;, :sum 6}
-</code></pre><p>The code is on <a href='https://github.com/analyticbastard/java-exercises'>Github</a> under ```src/main/clj```.</p>
+    <p>From my former team lead at Erudine I learnt the value of low turnaround JVM code execution for high throughput, and productive interactive development.</p><p>What I mean by this is:</p><ul><li>Running one and only one JVM almost all the time</li><li>Recompile and reload your classes, hotswapping new versions for old ones.</li><li>Create instances of your classes interactively using a REPL orinteractive console</li></ul><p>This enables a very fast development lifecycle and lowers new libraries learning curves by interactively exploring them.</p><h2><a name="my&#95;setup"></a>My setup</h2><p>In my opinion, the best IDE for this task is IntelliJ IDEA. Not only it allows fast development by being heavily keyboard shortcut biased, but it also includes running configurations that can be adapted to any possible setup you might need.</p><p>In my case, I normally use Cursive with Clojure. But if I only need Java, a Scala REPL (the Scala plugin is totally free, albeit it lacks smoothness, especially on Windows) suffices.</p><p>I normally swap the Oracle VM by <a href='https://dcevm.github.io/'>DCEVM</a>, a JVM runtime that installs on top of it (or OpenJDK). On top of that, I use the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a>, a Java agent that watches file changes (in this case bytecode class changes due to new compilations) and performs the hotswapping on the DCEVM. This agent must be used from the running configuration on IntelliJ (the Scala console running configuration).</p><p>If you want to install the DCEVEM as the alternative JVM in your JDK, you need to specifically use it from the command line by typing</p><pre><code>-XXaltjvm=dcevm -javaagent:PATH&#95;TO&#95;AGENT\hotswap-agent.jar</code></pre><p>This must also be included in the running configuration from IntelliJ in the JVM parameters section.</p><h2><a name="summary"></a>Summary</h2><ul><li>Get IntelliJ IDEA</li><li>Get <a href='https://dcevm.github.io/'>DCEVM</a></li><li>Get the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a></li><li>Add the Scala SDK to your Java project and create a runningconfiguration using the Hotswap agent and specifying the use ofthe Hotswap agent and, potentially, DCEVM as the altjvm.</li><li>Click on debug to start the Scala REPL with Hotswap capabilities</li></ul><p>You can now create Java objects of any class on your classpath, including classes from your libraries or classes from your project. In the latter case, you can now change their code, recompile with Ctrl+F9, and you will be able to see a green box telling you the number of reloaded classes (you did something wrong otherwise and the setup is not complete).</p><p>You will need to accommodate a minimal Scala syntax such as val or var to create variables.</p>
 </div>
 
 <div id="post-tags">
     <b>Tags: </b>
     
-    <a href="/blog/tags-output/Clojure/">Clojure</a>
-    
-    <a href="/blog/tags-output/Brainteasers/">Brainteasers</a>
-    
     <a href="/blog/tags-output/Programming/">Programming</a>
+    
+    <a href="/blog/tags-output/Java/">Java</a>
+    
+    <a href="/blog/tags-output/Software Development/">Software Development</a>
     
 </div>
 
 
     <div id="prev-next">
         
-        <a href="/blog/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">&laquo; Clojure parallel thread flows: pth library</a>
         
-        
-        <a class="right" href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Manipulating SVG images from browser Javascript &raquo;</a>
+        <a class="right" href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Oxidative stress: its causes, its consequences and its solution &raquo;</a>
         
     </div>
 

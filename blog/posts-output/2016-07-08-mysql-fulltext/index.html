@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: Posts Tagged &quot;Java&quot;</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/tags-output/Java/">
+    <title>The Analytic Bastard: MySQL full text search: a simple example</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2016-07-08-mysql-fulltext/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,17 +51,93 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="posts-by-tag">
-    <div id="page-header">
-        <h2>Posts Tagged &quot;Java&quot;</h2>
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">July 8, 2016</div>
+        
     </div>
-    <ul>
+    <h2>MySQL full text search: a simple example</h2>
+</div>
+<div>
     
-        <li>
-            <a href="/blog/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a>
-        </li>
+    <p>Following the previous post on MySQL GIS capabilities, this post is devoted to using MySQL as a text search engine like Apache Solr or Elasticsearch, but with no need for those systems.</p><h2><a name="table&#95;creation"></a>Table creation</h2><p>First, we define the table schema</p><pre><code class="sql">USE `gis`;
+
+DROP TABLE IF EXISTS `deal`;
+
+CREATE TABLE `deal` &#40;
+	`id` INT NOT NULL auto&#95;increment,
+    `titulo` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    PRIMARY KEY &#40;`id`&#41;,
+    UNIQUE KEY `id`&#40;`id`&#41;,
+    FULLTEXT&#40;`titulo`, `desc`&#41;
+&#41; ENGINE=MyISAM DEFAULT CHARSET=latin1;
+</code></pre><p>With this, we have declared two text fields and a fulltext index including both.</p><h2><a name="sample&#95;data&#95;insertion"></a>Sample data insertion</h2><p>Insert some values into the fields, there is nothing of significance here</p><pre><code class="sql">INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Pregnant baby doll','A baby doll that is pregnant, the baby\'s baby is pregnant too'&#41;;
+INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Liquour from Malta', 'Delicious blend of fruity blueberry liquour. Alcoholic drink'&#41;;
+INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Scotch Whiskey', 'Fine whiskey from Scotland. The best in the world'&#41;;
+INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Toyota Yaris', 'Diesel affordable car'&#41;;
+INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Mercedes Class C4', 'Diesel car only for those who can afford it'&#41;;
+INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Wine El Yantar', 'Affordable alcoholic drink. Cheap red wine.'&#41;;
+</code></pre><h2><a name="data&#95;querying"></a>Data querying</h2><p>We now use a <em>match against</em> query in the following way</p><pre><code class="sql">SELECT `titulo`, `desc` FROM `deal`
+	WHERE MATCH&#40;`titulo`, `desc`&#41; AGAINST &#40;'affordable'&#41; ;
+</code></pre><p>In the following result, we notice that only the full word <code>affordable</code> has been searched, but that we obtain no result involving any type of variation such as the Mercedes row, which has the root <code>afford</code>.</p><pre><code>+ ----------- + --------- +
+| titulo      | desc      |
++ ----------- + --------- +
+| Toyota Yaris | Diesel affordable car |
+| Wine El Yantar | Affordable alcoholic drink. Cheap red wine. |
++ ----------- + --------- +
+2 rows</code></pre><p>The same will happen when querying <code>afford</code></p><pre><code>+ ----------- + --------- +
+| titulo      | desc      |
++ ----------- + --------- +
+| Mercedes Class C4 | Diesel car only for those who can afford it |
++ ----------- + --------- +
+1 rows</code></pre><h2><a name="ngram&#95;search"></a>NGram search</h2><p>If we want to get result in a fashion similar to the use of Google (or other text search engines), the final step will be to use an NGram parser. We redefine our table schema like this:</p><pre><code class="sql">USE `gis`;
+
+DROP TABLE IF EXISTS `deal`;
+
+CREATE TABLE `deal` &#40;
+	`id` INT NOT NULL auto&#95;increment,
+    `titulo` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    PRIMARY KEY &#40;`id`&#41;,
+    UNIQUE KEY `id`&#40;`id`&#41;,
+    FULLTEXT&#40;`titulo`, `desc`&#41; WITH PARSER ngram
+&#41; ENGINE=InnoDB DEFAULT CHARSET=latin1;
+</code></pre><p>This will only work with MySQL version 5.7.6 for tables using InnoDB.</p><p>This will give us the desired result when querying for subset of words.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
     
-    </ul>
+    <a href="/blog/tags-output/Databases/">Databases</a>
+    
+    <a href="/blog/tags-output/MySQL/">MySQL</a>
+    
+    <a href="/blog/tags-output/Tools/">Tools</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        
+        <a class="right" href="/blog/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
             </div>

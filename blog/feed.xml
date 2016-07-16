@@ -12,11 +12,129 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Fri, 15 Jul 2016 22:19:03 +0200
+Sat, 16 Jul 2016 18:12:27 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-07-08-mysql-fulltext/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-07-08-mysql-fulltext/
+</link>
+<title>
+MySQL full text search: a simple example
+</title>
+<description>
+&lt;p&gt;Following the previous post on MySQL GIS capabilities, this post is devoted to using MySQL as a text search engine like Apache Solr or Elasticsearch, but with no need for those systems.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;table&amp;#95;creation&quot;&gt;&lt;/a&gt;Table creation&lt;/h2&gt;&lt;p&gt;First, we define the table schema&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;USE `gis`;
+
+DROP TABLE IF EXISTS `deal`;
+
+CREATE TABLE `deal` &amp;#40;
+	`id` INT NOT NULL auto&amp;#95;increment,
+    `titulo` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    PRIMARY KEY &amp;#40;`id`&amp;#41;,
+    UNIQUE KEY `id`&amp;#40;`id`&amp;#41;,
+    FULLTEXT&amp;#40;`titulo`, `desc`&amp;#41;
+&amp;#41; ENGINE=MyISAM DEFAULT CHARSET=latin1;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;With this, we have declared two text fields and a fulltext index including both.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;sample&amp;#95;data&amp;#95;insertion&quot;&gt;&lt;/a&gt;Sample data insertion&lt;/h2&gt;&lt;p&gt;Insert some values into the fields, there is nothing of significance here&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Pregnant baby doll','A baby doll that is pregnant, the baby\'s baby is pregnant too'&amp;#41;;
+INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Liquour from Malta', 'Delicious blend of fruity blueberry liquour. Alcoholic drink'&amp;#41;;
+INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Scotch Whiskey', 'Fine whiskey from Scotland. The best in the world'&amp;#41;;
+INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Toyota Yaris', 'Diesel affordable car'&amp;#41;;
+INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Mercedes Class C4', 'Diesel car only for those who can afford it'&amp;#41;;
+INSERT INTO `deal` &amp;#40;`titulo`, `desc`&amp;#41; VALUES&amp;#40;'Wine El Yantar', 'Affordable alcoholic drink. Cheap red wine.'&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;data&amp;#95;querying&quot;&gt;&lt;/a&gt;Data querying&lt;/h2&gt;&lt;p&gt;We now use a &lt;em&gt;match against&lt;/em&gt; query in the following way&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;SELECT `titulo`, `desc` FROM `deal`
+	WHERE MATCH&amp;#40;`titulo`, `desc`&amp;#41; AGAINST &amp;#40;'affordable'&amp;#41; ;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the following result, we notice that only the full word &lt;code&gt;affordable&lt;/code&gt; has been searched, but that we obtain no result involving any type of variation such as the Mercedes row, which has the root &lt;code&gt;afford&lt;/code&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;+ ----------- + --------- +
+| titulo      | desc      |
++ ----------- + --------- +
+| Toyota Yaris | Diesel affordable car |
+| Wine El Yantar | Affordable alcoholic drink. Cheap red wine. |
++ ----------- + --------- +
+2 rows&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The same will happen when querying &lt;code&gt;afford&lt;/code&gt;&lt;/p&gt;&lt;pre&gt;&lt;code&gt;+ ----------- + --------- +
+| titulo      | desc      |
++ ----------- + --------- +
+| Mercedes Class C4 | Diesel car only for those who can afford it |
++ ----------- + --------- +
+1 rows&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;ngram&amp;#95;search&quot;&gt;&lt;/a&gt;NGram search&lt;/h2&gt;&lt;p&gt;If we want to get result in a fashion similar to the use of Google (or other text search engines), the final step will be to use an NGram parser. We redefine our table schema like this:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;USE `gis`;
+
+DROP TABLE IF EXISTS `deal`;
+
+CREATE TABLE `deal` &amp;#40;
+	`id` INT NOT NULL auto&amp;#95;increment,
+    `titulo` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    PRIMARY KEY &amp;#40;`id`&amp;#41;,
+    UNIQUE KEY `id`&amp;#40;`id`&amp;#41;,
+    FULLTEXT&amp;#40;`titulo`, `desc`&amp;#41; WITH PARSER ngram
+&amp;#41; ENGINE=InnoDB DEFAULT CHARSET=latin1;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This will only work with MySQL version 5.7.6 for tables using InnoDB.&lt;/p&gt;&lt;p&gt;This will give us the desired result when querying for subset of words.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Fri, 08 Jul 2016 00:00:00 +0200
+</pubDate>
+</item>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-07-05-mysql-gis/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-07-05-mysql-gis/
+</link>
+<title>
+MySQL GIS capabilities: query geographical locations simple example
+</title>
+<description>
+&lt;p&gt;MySQL can be used as a GIS (Geographic Information System) database backend thanks to its spatial functions, which have been around since version 5.6 for MyISAM engine and since 5.7.5 for InnoDB engine.&lt;/p&gt;&lt;p&gt;Now, since InnoDB offers transactional capabilities too, i.e., a fully ACID-compliant DB engine. It is very interesting for a development in need of geographic information to be used alongside common business DB operations.&lt;/p&gt;&lt;p&gt;In this case, I will limit myself to using MyISAM for this example, since the only point is to show how we can use MySQL to retrieve data points from a query. The query itself could come from a reverse search by the Google Maps API (query by spatial features such as coordinates, distance or containing areas)&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;creating&amp;#95;the&amp;#95;schema&quot;&gt;&lt;/a&gt;Creating the schema&lt;/h2&gt;&lt;p&gt;Let's create a table called &lt;code&gt;nodes&lt;/code&gt; with the following schema:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;USE `gis`;
+
+DROP TABLE `nodes`;
+
+CREATE TABLE `nodes` &amp;#40;
+  `id` bigint&amp;#40;20&amp;#41; DEFAULT NULL,
+  `geom` geometry NOT NULL,
+  `name` varchar&amp;#40;50&amp;#41; DEFAULT NULL,
+  UNIQUE KEY `i&amp;#95;nodeids` &amp;#40;`id`&amp;#41;,
+  SPATIAL KEY `i&amp;#95;geomidx` &amp;#40;`geom`&amp;#41;
+&amp;#41; ENGINE=MyISAM DEFAULT CHARSET=latin1;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The only outstanding thing is the geometry related elements. We can spot the special &lt;code&gt;geometry&lt;/code&gt; data type and the &lt;em&gt;spatial key&lt;/em&gt;, which creates a spatial indexed. To do this, a special type of indexing is used for spatial data called R-tree (Region tree) indexing. This involves organizing the minimum bounding rectangle (MBR) of the spatial objects in a tree structure that is then used by the different spatial functions.&lt;/p&gt;&lt;p&gt;An R-tree index organizes the indexed nodes in a hierarchy where the nodes in the index represent the MBR of the objects in the node. The leaf nodes in the index contain references to the row that contain the data, just like a B+-tree index.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;inserting&amp;#95;points&quot;&gt;&lt;/a&gt;Inserting points&lt;/h2&gt;&lt;p&gt;Let's insert some data into the table:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;INSERT INTO `nodes` &amp;#40;`id`,`geom`,`name`&amp;#41; VALUES &amp;#40;1,ST&amp;#95;GeomFromText&amp;#40;'POINT&amp;#40;108.875000 34.216020&amp;#41;'&amp;#41;,'Point 1'&amp;#41;;
+INSERT INTO `nodes` &amp;#40;`id`,`geom`,`name`&amp;#41; VALUES &amp;#40;2,ST&amp;#95;GeomFromText&amp;#40;'POINT&amp;#40;109.569098 36.64635&amp;#41;'&amp;#41;,'Point 2'&amp;#41;;
+INSERT INTO `nodes` &amp;#40;`id`,`geom`,`name`&amp;#41; VALUES &amp;#40;3,ST&amp;#95;GeomFromText&amp;#40;'POINT&amp;#40;109.550988 36.633384&amp;#41;'&amp;#41;,'Point 3'&amp;#41;;
+INSERT INTO `nodes` &amp;#40;`id`,`geom`,`name`&amp;#41; VALUES &amp;#40;4,ST&amp;#95;GeomFromText&amp;#40;'POINT&amp;#40;109.472800 36.624116&amp;#41;'&amp;#41;,'Point 4'&amp;#41;;
+INSERT INTO `nodes` &amp;#40;`id`,`geom`,`name`&amp;#41; VALUES &amp;#40;5,ST&amp;#95;GeomFromText&amp;#40;'POINT&amp;#40;109.487460 36.563614&amp;#41;'&amp;#41;,'Point 5'&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice the use of the construct &lt;code&gt;Point&lt;/code&gt;. This is one of the possible GIS data types that can be used from MySQL.&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;ftp://ftp.ntu.edu.tw/tmp/MySQL/tech-resources/articles/4.1/gis-datatypes.png&quot; alt=&quot;GIS data types in MySQL&quot; /&gt;&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;quering&amp;#95;the&amp;#95;database&quot;&gt;&lt;/a&gt;Quering the database&lt;/h2&gt;&lt;p&gt;Let us make a geometry to query data (notice that the last data point must be the same than the initial one, effectively closing the surface)&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;SET @g3 = ST&amp;#95;GeomFromText&amp;#40;'Polygon&amp;#40;&amp;#40;108 36.5,108 36.7,109.5 36.7,109.5 36.5,108 36.5&amp;#41;&amp;#41;'&amp;#41;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can now query which data points in the database are related to the geometry:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;SELECT `name`, st&amp;#95;x&amp;#40;`geom`&amp;#41; AS x,st&amp;#95;y&amp;#40;`geom`&amp;#41; AS y, contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0 FROM `nodes`
+  WHERE contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that we are using &lt;code&gt;contains&lt;/code&gt;, which checks whether the points fall within the minimum bounding rectangle (MBR) which encloses the box.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;+ --------- + ------ + ------ + --------------------------- +
+| name      | x      | y      | contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0      |
++ --------- + ------ + ------ + --------------------------- +
+| Point 1   | 1      | 1      | 1                           |
+| Point 2   | 1      | 5      | 1                           |
+| Point 3   | 5      | 1      | 1                           |
+| Point 4   | 5      | 5      | 1                           |
++ --------- + ------ + ------ + --------------------------- +
+4 rows&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We get all four points but the area only encloses three of them. You can see our problem here in this &lt;a href='https://www.percona.com/blog/2013/10/21/using-the-new-mysql-spatial-functions-5-6-for-geo-enabled-applications/'&gt;illustration&lt;/a&gt;:&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;https://www.percona.com/blog/wp-content/uploads/2013/10/mbr_example_sm1.png&quot; alt=&quot;False positives&quot; /&gt;&lt;/p&gt;&lt;p&gt;We can get points that don't belong to the queried region, but that only fall within their MBR, since the default version of the spatial functions use MBRs, and are equivalent to using the &lt;code&gt;mbr&lt;/code&gt;-prefixed versions. In this case, the full name for &lt;code&gt;contains&lt;/code&gt; is really &lt;code&gt;mbrcontains&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;To address this, a new set of functions was introduced as of 5.6 which are prefixed with &lt;code&gt;st&amp;#95;&lt;/code&gt;.&lt;/p&gt;&lt;p&gt;Let's repeat the query using &lt;code&gt;st&amp;#95;contains&lt;/code&gt;:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;sql&quot;&gt;SELECT `name`, st&amp;#95;x&amp;#40;`geom`&amp;#41; AS x,st&amp;#95;y&amp;#40;`geom`&amp;#41; AS y, st&amp;#95;contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0 FROM `nodes`
+  WHERE st&amp;#95;contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;which results in&lt;/p&gt;&lt;pre&gt;&lt;code&gt;+ --------- + ------ + ------ + ------------------------------ +
+| name      | x      | y      | st&amp;#95;contains&amp;#40;@g3,`geom`&amp;#41;&amp;gt;0      |
++ --------- + ------ + ------ + ------------------------------ +
+| Point 1   | 1      | 1      | 1                              |
+| Point 2   | 1      | 5      | 1                              |
+| Point 3   | 5      | 1      | 1                              |
++ --------- + ------ + ------ + ------------------------------ +&lt;/code&gt;&lt;/pre&gt;&lt;h2&gt;&lt;a name=&quot;comments&quot;&gt;&lt;/a&gt;Comments&lt;/h2&gt;&lt;p&gt;InnoDB is ligther and faster to query but it is not ACID-compliant. On the other hand, InnoDB also offers full-text search, which can cheaply provide us with a basic but fully-operative text search engine in the same table in case we need it. Nevertheless, we can combine MyISAM and InnoDB to get the best of bith worlds by using them in specific tables: One for GIS and one for text.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 05 Jul 2016 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/blog/posts-output/2016-07-03-cant-wait-for-java-repl/
@@ -25,10 +143,10 @@ http://analyticbastard.github.io/blog/posts-output/2016-07-03-cant-wait-for-java
 http://analyticbastard.github.io/blog/posts-output/2016-07-03-cant-wait-for-java-repl/
 </link>
 <title>
-Interactive, high throughput, low turnaround development: my setup
+Interactive, high throughput, low turnaround development in the JVM: my setup
 </title>
 <description>
-&lt;p&gt;From my former team lead at Erudine I learnt the value of low turnaround JVM code execution for high throughput, and productive interactive development.&lt;/p&gt;&lt;p&gt;What I mean by this is:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Running one and only one JVM almost all the time&lt;/li&gt;&lt;li&gt;Recompile and reload your classes, hotswapping new versions for old ones.&lt;/li&gt;&lt;li&gt;Create instances of your classes interactively using a REPL orinteractive console&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;This enables a very fast development lifecycle and lowers new libraries learning curves by interactively exploring them.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;my&amp;#95;setup&quot;&gt;&lt;/a&gt;My setup&lt;/h2&gt;&lt;p&gt;In my opinion, the best IDE for this task is IntelliJ IDEA. Not only it allows fast development by being heavily keyboard shortcut biased, but it also includes running configurations that can be adapted to any possible setup you might need.&lt;/p&gt;&lt;p&gt;In my case, I normally use Cursive with Clojure. But if I only need Java, a Scala REPL (the Scala plugin is totally free, albeit it lacks smoothness, especially on Windows) suffices.&lt;/p&gt;&lt;p&gt;I normally swap the Oracle VM by &lt;a href='https://dcevm.github.io/'&gt;DCEVM&lt;/a&gt;, a JVM runtime that installs on top of it (or OpenJDK). On top of that, I use the &lt;a href='http://www.hotswapagent.org/'&gt;Hotswap Agent&lt;/a&gt;, a Java agent that watches file changes (in this case bytecode class changes due to new compilations) and performs the hotswapping on the DCEVM. This agent must be used from the running configuration on IntelliJ (the Scala console running configuration).&lt;/p&gt;&lt;p&gt;If you want to install the DCEVEM as the alternative JVM in your JDK, you need to specifically use it from the command line by typing&lt;/p&gt;&lt;pre&gt;&lt;code&gt;-XXaltjvm=dcevm -javaagent:PATH&amp;#95;TO&amp;#95;AGENT\hotswap-agent.jar&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This must also be included in the running configuration from IntelliJ in the JVM parameters section.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;Get IntelliJ IDEA&lt;/li&gt;&lt;li&gt;Get &lt;a href='https://dcevm.github.io/'&gt;DCEVM&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Get the &lt;a href='http://www.hotswapagent.org/'&gt;Hotswap Agent&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Add the Scala SDK to your Java project and create a runningconfiguration using the Hotswap agent and specifying the use ofthe Hotswap agent and, potentially, DCEVM as the altjvm.&lt;/li&gt;&lt;li&gt;Click on debug to start the Scala REPL with Hotswap capabilities&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;You can now create Java objects of any class on your classpath, including classes from your libraries or classes from your project. In the latter case, you can now change their code, recompile with Ctrl+F9, and you will be able to see a green box telling you the number of reloaded classes (you did something wrong otherwise and the setup is not complete).&lt;/p&gt;&lt;p&gt;You will need to accommodate a minimal Scala syntax such as val or var to create variables.&lt;/p&gt;
+&lt;p&gt;From my former team lead at Erudine I learnt the value of low turnaround JVM code execution for high throughput, and productive interactive development.&lt;/p&gt;&lt;p&gt;What I mean by this is:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Running one and only one JVM almost all the time&lt;/li&gt;&lt;li&gt;Recompiling and reload your classes, hotswapping new versions for old ones.&lt;/li&gt;&lt;li&gt;Creating instances of your classes interactively using a REPL orinteractive console&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;This enables a very fast development lifecycle and lowers new libraries learning curves by interactively exploring them.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;my&amp;#95;setup&quot;&gt;&lt;/a&gt;My setup&lt;/h2&gt;&lt;p&gt;In my opinion, the best IDE for this task is IntelliJ IDEA. Not only it provides fast development by being heavily keyboard shortcut biased, but it also includes running configurations that can be adapted to any possible setup you might need.&lt;/p&gt;&lt;p&gt;In my case, I normally use Cursive with Clojure. But if I only need Java, a Scala REPL (the Scala plugin is totally free, albeit it lacks smoothness, especially on Windows) suffices.&lt;/p&gt;&lt;p&gt;I usually switch the Oracle VM to &lt;a href='https://dcevm.github.io/'&gt;DCEVM&lt;/a&gt;, a JVM runtime that installs on top of it (or OpenJDK). Next, I get the &lt;a href='http://www.hotswapagent.org/'&gt;Hotswap Agent&lt;/a&gt;, a Java agent that watches file changes (in this case bytecode class changes due to new compilations) and performs the hotswapping on the DCEVM. This agent must be used from the running configuration on IntelliJ (the Scala console running configuration).&lt;/p&gt;&lt;p&gt;If you want to install the DCEVEM as the alternative JVM in your JDK, you need to specifically use it from the command line, along with the use of the agent:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;-XXaltjvm=dcevm -javaagent:PATH&amp;#95;TO&amp;#95;AGENT\hotswap-agent.jar&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This must also be included in the running configuration from IntelliJ in the JVM parameters section.&lt;/p&gt;&lt;h2&gt;&lt;a name=&quot;summary&quot;&gt;&lt;/a&gt;Summary&lt;/h2&gt;&lt;ul&gt;&lt;li&gt;Get IntelliJ IDEA&lt;/li&gt;&lt;li&gt;Get &lt;a href='https://dcevm.github.io/'&gt;DCEVM&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Get the &lt;a href='http://www.hotswapagent.org/'&gt;Hotswap Agent&lt;/a&gt;&lt;/li&gt;&lt;li&gt;Add the Scala SDK to your Java project and create a runningconfiguration using the Hotswap agent and specifying the use ofthe Hotswap agent and, potentially, DCEVM as the altjvm.&lt;/li&gt;&lt;li&gt;Click on debug to start the Scala REPL with Hotswap capabilities&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;You can now create Java objects of any class on your classpath, including classes from your libraries or classes from your project. In the latter case, you can now change their code, recompile with Ctrl+F9, and you will be able to see a green box telling you the number of reloaded classes (you did something wrong otherwise and the setup is not complete).&lt;/p&gt;&lt;p&gt;You will need to accommodate a minimal Scala syntax such as val or var to create variables.&lt;/p&gt;
 </description>
 <enclosure>
 

@@ -54,6 +54,17 @@
 <div id="post">
     
     <div class="post-header">
+        <h2>Manipulating SVG images from browser Javascript</h2>
+        <div id="post-meta">
+            
+            <div class="date">April 9, 2015</div>
+        </div>
+    </div>
+    <p>SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.</p><p>I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.</p>
+    <a href="/blog/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
         <h2>Installing Theano on Windows</h2>
         <div id="post-meta">
             
@@ -95,17 +106,6 @@
     </div>
     <p>There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.</p><p>This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.</p>
     <a href="/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Google&#39;s original Page Rank implementation</h2>
-        <div id="post-meta">
-            
-            <div class="date">February 8, 2015</div>
-        </div>
-    </div>
-    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n_i}$, where $n_i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p>
-    <a href="/blog/posts-output/2015-02-08-google-original-page-rank/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -159,6 +159,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/blog/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
                         <li><a href="/blog/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
                         
                         <li><a href="/blog/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
@@ -166,8 +168,6 @@
                         <li><a href="/blog/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
                         
                         <li><a href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Oxidative stress: its causes, its consequences and its solution</a></li>
-                        
-                        <li><a href="/blog/posts-output/2016-06-09-building-an-automated-trading-system/">Building a Machine Learning-based automated trading system</a></li>
                         
                     </ul>
                 </div>
@@ -185,13 +185,15 @@
                         
                         <li><a href="/blog/tags-output/Databases/">Databases</a></li>
                         
+                        <li><a href="/blog/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/blog/tags-output/Biohacking/">Biohacking</a></li>
+                        
                         <li><a href="/blog/tags-output/Clojure/">Clojure</a></li>
                         
                         <li><a href="/blog/tags-output/Brainteasers/">Brainteasers</a></li>
                         
                         <li><a href="/blog/tags-output/MySQL/">MySQL</a></li>
-                        
-                        <li><a href="/blog/tags-output/Nootropics &amp; Supplements/">Nootropics &amp; Supplements</a></li>
                         
                         <li><a href="/blog/tags-output/Tools/">Tools</a></li>
                         

@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: Google&#39;s original Page Rank implementation</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/blog/posts-output/2015-02-08-google-original-page-rank/">
+    <title>The Analytic Bastard: Posts Tagged &quot;Biohacking&quot;</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/blog/tags-output/Biohacking/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,50 +51,17 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="post">
-    <div class="post-header">
-    <div id="post-meta" class="row">
-        <div class="col-lg-6">February 8, 2015</div>
-        
+<div id="posts-by-tag">
+    <div id="page-header">
+        <h2>Posts Tagged &quot;Biohacking&quot;</h2>
     </div>
-    <h2>Google&#39;s original Page Rank implementation</h2>
-</div>
-<div>
+    <ul>
     
-    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n&#95;i}$, where $n&#95;i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p><p>$$ \mathbf{G} = \beta \mathbf{M} + (1-\beta) \frac{\mathbf{1} \mathbf{1}^ T}{N} $$</p><p>where $N$ is the total number of web pages in the system and $\mathbf{1}$ is the vector of all ones of size $N$.</p><p>$\mathbf{G}$, being a stochastic matrix, has one as the largest eigenvalue (in module). This can be proved by taking $\mathbf{G}^ T \mathbf{1}=\mathbf{1}$, and since $\mathbf{G}^ T = (\mathbf{P}^ {-1})^ {-T} \mathbf{D} \mathbf{P}^ {-T}$, where $\mathbf{P}$ diagonalizes $\mathbf{G}$ and $\mathbf{D}$ is the resulting diagonal matrix with the eigenvalues of both $\mathbf{G}$ and $\mathbf{G^ {T}}$. Thus one is also the largest eigenvalue of $\mathbf{G}$. Proving that this is in fact the largest can be done by applyting the <a href='http://en.wikipedia.org/wiki/Gershgorin_circle_theorem'>Gershgoring circle theorem</a>.</p><p>Intuitively, applyting $$\mathbf{G}$$ several times has the effect of building a power matrix $\mathbf{G}^ M$ whose largest eigenvalue is also one, but the rest are the power of elements less than one, meaning that each power decreases all the eigenvalues except the first one. This has the effect of minimizing the component of any vector (the projection) in the subspace spanned by the eigenvector corresponding to any eigenvalue except the first one. Eventually, all of them reach zero, leaving only the component of the original vector in the subspace of the eigenvector corresponding to the largest eigenvalue. This means $\mathbf{G}^ M \mathbf{x} \rightarrow \mathbf{w}$, as $M$ tends to infinite, where $\mathbf{w}$ is the dominant eigenvector (the one corresponding to the eigenvalue one).</p><p>The elements of this vectors are the important for all the pages registered on the database by the crawlers or robots.</p><p>Obviously this demands a lot of computation since the web is ever changing and this power method would need to be performed in batch intermitently, so efficient implementations are needed (based on Map Reduce or not).</p>
-</div>
-
-<div id="post-tags">
-    <b>Tags: </b>
+        <li>
+            <a href="/blog/posts-output/2016-06-27-Lifestyle-supplements-nootropics/">Oxidative stress: its causes, its consequences and its solution</a>
+        </li>
     
-    <a href="/blog/tags-output/Mathematics/">Mathematics</a>
-    
-    <a href="/blog/tags-output/Statistics/">Statistics</a>
-    
-</div>
-
-
-    <div id="prev-next">
-        
-        <a href="/blog/posts-output/2015-02-20-image-pan-sharpening-with-pca/">&laquo; Image pan-sharpening with PCA</a>
-        
-        
-        <a class="right" href="/blog/posts-output/2015-01-10-my-git-workflow/">My Git workflow &raquo;</a>
-        
-    </div>
-
-    
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    
-
-
+    </ul>
 </div>
 
             </div>

@@ -12,11 +12,197 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Sat, 16 Jul 2016 18:12:27 +0200
+Mon, 19 Sep 2016 00:53:17 +0200
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2016-09-15-elasticsearch-gis/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2016-09-15-elasticsearch-gis/
+</link>
+<title>
+Elasticsearch and GIS
+</title>
+<description>
+&lt;p&gt;We saw that MySQL comfortably deals with GIS data. Now it is the turn of Elasticsearch.&lt;/p&gt;&lt;p&gt;We will upload the geospatial information from a shapefile to Elasticsearch. Shapefiles are a standard in the GIS world, and are normally accompanied by other files, including a DBF file. This DBF file can be opened in Excel or Libreoffice, and it normally specifies region data, including names. For this example, we will use the &lt;a href='http://www.gadm.org/country'&gt;Global Adminsitrative Area's Spain shapefile&lt;/a&gt;&lt;/p&gt;&lt;p&gt;I used my Hackintosh to do the whole thing, and the version maintained on Homebrew is too old to support the commands we need. So I needed to compile a new one and replace the sources from Homebrew with the official ones and then install them with the ```brew``` command.&lt;/p&gt;&lt;p&gt;You can get the sources using Subversion (as of the time of writing the latest tag was 2.1.1):&lt;/p&gt;&lt;pre&gt;&lt;code&gt;svn co https://svn.osgeo.org/gdal/tags/2.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Then copy the sources to your previously installed Homebrew sources (search how to get sources with Hombrew, the package is gdal).&lt;/p&gt;&lt;p&gt;Once we've got the latest version in place, we issue the following command:&lt;/p&gt;&lt;pre&gt;&lt;code&gt;ogr2ogr -progress --config WRITE&amp;#95;MAPPING &amp;quot;esmap.json&amp;quot; -f &amp;quot;ElasticSearch&amp;quot; http://localhost:9200 es&amp;#95;peninsula.shp
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The config value ```WRITE_MAPPING``` to write the map, it never produces the file, but it does produce the correct mapping in the index. The rest are Elasticsearch's URL and the shapefile.&lt;/p&gt;&lt;p&gt;We now check the existence of the index&lt;pre&gt;&lt;code&gt;curl -X GET 'http://localhost:9200/&amp;#95;cat/indices'
+
+yellow open es&amp;#95;peninsula 5 1   54 0 4.4mb 4.4mb
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;And get the resulting mapping&lt;pre&gt;&lt;code&gt;curl -X GET 'http://localhost:9200/es&amp;#95;peninsula/&amp;#95;mapping'
+{
+  &amp;quot;es&amp;#95;peninsula&amp;quot;: {
+    &amp;quot;mappings&amp;quot;: {
+      &amp;quot;FeatureCollection&amp;quot;: {
+        &amp;quot;&amp;#95;meta&amp;quot;: {
+          &amp;quot;fid&amp;quot;: &amp;quot;ogc&amp;#95;fid&amp;quot;,
+          &amp;quot;geomfields&amp;quot;: {
+            &amp;quot;geometry&amp;quot;: &amp;quot;POLYGON&amp;quot;
+          }
+        },
+        &amp;quot;properties&amp;quot;: {
+          &amp;quot;geometry&amp;quot;: {
+            &amp;quot;type&amp;quot;: &amp;quot;geo&amp;#95;shape&amp;quot;
+          },
+          &amp;quot;ogc&amp;#95;fid&amp;quot;: {
+            &amp;quot;type&amp;quot;: &amp;quot;long&amp;quot;
+          },
+          &amp;quot;properties&amp;quot;: {
+            &amp;quot;properties&amp;quot;: {
+              &amp;quot;CCA&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;CCN&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;long&amp;quot;
+              },
+              &amp;quot;ENGTYPE&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;HASC&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;ID&amp;#95;0&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;long&amp;quot;
+              },
+              &amp;quot;ID&amp;#95;1&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;long&amp;quot;
+              },
+              &amp;quot;ID&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;long&amp;quot;
+              },
+              &amp;quot;ISO&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;NAME&amp;#95;0&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;NAME&amp;#95;1&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;NAME&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;NL&amp;#95;NAME&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;TYPE&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              },
+              &amp;quot;VARNAME&amp;#95;2&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+              }
+            }
+          },
+          &amp;quot;type&amp;quot;: {
+            &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+          }
+        }
+      },
+      &amp;quot;Feature&amp;quot;: {
+        &amp;quot;properties&amp;quot;: {
+          &amp;quot;query&amp;quot;: {
+            &amp;quot;properties&amp;quot;: {
+              &amp;quot;term&amp;quot;: {
+                &amp;quot;properties&amp;quot;: {
+                  &amp;quot;NAME&amp;#95;2&amp;quot;: {
+                    &amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Observe the &quot;geometry&quot; property of type &quot;geo_shape&quot;. This is the basic geographical type we use.&lt;/p&gt;&lt;p&gt;We now post a search on the type, and request all available data for the Madrid region.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;curl -X POST 'http://localhost:9200/es&amp;#95;peninsula/FeatureCollection/&amp;#95;search' -d '{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;match&amp;quot; : {
+            &amp;quot;properties.NAME&amp;#95;1&amp;quot; : &amp;quot;Madrid&amp;quot;
+        }
+    }
+}'
+
+{
+  &amp;quot;took&amp;quot;: &amp;quot;76&amp;quot;,
+  &amp;quot;timed&amp;#95;out&amp;quot;: false,
+  &amp;quot;&amp;#95;shards&amp;quot;: {
+    &amp;quot;total&amp;quot;: &amp;quot;5&amp;quot;,
+    &amp;quot;successful&amp;quot;: &amp;quot;5&amp;quot;,
+    &amp;quot;failed&amp;quot;: &amp;quot;0&amp;quot;
+  },
+  &amp;quot;hits&amp;quot;: {
+    &amp;quot;total&amp;quot;: &amp;quot;1&amp;quot;,
+    &amp;quot;max&amp;#95;score&amp;quot;: &amp;quot;1.4729551&amp;quot;,
+    &amp;quot;hits&amp;quot;: &amp;#91;
+      {
+        &amp;quot;&amp;#95;index&amp;quot;: &amp;quot;es&amp;#95;peninsula&amp;quot;,
+        &amp;quot;&amp;#95;type&amp;quot;: &amp;quot;FeatureCollection&amp;quot;,
+        &amp;quot;&amp;#95;id&amp;quot;: &amp;quot;AVbCrSsnfoFZGhh&amp;#95;-hoH&amp;quot;,
+        &amp;quot;&amp;#95;score&amp;quot;: &amp;quot;1.4729551&amp;quot;,
+        &amp;quot;fields&amp;quot;: {
+          &amp;quot;properties.NAME&amp;#95;2&amp;quot;: &amp;#91;
+            &amp;quot;Madrid&amp;quot;
+          &amp;#93;
+        }
+      }
+    &amp;#93;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Imagine the input query is inexact or inaccurate, and we are still interested in getting the information about the Madrid region. We can use a fuzzy search.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;curl -X POST 'http://localhost:9200/es&amp;#95;peninsula/FeatureCollection/&amp;#95;search' -d '{
+    &amp;quot;fields&amp;quot; : &amp;#91;&amp;quot;properties.NAME&amp;#95;1&amp;quot;, &amp;quot;properties.NAME&amp;#95;2&amp;quot;&amp;#93;,
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;match&amp;quot; : {
+            &amp;quot;properties.NAME&amp;#95;1&amp;quot; : {
+                &amp;quot;query&amp;quot; : &amp;quot;Mardid&amp;quot;,
+                &amp;quot;fuzziness&amp;quot; : 2
+            }
+        }
+    }
+}'
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Were we have limited the output to the name fields of the administrative area to avoid the large output which would have resulted from getting Madrid's polygon shape.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;took&amp;quot;: &amp;quot;76&amp;quot;,
+  &amp;quot;timed&amp;#95;out&amp;quot;: false,
+  &amp;quot;&amp;#95;shards&amp;quot;: {
+    &amp;quot;total&amp;quot;: &amp;quot;5&amp;quot;,
+    &amp;quot;successful&amp;quot;: &amp;quot;5&amp;quot;,
+    &amp;quot;failed&amp;quot;: &amp;quot;0&amp;quot;
+  },
+  &amp;quot;hits&amp;quot;: {
+    &amp;quot;total&amp;quot;: &amp;quot;1&amp;quot;,
+    &amp;quot;max&amp;#95;score&amp;quot;: &amp;quot;1.4729551&amp;quot;,
+    &amp;quot;hits&amp;quot;: &amp;#91;
+      {
+        &amp;quot;&amp;#95;index&amp;quot;: &amp;quot;es&amp;#95;peninsula&amp;quot;,
+        &amp;quot;&amp;#95;type&amp;quot;: &amp;quot;FeatureCollection&amp;quot;,
+        &amp;quot;&amp;#95;id&amp;quot;: &amp;quot;AVbCrSsnfoFZGhh&amp;#95;-hoH&amp;quot;,
+        &amp;quot;&amp;#95;score&amp;quot;: &amp;quot;1.4729551&amp;quot;,
+        &amp;quot;fields&amp;quot;: {
+          &amp;quot;properties.NAME&amp;#95;2&amp;quot;: &amp;#91;
+            &amp;quot;Madrid&amp;quot;
+          &amp;#93;,
+          &amp;quot;properties.NAME&amp;#95;1&amp;quot;: &amp;#91;
+            &amp;quot;Comunidad de Madrid&amp;quot;
+          &amp;#93;
+        }
+      }
+    &amp;#93;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We could use the polygon shape information as input to another query to retrieve items available in the database.&lt;/p&gt;&lt;p&gt;Now, the question remains: which is faster? MySQL or Elasticsearch? I might compare them if I find the time.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Thu, 15 Sep 2016 00:00:00 +0200
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/blog/posts-output/2016-07-08-mysql-fulltext/

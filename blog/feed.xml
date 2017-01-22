@@ -12,11 +12,113 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Mon, 19 Sep 2016 00:53:17 +0200
+Sun, 22 Jan 2017 12:27:48 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/blog/posts-output/2017-01-10-monads/
+</guid>
+<link>
+http://analyticbastard.github.io/blog/posts-output/2017-01-10-monads/
+</link>
+<title>
+Monads: Scala vs. Clojure
+</title>
+<description>
+&lt;p&gt;This summary follows from the magnificent talk by Juan Manuel Serrano Hidalgo as part of the CodeMotion 2016 in Madrid, Spain, &lt;a href='https://www.youtube.com/watch?v=CT58M6CH0m4&amp;t=9s'&gt;available on Youtube&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Juan Manuel not only masterfully gives the fundamental idea of monads in Scala, but it does so in the finniest and most enjoyable way possible.&lt;/p&gt;&lt;p&gt;In this article I will build upon his constructs, filling in the empty blanks left in the talk. Although recommended, it is not necessary for you to watch the talk. It is, of course, recommended (although it is in Spanish).&lt;/p&gt;&lt;p&gt;Assume a software system composed of an interface, implementations of that interface, a program build on top of instances of that interface which is finally composed with the implementation in a configuration.&lt;/p&gt;&lt;p&gt;A very easy example consists of an echo program, which reads from an input and writes to an output. Easy enough right?&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;class IO {
+   read &amp;#40;&amp;#41; : String = &amp;quot;&amp;quot;
+   write &amp;#40;msg : String&amp;#41;
+}
+
+def echo &amp;#40;io : IO&amp;#41; : Unit = {
+   var msg : String = io.read
+   io.write&amp;#40;msg&amp;#41;
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, requisites change and we need to update our program to accommodate more use cases. Imagine that we no longer must use a unique synchronous IO module but also an asynchronous one. For this asynchronous interface, the echo program must be rewritten.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;class IO {
+   read &amp;#40;&amp;#41; : Future&amp;#40;String&amp;#41; = &amp;quot;&amp;quot;
+   write &amp;#40;msg : String&amp;#41;
+}
+
+def echo &amp;#40;io : IO&amp;#41; : Unit = {
+   val msg: Future&amp;#91;String&amp;#93; = AsyncIO.read
+   msg onComplete {
+      case Success&amp;#40;strMsg&amp;#41; =&amp;gt; io.write&amp;#40;strMsg&amp;#41;
+      case Failure&amp;#40;t&amp;#41; =&amp;gt; println &amp;#40;&amp;quot;error&amp;quot;&amp;#41;
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Notice that we needed to change the implementation of our Echo program.&lt;/p&gt;&lt;p&gt;A natural question to ask ourselves is whether there is a way of using both, or any number of interfaces for that matter, without needing to modify our program. This is actually what monads solve, acting as adaptors of types so that a program can accept multiple interfaces at no extra cost. Of course, the trade off here is grater complexity and learning curve for the programmer.&lt;/p&gt;&lt;p&gt;Having this in mind, we set up to build a program that never changes no matter the interfaces it uses.&lt;/p&gt;&lt;p&gt;We can use something like adaptor objects that take care of the possible types that can occur in the interfaces of the program, given that we keep the interfaces' inputs intact.&lt;/p&gt;&lt;p&gt;Let's begin by formally specifying an IO interface that can accommodate several types of outputs and always accepts the same input parameters, i.e., none for read and String for write.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;trait IO&amp;#91;P&amp;#91;&amp;#95;&amp;#93;&amp;#93; {
+  def read&amp;#40;&amp;#41;: P&amp;#91;String&amp;#93;
+  def write&amp;#40;msg: String&amp;#41;: P&amp;#91;Unit&amp;#93;
+}
+
+type Id&amp;#91;T&amp;#93; = T
+
+object SyncIO extends IO&amp;#91;Id&amp;#93; {
+  override def read&amp;#40;&amp;#41;: String = &amp;quot;Sync!&amp;quot;
+  override def write&amp;#40;msg: String&amp;#41;: Unit = identity&amp;#40;msg&amp;#41;
+}
+
+object AsyncIO extends IO&amp;#91;Future&amp;#93; {
+  override def read&amp;#40;&amp;#41;: Future&amp;#91;String&amp;#93; = Future&amp;#40;&amp;quot;Async!&amp;quot;&amp;#41;
+  override def write&amp;#40;msg: String&amp;#41;: Future&amp;#91;Unit&amp;#93; = Future{ print&amp;#40;msg&amp;#41;}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We now write the new version of the program, that will use these adaptors, for each sentence that uses the &lt;code&gt;IO&lt;/code&gt; interface. This adaptors are our monads:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;def echo&amp;#91;P&amp;#91;&amp;#95;&amp;#93;&amp;#93;&amp;#40;io: IO&amp;#91;P&amp;#93;, m: Monad&amp;#91;P&amp;#93;&amp;#41;&amp;#40;&amp;#41;: P&amp;#91;String&amp;#93; = {
+  m.bind&amp;#40;io.read&amp;#40;&amp;#41;, { msg: String =&amp;gt;
+    m.bind&amp;#40;io.write&amp;#40;msg&amp;#41;, {&amp;#95;: Unit =&amp;gt;
+      m.identity&amp;#40;&amp;quot;Out message is: &amp;quot; + msg&amp;#41;}&amp;#41;}&amp;#41;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;we see that, instead of simply using a classic statement to evaluate the interface instance and assign a value just to go on to the next instruction in an imperative way, we now evaluate the interface and put the value, whatever the interface returns as the output, into the first argument of a &lt;code&gt;bind&lt;/code&gt; function. The second argument is a function that always accepts a String. &lt;code&gt;identity&lt;/code&gt; just returns the monad containing a String. Why do we do this? If you pay attention, this was a sequence of instructions, which is what monads are. Let's disect the &lt;code&gt;Monad&lt;/code&gt; interface and implementations.&lt;/p&gt;&lt;p&gt;We have the generic interface and two implementations that cover our two types of &lt;code&gt;IO&lt;/code&gt;.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;trait Monad&amp;#91;P&amp;#91;&amp;#95;&amp;#93;&amp;#93; {
+  def bind&amp;#91;A,B&amp;#93;&amp;#40;p: P&amp;#91;A&amp;#93;, f: A =&amp;gt; P&amp;#91;B&amp;#93;&amp;#41;: P&amp;#91;B&amp;#93;
+  def identity&amp;#91;A&amp;#93;&amp;#40;x: A&amp;#41;: P&amp;#91;A&amp;#93;
+}
+
+val monadId: Monad&amp;#91;Id&amp;#93; = new Monad&amp;#91;Id&amp;#93; {
+  override def bind&amp;#91;A, B&amp;#93;&amp;#40;p: Id&amp;#91;A&amp;#93;, f: &amp;#40;A&amp;#41; =&amp;gt; Id&amp;#91;B&amp;#93;&amp;#41;: Id&amp;#91;B&amp;#93; = f&amp;#40;p&amp;#41;
+  override def identity&amp;#91;A&amp;#93;&amp;#40;x: A&amp;#41;: Id&amp;#91;A&amp;#93; = x
+}
+
+val monadFuture: Monad&amp;#91;Future&amp;#93; = new Monad&amp;#91;Future&amp;#93; {
+  override def bind&amp;#91;A, B&amp;#93;&amp;#40;p: Future&amp;#91;A&amp;#93;, f: &amp;#40;A&amp;#41; =&amp;gt; Future&amp;#91;B&amp;#93;&amp;#41;: Future&amp;#91;B&amp;#93; = p.flatMap&amp;#40;f&amp;#41;
+  override def identity&amp;#91;A&amp;#93;&amp;#40;x: A&amp;#41;: Future&amp;#91;A&amp;#93; = Future&amp;#40;x&amp;#41;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The identity monad &lt;code&gt;monadId&lt;/code&gt; does not do much. Its &lt;code&gt;bind&lt;/code&gt; function just evaluates the function in the second argument with the first argument as the parameter value. The asynchronous monad &lt;code&gt;asyncMonad&lt;/code&gt; is more elaborated. It evaluates to the &lt;code&gt;flatMap&lt;/code&gt; of &lt;code&gt;Future&lt;/code&gt;, itself being a monad. Yes, &lt;code&gt;flatMap&lt;/code&gt; is the convention in Scala for &lt;code&gt;bind&lt;/code&gt; in the academic literature. So it just passes &lt;code&gt;f&lt;/code&gt; to the &lt;code&gt;Future&lt;/code&gt; monad.&lt;/p&gt;&lt;p&gt;So going back to the &lt;code&gt;echo&lt;/code&gt; program, the first step was to read a value from the &lt;code&gt;IO&lt;/code&gt; object, which the monad then passes on to the lambda &lt;code&gt;msg: String =&amp;gt; m.bind&amp;#40;io.write&amp;#40;msg&amp;#41;, ...&lt;/code&gt; i.e., it is binding the result of &lt;code&gt;read&lt;/code&gt; to the symbol &lt;code&gt;msg&lt;/code&gt;. The second use of the monad takes the return of &lt;code&gt;write&lt;/code&gt; and binds it to nothing &lt;code&gt;&amp;#95;&lt;/code&gt;, because it will never be used, and then evaluates the body to a screen text print.&lt;/p&gt;&lt;p&gt;The composition of the program, that can take place in a configuration or main program, for each case, is:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;def syncEcho: &amp;#40;&amp;#41; =&amp;gt; String = echo&amp;#91;Id&amp;#93;&amp;#40;SyncIO, monadId&amp;#41;
+def asyncEcho: &amp;#40;&amp;#41; =&amp;gt; Future&amp;#91;String&amp;#93; = echo&amp;#91;Future&amp;#93;&amp;#40;AsyncIO, monadFuture&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can use the synchronous version as:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;syncEcho&amp;#40;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And the asynchronous one:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;scala&quot;&gt;val eventualString: Future&amp;#91;String&amp;#93; = asyncEcho&amp;#40;&amp;#41;
+Await.ready&amp;#40;eventualString, Duration.create&amp;#40;100, TimeUnit.MILLISECONDS&amp;#41;&amp;#41;.value.get.get
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, how do we port this to Clojure? In Clojure we don't have types, but we do have futures so we are kind of in a grey area that has been covered by a number of articles.&lt;/p&gt;&lt;p&gt;As in Scala, we first define our object interface versions, which in Clojure are pure functions&lt;/p&gt;&lt;p&gt;Synchronous:&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn io-sync-read &amp;#91;&amp;#93;
+  &amp;quot;sync!&amp;quot;&amp;#41;
+
+&amp;#40;defn io-sync-write &amp;#91;msg&amp;#93;
+  &amp;#40;println msg&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Asynchronous:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn io-async-read &amp;#91;&amp;#93;
+  &amp;#40;future &amp;quot;async!&amp;quot;&amp;#41;&amp;#41;
+
+&amp;#40;defn io-async-write &amp;#91;msg&amp;#93;
+  &amp;#40;future &amp;#40;println msg&amp;#41;&amp;#41;&amp;#41;
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;So, how are the Monads written in Clojure? We directly interpret what happens in Scala on each case. Also, notice that we do not need the version of &lt;code&gt;pure&lt;/code&gt; in this particular case.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn mo-sync-bind &amp;#91;f v&amp;#93;
+  &amp;#40;f v&amp;#41;&amp;#41;
+
+&amp;#40;defn mo-async-bind &amp;#91;f v&amp;#93;
+  &amp;#40;future &amp;#40;f @v&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We will use a closure for the program that accepts the chosen set of IO functions and the monad function.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;&amp;#40;defn echo &amp;#91;&amp;#91;read write mbind&amp;#93;&amp;#93;
+  &amp;#40;fn &amp;#91;&amp;#93;
+    &amp;#40;let &amp;#91;msg &amp;#40;read&amp;#41;
+          &amp;#95;   &amp;#40;mbind write msg&amp;#41;&amp;#93;
+      &amp;#40;mbind #&amp;#40;str &amp;quot;this was the message: &amp;quot; %&amp;#41; msg&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We use the &lt;code&gt;mbind&lt;/code&gt; as the adaptor to interpret what msg is and pass it on as an argument that &lt;code&gt;write&lt;/code&gt; understands. Notice that the program is a let, which you will find in many places as the example of monad in Clojure, since in itself is a multiplicity of binds. The only thing missing here was types, pervasively hidden in Clojure but not absent. This fact is not surprising, since it is the nature we have been trying to uncover the while article about monads: They are the class of imperative programs!&lt;/p&gt;&lt;p&gt;As a final note, there is a pretty interesting Clojure library called &lt;a href='http://fluokitten.uncomplicate.org/articles/functors_applicatives_monads_in_pictures.html'&gt;Fluokitten&lt;/a&gt; that uses the monad concept of boxing in Clojure, though its practicality is limited due to the core language handling of nulls.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 10 Jan 2017 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/blog/posts-output/2016-09-15-elasticsearch-gis/
@@ -120,7 +222,7 @@ yellow open es&amp;#95;peninsula 5 1   54 0 4.4mb 4.4mb
     }
   }
 }
- &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Observe the &quot;geometry&quot; property of type &quot;geo_shape&quot;. This is the basic geographical type we use.&lt;/p&gt;&lt;p&gt;We now post a search on the type, and request all available data for the Madrid region.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;curl -X POST 'http://localhost:9200/es&amp;#95;peninsula/FeatureCollection/&amp;#95;search' -d '{
+ &lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;p&gt;Notice the &quot;geometry&quot; property of type &quot;geo_shape&quot;. This is the basic geographical type we use.&lt;/p&gt;&lt;p&gt;We now post a search on the type, and request all available data for the Madrid region.&lt;/p&gt;&lt;pre&gt;&lt;code&gt;curl -X POST 'http://localhost:9200/es&amp;#95;peninsula/FeatureCollection/&amp;#95;search' -d '{
     &amp;quot;query&amp;quot;: {
         &amp;quot;match&amp;quot; : {
             &amp;quot;properties.NAME&amp;#95;1&amp;quot; : &amp;quot;Madrid&amp;quot;
@@ -194,7 +296,7 @@ yellow open es&amp;#95;peninsula 5 1   54 0 4.4mb 4.4mb
     &amp;#93;
   }
 }
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We could use the polygon shape information as input to another query to retrieve items available in the database.&lt;/p&gt;&lt;p&gt;Now, the question remains: which is faster? MySQL or Elasticsearch? I might compare them if I find the time.&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We could use the polygon shape information as input to another query as an enclosing polygon to retrieve items available in the database.&lt;/p&gt;&lt;p&gt;Now, the question remains: which is faster? MySQL or Elasticsearch? I might compare them if I find the time.&lt;/p&gt;
 </description>
 <enclosure>
 

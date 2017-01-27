@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: The Monty Hall problem (my explanation)</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">March 8, 2015</div>
+        
+    </div>
+    <h2>The Monty Hall problem (my explanation)</h2>
+</div>
+<div>
+    
+    <p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p><p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R "right choice" V "visible incorrect wallet" and S "your choice". We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).</p><p>$$P(R=3|V=2,S=1)=$$ $$\quad\frac{P(V=2,S=1|R=3)P(R=3)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}=$$ $$\quad\frac{1\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=2/3$$ $$P(V=2,S=1|R=3)=1$$</p><p>is the probability that, given R=3, then I was forced to show you the incorrect wallet remaining  (you already chose one incorrect wallet). $$P(V=2,S=1|R=1)=1/2$$ because there are two possible   incorrect wallets (since you selected the correct one) that I can choose from to show you.</p><p>Let's compute the same posterior for the case I decide not to change wallet: $$P(R=1|V=2,S=1)=$$ $$\quad\frac{P(V=2,S=1|R=1)P(R=1)}{P(V=2,S=1|R=3)P(R=3)+P(V=2,S=1|R=1)P(R=1)}$$ $$\quad\frac{1/2\times 1/3}{1\times 1/3 + 1/2 \times 1/3}=1/3$$</p><p>Therefore if you change you have more chances of winning the 1000 bitcoins.</p><p>Needless to say, this works for every possible combination of $R$, $S$ and $V$. This happens, as I mentioned, because of the way I was influenced (forced) to show you the incorrect remaining wallets. To see it intuitively, imagine 100 wallets, and that you chose one amongst them, and I am forced to show you 98 incorrect wallets, leaving your choice and another one. Is it more likely that this particular wallet is the correct one (that your choice forced me to leave it) or that you chose wisely amongst 100 wallets? If you choose 99 incorrect wallets, the set that I show you is the same, except for the chosen incorrect wallets each time, and will never contain the particular correct wallet.</p><p>There is a cool <a href='https://play.google.com/store/apps/details?id=us.steveo.montyhall'>Android app</a>  in case you want to check how the law of large numbers works for this problem.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Mathematics/">Mathematics</a>
+    
+    <a href="/tags-output/Brainteasers/">Brainteasers</a>
+    
+    <a href="/tags-output/Tools/">Tools</a>
+    
+    <a href="/tags-output/Statistics/">Statistics</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-03-25-installing-theano-on-windows/">&laquo; Installing Theano on Windows</a>
+        
+        
+        <a class="right" href="/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">Powering up python as a data analysis platform &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    
+                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/tags-output/Databases/">Databases</a></li>
+                        
+                        <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/tags-output/Biohacking/">Biohacking</a></li>
+                        
+                        <li><a href="/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/tags-output/MySQL/">MySQL</a></li>
+                        
+                        <li><a href="/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/tags-output/Git/">Git</a></li>
+                        
+                        <li><a href="/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/tags-output/Java/">Java</a></li>
+                        
+                        <li><a href="/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+
+                <script type="text/javascript" src="//rc.revolvermaps.com/0/0/6.js?i=2j1s8v947td&amp;m=7&amp;s=320&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

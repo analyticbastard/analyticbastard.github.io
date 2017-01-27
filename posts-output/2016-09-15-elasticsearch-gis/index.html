@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: Elasticsearch and GIS</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2016-09-15-elasticsearch-gis/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">September 15, 2016</div>
+        
+    </div>
+    <h2>Elasticsearch and GIS</h2>
+</div>
+<div>
+    
+    <p>We saw that MySQL comfortably deals with GIS data. Now it is the turn of Elasticsearch.</p><p>We will upload the geospatial information from a shapefile to Elasticsearch. Shapefiles are a standard in the GIS world, and are normally accompanied by other files, including a DBF file. This DBF file can be opened in Excel or Libreoffice, and it normally specifies region data, including names. For this example, we will use the <a href='http://www.gadm.org/country'>Global Adminsitrative Area's Spain shapefile</a></p><p>I used my Hackintosh to do the whole thing, and the version maintained on Homebrew is too old to support the commands we need. So I needed to compile a new one and replace the sources from Homebrew with the official ones and then install them with the ```brew``` command.</p><p>You can get the sources using Subversion (as of the time of writing the latest tag was 2.1.1):</p><pre><code>svn co https://svn.osgeo.org/gdal/tags/2.1.1
+</code></pre><p>Then copy the sources to your previously installed Homebrew sources (search how to get sources with Hombrew, the package is gdal).</p><p>Once we've got the latest version in place, we issue the following command:</p><pre><code>ogr2ogr -progress --config WRITE&#95;MAPPING &quot;esmap.json&quot; -f &quot;ElasticSearch&quot; http://localhost:9200 es&#95;peninsula.shp
+</code></pre><p>The config value ```WRITE_MAPPING``` to write the map, it never produces the file, but it does produce the correct mapping in the index. The rest are Elasticsearch's URL and the shapefile.</p><p>We now check the existence of the index<pre><code>curl -X GET 'http://localhost:9200/&#95;cat/indices'
+
+yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
+ </code></pre></p><p>And get the resulting mapping<pre><code>curl -X GET 'http://localhost:9200/es&#95;peninsula/&#95;mapping'
+{
+  &quot;es&#95;peninsula&quot;: {
+    &quot;mappings&quot;: {
+      &quot;FeatureCollection&quot;: {
+        &quot;&#95;meta&quot;: {
+          &quot;fid&quot;: &quot;ogc&#95;fid&quot;,
+          &quot;geomfields&quot;: {
+            &quot;geometry&quot;: &quot;POLYGON&quot;
+          }
+        },
+        &quot;properties&quot;: {
+          &quot;geometry&quot;: {
+            &quot;type&quot;: &quot;geo&#95;shape&quot;
+          },
+          &quot;ogc&#95;fid&quot;: {
+            &quot;type&quot;: &quot;long&quot;
+          },
+          &quot;properties&quot;: {
+            &quot;properties&quot;: {
+              &quot;CCA&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;CCN&#95;2&quot;: {
+                &quot;type&quot;: &quot;long&quot;
+              },
+              &quot;ENGTYPE&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;HASC&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;ID&#95;0&quot;: {
+                &quot;type&quot;: &quot;long&quot;
+              },
+              &quot;ID&#95;1&quot;: {
+                &quot;type&quot;: &quot;long&quot;
+              },
+              &quot;ID&#95;2&quot;: {
+                &quot;type&quot;: &quot;long&quot;
+              },
+              &quot;ISO&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;NAME&#95;0&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;NAME&#95;1&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;NAME&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;NL&#95;NAME&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;TYPE&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              },
+              &quot;VARNAME&#95;2&quot;: {
+                &quot;type&quot;: &quot;string&quot;
+              }
+            }
+          },
+          &quot;type&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        }
+      },
+      &quot;Feature&quot;: {
+        &quot;properties&quot;: {
+          &quot;query&quot;: {
+            &quot;properties&quot;: {
+              &quot;term&quot;: {
+                &quot;properties&quot;: {
+                  &quot;NAME&#95;2&quot;: {
+                    &quot;type&quot;: &quot;string&quot;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+ </code></pre></p><p>Notice the "geometry" property of type "geo_shape". This is the basic geographical type we use.</p><p>We now post a search on the type, and request all available data for the Madrid region.</p><pre><code>curl -X POST 'http://localhost:9200/es&#95;peninsula/FeatureCollection/&#95;search' -d '{
+    &quot;query&quot;: {
+        &quot;match&quot; : {
+            &quot;properties.NAME&#95;1&quot; : &quot;Madrid&quot;
+        }
+    }
+}'
+
+{
+  &quot;took&quot;: &quot;76&quot;,
+  &quot;timed&#95;out&quot;: false,
+  &quot;&#95;shards&quot;: {
+    &quot;total&quot;: &quot;5&quot;,
+    &quot;successful&quot;: &quot;5&quot;,
+    &quot;failed&quot;: &quot;0&quot;
+  },
+  &quot;hits&quot;: {
+    &quot;total&quot;: &quot;1&quot;,
+    &quot;max&#95;score&quot;: &quot;1.4729551&quot;,
+    &quot;hits&quot;: &#91;
+      {
+        &quot;&#95;index&quot;: &quot;es&#95;peninsula&quot;,
+        &quot;&#95;type&quot;: &quot;FeatureCollection&quot;,
+        &quot;&#95;id&quot;: &quot;AVbCrSsnfoFZGhh&#95;-hoH&quot;,
+        &quot;&#95;score&quot;: &quot;1.4729551&quot;,
+        &quot;fields&quot;: {
+          &quot;properties.NAME&#95;2&quot;: &#91;
+            &quot;Madrid&quot;
+          &#93;
+        }
+      }
+    &#93;
+  }
+}
+</code></pre><p>Imagine the input query is inexact or inaccurate, and we are still interested in getting the information about the Madrid region. We can use a fuzzy search.</p><pre><code>curl -X POST 'http://localhost:9200/es&#95;peninsula/FeatureCollection/&#95;search' -d '{
+    &quot;fields&quot; : &#91;&quot;properties.NAME&#95;1&quot;, &quot;properties.NAME&#95;2&quot;&#93;,
+    &quot;query&quot;: {
+        &quot;match&quot; : {
+            &quot;properties.NAME&#95;1&quot; : {
+                &quot;query&quot; : &quot;Mardid&quot;,
+                &quot;fuzziness&quot; : 2
+            }
+        }
+    }
+}'
+</code></pre><p>Were we have limited the output to the name fields of the administrative area to avoid the large output which would have resulted from getting Madrid's polygon shape.</p><pre><code>{
+  &quot;took&quot;: &quot;76&quot;,
+  &quot;timed&#95;out&quot;: false,
+  &quot;&#95;shards&quot;: {
+    &quot;total&quot;: &quot;5&quot;,
+    &quot;successful&quot;: &quot;5&quot;,
+    &quot;failed&quot;: &quot;0&quot;
+  },
+  &quot;hits&quot;: {
+    &quot;total&quot;: &quot;1&quot;,
+    &quot;max&#95;score&quot;: &quot;1.4729551&quot;,
+    &quot;hits&quot;: &#91;
+      {
+        &quot;&#95;index&quot;: &quot;es&#95;peninsula&quot;,
+        &quot;&#95;type&quot;: &quot;FeatureCollection&quot;,
+        &quot;&#95;id&quot;: &quot;AVbCrSsnfoFZGhh&#95;-hoH&quot;,
+        &quot;&#95;score&quot;: &quot;1.4729551&quot;,
+        &quot;fields&quot;: {
+          &quot;properties.NAME&#95;2&quot;: &#91;
+            &quot;Madrid&quot;
+          &#93;,
+          &quot;properties.NAME&#95;1&quot;: &#91;
+            &quot;Comunidad de Madrid&quot;
+          &#93;
+        }
+      }
+    &#93;
+  }
+}
+</code></pre><p>We could use the polygon shape information as input to another query as an enclosing polygon to retrieve items available in the database.</p><p>Now, the question remains: which is faster? MySQL or Elasticsearch? I might compare them if I find the time.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Databases/">Databases</a>
+    
+    <a href="/tags-output/Elasticsearch/">Elasticsearch</a>
+    
+    <a href="/tags-output/Tools/">Tools</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2017-01-10-monads/">&laquo; Monads: Scala vs. Clojure</a>
+        
+        
+        <a class="right" href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    
+                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/tags-output/Databases/">Databases</a></li>
+                        
+                        <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/tags-output/Biohacking/">Biohacking</a></li>
+                        
+                        <li><a href="/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/tags-output/MySQL/">MySQL</a></li>
+                        
+                        <li><a href="/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/tags-output/Git/">Git</a></li>
+                        
+                        <li><a href="/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/tags-output/Java/">Java</a></li>
+                        
+                        <li><a href="/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+
+                <script type="text/javascript" src="//rc.revolvermaps.com/0/0/6.js?i=2j1s8v947td&amp;m=7&amp;s=320&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

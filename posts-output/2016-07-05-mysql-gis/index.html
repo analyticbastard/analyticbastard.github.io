@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: MySQL GIS capabilities: query geographical locations simple example</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2016-07-05-mysql-gis/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">July 5, 2016</div>
+        
+    </div>
+    <h2>MySQL GIS capabilities: query geographical locations simple example</h2>
+</div>
+<div>
+    
+    <p>MySQL can be used as a GIS (Geographic Information System) database backend thanks to its spatial functions, which have been around since version 5.6 for MyISAM engine and since 5.7.5 for InnoDB engine.</p><p>Now, since InnoDB offers transactional capabilities too, i.e., a fully ACID-compliant DB engine. It is very interesting for a development in need of geographic information to be used alongside common business DB operations.</p><p>In this case, I will limit myself to using MyISAM for this example, since the only point is to show how we can use MySQL to retrieve data points from a query. The query itself could come from a reverse search by the Google Maps API (query by spatial features such as coordinates, distance or containing areas)</p><h2><a name="creating&#95;the&#95;schema"></a>Creating the schema</h2><p>Let's create a table called <code>nodes</code> with the following schema:</p><pre><code class="sql">USE `gis`;
+
+DROP TABLE `nodes`;
+
+CREATE TABLE `nodes` &#40;
+  `id` bigint&#40;20&#41; DEFAULT NULL,
+  `geom` geometry NOT NULL,
+  `name` varchar&#40;50&#41; DEFAULT NULL,
+  UNIQUE KEY `i&#95;nodeids` &#40;`id`&#41;,
+  SPATIAL KEY `i&#95;geomidx` &#40;`geom`&#41;
+&#41; ENGINE=MyISAM DEFAULT CHARSET=latin1;
+</code></pre><p>The only outstanding thing is the geometry related elements. We can spot the special <code>geometry</code> data type and the <em>spatial key</em>, which creates a spatial indexed. To do this, a special type of indexing is used for spatial data called R-tree (Region tree) indexing. This involves organizing the minimum bounding rectangle (MBR) of the spatial objects in a tree structure that is then used by the different spatial functions.</p><p>An R-tree index organizes the indexed nodes in a hierarchy where the nodes in the index represent the MBR of the objects in the node. The leaf nodes in the index contain references to the row that contain the data, just like a B+-tree index.</p><h2><a name="inserting&#95;points"></a>Inserting points</h2><p>Let's insert some data into the table:</p><pre><code class="sql">INSERT INTO `nodes` &#40;`id`,`geom`,`name`&#41; VALUES &#40;1,ST&#95;GeomFromText&#40;'POINT&#40;108.875000 34.216020&#41;'&#41;,'Point 1'&#41;;
+INSERT INTO `nodes` &#40;`id`,`geom`,`name`&#41; VALUES &#40;2,ST&#95;GeomFromText&#40;'POINT&#40;109.569098 36.64635&#41;'&#41;,'Point 2'&#41;;
+INSERT INTO `nodes` &#40;`id`,`geom`,`name`&#41; VALUES &#40;3,ST&#95;GeomFromText&#40;'POINT&#40;109.550988 36.633384&#41;'&#41;,'Point 3'&#41;;
+INSERT INTO `nodes` &#40;`id`,`geom`,`name`&#41; VALUES &#40;4,ST&#95;GeomFromText&#40;'POINT&#40;109.472800 36.624116&#41;'&#41;,'Point 4'&#41;;
+INSERT INTO `nodes` &#40;`id`,`geom`,`name`&#41; VALUES &#40;5,ST&#95;GeomFromText&#40;'POINT&#40;109.487460 36.563614&#41;'&#41;,'Point 5'&#41;;
+</code></pre><p>Notice the use of the construct <code>Point</code>. This is one of the possible GIS data types that can be used from MySQL.</p><p><img src="ftp://ftp.ntu.edu.tw/tmp/MySQL/tech-resources/articles/4.1/gis-datatypes.png" alt="GIS data types in MySQL" /></p><h2><a name="quering&#95;the&#95;database"></a>Quering the database</h2><p>Let us make a geometry to query data (notice that the last data point must be the same than the initial one, effectively closing the surface)</p><pre><code class="sql">SET @g3 = ST&#95;GeomFromText&#40;'Polygon&#40;&#40;108 36.5,108 36.7,109.5 36.7,109.5 36.5,108 36.5&#41;&#41;'&#41;;
+</code></pre><p>We can now query which data points in the database are related to the geometry:</p><pre><code class="sql">SELECT `name`, st&#95;x&#40;`geom`&#41; AS x,st&#95;y&#40;`geom`&#41; AS y, contains&#40;@g3,`geom`&#41;&gt;0 FROM `nodes`
+  WHERE contains&#40;@g3,`geom`&#41;&gt;0;
+</code></pre><p>Notice that we are using <code>contains</code>, which checks whether the points fall within the minimum bounding rectangle (MBR) which encloses the box.</p><pre><code>+ --------- + ------ + ------ + --------------------------- +
+| name      | x      | y      | contains&#40;@g3,`geom`&#41;&gt;0      |
++ --------- + ------ + ------ + --------------------------- +
+| Point 1   | 1      | 1      | 1                           |
+| Point 2   | 1      | 5      | 1                           |
+| Point 3   | 5      | 1      | 1                           |
+| Point 4   | 5      | 5      | 1                           |
++ --------- + ------ + ------ + --------------------------- +
+4 rows</code></pre><p>We get all four points but the area only encloses three of them. You can see our problem here in this <a href='https://www.percona.com/blog/2013/10/21/using-the-new-mysql-spatial-functions-5-6-for-geo-enabled-applications/'>illustration</a>:</p><p><img src="https://www.percona.com/blog/wp-content/uploads/2013/10/mbr_example_sm1.png" alt="False positives" /></p><p>We can get points that don't belong to the queried region, but that only fall within their MBR, since the default version of the spatial functions use MBRs, and are equivalent to using the <code>mbr</code>-prefixed versions. In this case, the full name for <code>contains</code> is really <code>mbrcontains</code>.</p><p>To address this, a new set of functions was introduced as of 5.6 which are prefixed with <code>st&#95;</code>.</p><p>Let's repeat the query using <code>st&#95;contains</code>:</p><pre><code class="sql">SELECT `name`, st&#95;x&#40;`geom`&#41; AS x,st&#95;y&#40;`geom`&#41; AS y, st&#95;contains&#40;@g3,`geom`&#41;&gt;0 FROM `nodes`
+  WHERE st&#95;contains&#40;@g3,`geom`&#41;&gt;0;
+</code></pre><p>which results in</p><pre><code>+ --------- + ------ + ------ + ------------------------------ +
+| name      | x      | y      | st&#95;contains&#40;@g3,`geom`&#41;&gt;0      |
++ --------- + ------ + ------ + ------------------------------ +
+| Point 1   | 1      | 1      | 1                              |
+| Point 2   | 1      | 5      | 1                              |
+| Point 3   | 5      | 1      | 1                              |
++ --------- + ------ + ------ + ------------------------------ +</code></pre><h2><a name="comments"></a>Comments</h2><p>InnoDB is ligther and faster to query but it is not ACID-compliant. On the other hand, InnoDB also offers full-text search, which can cheaply provide us with a basic but fully-operative text search engine in the same table in case we need it. Nevertheless, we can combine MyISAM and InnoDB to get the best of bith worlds by using them in specific tables: One for GIS and one for text.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Databases/">Databases</a>
+    
+    <a href="/tags-output/MySQL/">MySQL</a>
+    
+    <a href="/tags-output/Tools/">Tools</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2016-07-08-mysql-fulltext/">&laquo; MySQL full text search: a simple example</a>
+        
+        
+        <a class="right" href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    
+                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/tags-output/Databases/">Databases</a></li>
+                        
+                        <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/tags-output/Biohacking/">Biohacking</a></li>
+                        
+                        <li><a href="/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/tags-output/MySQL/">MySQL</a></li>
+                        
+                        <li><a href="/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/tags-output/Git/">Git</a></li>
+                        
+                        <li><a href="/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/tags-output/Java/">Java</a></li>
+                        
+                        <li><a href="/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+
+                <script type="text/javascript" src="//rc.revolvermaps.com/0/0/6.js?i=2j1s8v947td&amp;m=7&amp;s=320&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

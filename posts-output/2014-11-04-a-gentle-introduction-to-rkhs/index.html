@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: A gentle introduction to RKHS and Kernel Methods</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">November 4, 2014</div>
+        
+    </div>
+    <h2>A gentle introduction to RKHS and Kernel Methods</h2>
+</div>
+<div>
+    
+    <p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,</p><p>$$\delta&#95;x(\alpha f + \beta g) = \alpha \delta&#95;x(f) + \beta\delta&#95;x(g)$$</p><p>for a location $x$, and two real (or complex) numbers $\alpha$ and $\beta$.</p><p>This theory was originally developed as a functional analytic abstraction to solve a linear differential equations (as were Hilbert and Banach spaces) of positive (or negative) kind, but made their way to data analysis first in the theory of splines and later became the engine of multiple abstract machines, based on more general reproducing kernels.</p><p>Let $\mathbf{X}$ be a compact set or a manifold. The linear property of the evaluation functional implies, by the Riesz representation theorem, that it has a representer within the space, in contrast, for example, to the Dirac's $\delta$ evaluation functional of the Hilbert space of squared-integrable functions (equivalence classes of functions) $L^ {2} (\mathbf{X})$, which is a generalized function and, thus, does not belong to $L^ {2}(\mathbf{X})$. The Riesz representation theorem implies that there is an element <em>within</em> the space of functions that yields the same results when operating it with the rest of the elements of that space than a certain linear functional. Note that this, alone, does not say that all functionals that are evaluation functionals are linear.  It is only when they are linear that the Riesz theorem applies and they can be associatited to certain elements within the space, and we find ourselves with a RKHS.</p><p>A function $f$ belonging to a RKHS $H&#95;k$ can then be evaluated, at any point $\mathbf{x}$ in the set on which the functions in $H&#95;k$ are defined, with the <em>reproducing property</em> $$ f(\mathbf{x}) = \delta&#95;{\mathbf{x}} (f) = \langle k&#95;{\mathbf{x}}, f \rangle&#95;{H&#95;k} $$ where we call $\delta&#95;x$ to the linear evaluation functional at location $\mathbf{x}$ for $H&#95;k$, belonging to $H&#95;k*$, the algebraic dual of $H&#95;k$, whose representer element in $H&#95;k$ is $k&#95;x$. The notation $k&#95;x = k(\cdot, x) \in H&#95;k$ means that we fix the second argument to $\mathbf{x}$ so that $k$ is a function only on the first argument, and then it belongs to the very space $H&#95;k$ it can reproduce pointwise via inner products. We work with real RKHS henceforth.</p><p>This function with two arguments, $k:\mathbf{X} \times \mathbf{X} \rightarrow \mathbb{R}$, is the <em>kernel</em> of the positive linear integral operator</p><p>$$ T&#95;k : L^ {2}(\mathbf{X}) \rightarrow H&#95;k $$</p><p>such that the bi-linear form</p><p>$$ \langle f, T&#95;k f \rangle_{L^ {2}(\mathbf{X})} = \int&#95;{\mathbf{X}} \int&#95;{\mathbf{X}} k(\mathbf{x}&#95;1,\mathbf{x}&#95;2) f(\mathbf{x}&#95;2) dP&#95;X(\mathbf{x}&#95;2) f(\mathbf{x}&#95;1) dP&#95;X(\mathbf{x}&#95;1) $$</p><p>is positive, where $P&#95;X$ is a finite Borel measure endowing $\mathbf{X}$ and $f \in L&#95;{2&#95;{P&#95;X}}(\mathbf{X})$, the Hilbert space of square-integrable functions under measure $P&#95;X$. Such a kernel is called positive-definite. This of this as the infinite-dimensional equivalent of a matrix, which instead of finite dimensional vectors, operates functions in a linear fashion (the kernel itself does not depend on the function it is operated with under the integral sign). This is the functional-analytic way of solving differential equations, since we can invert the linear differential operator with these kind of integral operators, and this get the solution. </p><p>A particularly important class of linear operator kernels are positive-definite kernels, and of particular interest is that of Mercer's kernels. Given a Mercer's kernel $k$, it holds that</p><p>$$ k(\mathbf{x}&#95;1,\mathbf{x}&#95;2)=\Phi(\mathbf{x}&#95;1)^ {T}\Phi(\mathbf{x}&#95;2) = \sum&#95;{j=1}^ {\infty} \lambda&#95;j \phi&#95;j(\mathbf{x}&#95;1) \phi&#95;j(\mathbf{x}&#95;2) $$</p><p>where $\lambda&#95;j$ and $\phi&#95;j$ are the eigenvalues and eigenfunctions of the linear integral operator $T&#95;k$, which is compact. This iduces a map $\Phi: \mathbf{X} \rightarrow \ell^ 2$, the space of square-summable sequences. This map $\Phi = (\sqrt{\lambda&#95;1} \phi&#95;1, \sqrt{\lambda&#95;2} \phi&#95;2, \ldots)^ T$ is the so-called <em>kernel embedding</em> and allows the practitioner to map the data to a definite dimension (possibly infinite), where the learning task is likely to become linear. This map, however, needs not be computed explicitly in Kernel Learning methods and is defined, as seen above, by the kernel we are using and, in practice, we are restricted to a finite number of training points. This map can be written as a vector $\mathbf{z} \in \mathbb{R}^ D$ for each datum, with a dimension $D \leq N$. The collection for $N$ data can be written as a matrix $\mathbf{Z} \in \mathbb{R}^ {N \times D}$ of vectors $\mathbf{z}$ vertically stacked, and the finite version of the Mercer kernel expansion, yields the finite-dimensional embedding $\mathbf{Z}$ and the so-called <em>kernel trick</em> $$ \mathbf{K} = \mathbf{Z} \mathbf{Z}^ T $$ where $\mathbf{K} \in \mathbb{R}^ {N \times N}$ is the Gram matrix of kernel evaluations on the dataset $$&#123;\mathbf{x}&#95;1, \mathbf{x}&#95;2, \ldots, \mathbf{x}&#95;N&#125;$$ built so that each entry of the matrix correspond to the kernel evaluation at two points, $\mathbf{K}&#95;{i,j} = k(\mathbf{x}&#95;i, \mathbf{x}&#95;j)$. This embedding constituted the breakthrough in Machine Learning in the late 90s and early new century. Notice that this feature space is <strong>not</strong> the RKHS, since it is a subspace of $\ell<sup>2$,</sup> their elements being sequences, whereas the RKHS is a subspace if $L^ 2$, its elements being functions.</p><p>Let $f,g \in H&#95;k$ be expressed as a linear combination of the eigenfunctions of $T&#95;k$, $$f = \sum&#95;{j=1}^ {\infty} \alpha&#95;j \phi&#95;j$$ and $$g = \sum&#95;{j=1}^ {\infty} \beta&#95;j \phi&#95;j$$. The inner product in $H&#95;k$ is defined as</p><p>$$ \langle f,  g \rangle&#95;{H&#95;k} = \sum&#95;{j=1}^ {\infty} \frac{\alpha&#95;j \beta&#95;j}{\lambda&#95;j} $$</p><p>Which is equal to the equation above, i.e., </p><p>$$ \langle f,  g \rangle&#95;{H&#95;k} = \langle f, T&#95;k g \rangle&#95;{L^ 2(\mathbf{X})} $$.</p><p>This induces a norm</p><p>$$ \|f\|&#95;{H&#95;k}^ 2 = \langle f,  f \rangle&#95;{H&#95;k} =  \|P f\|&#95;{L^ 2 (\mathbf{X})}^ 2 $$</p><p>Where $P$ is a pseudo-differential operator and $P ^{&#42;}$ is its adjoint such that $T&#95;k = P^ {&#42;} P$.</p><p>The learning task in kernel methods consist on computing a function that can approximate certain pre-defined data with certain desired properties, namely, that it is "simple" enough, simplicity measured by the norm in the space, the smaller norm, the better, as this requirement tries to overcome the overfitting and noise presence (the less "wiggly" the function, the less it responds to noise). So given a kernel function $k$ and a finite data sample of size $N$, the Representer theorem ensures that the subspace of functions spanned by finite linear combinations of the form $f=\sum&#95;j^ {n}{\alpha&#95;j k(\cdot, \mathbf{x}&#95;j)}$ is the solution to a regularization problem of the form $$ \min&#95;{f \in H&#95;k}  \sum&#95;{j=1}^ {n} (y&#95;i - f(\mathbf{x}&#95;i))^ 2 + \lambda \|f\|&#95;{H_k}^ 2 $$ where $\lambda$ is the regularization parameter, and where we see that both the approximation results on our existing training data and the complexity of the function are accounted for. This kind of quadratic functionals appear in multiple kernel methods, including support vector machines (SVM). These quadratic functionals are the ones optimized by any quadratic optimization method to arrive at an acceptable solution.</p><p>Despite the proven power of kernel methods, they have a main drawback, which is that they scale with the square of the number of data $N$. Managing matrices larger than $N>10000$ is unmanageable for most computers, and the $N<sup>2$</sup> scaling renders supercomputers unable to handle these matrices. To partially overcome this difficulty, several methods have been developed. Firstly, the Nyström method can be used to approximate any kernel Gram matrix simply using the fact that for an integral linear operator as in the above equation, the eigenequation</p><p>$$ \int&#95;{\mathbf{X}} k(\mathbf{x}&#95;1,\mathbf{x}&#95;2) \phi&#95;i(\mathbf{x}&#95;2) dP&#95;X(\mathbf{x}&#95;2) = \lambda&#95;i \phi&#95;i(\mathbf{x}&#95;1) $$</p><p>holds, so that uniformly sampling $\mathbf{x}$ from $P&#95;X$, we can make the approximation of the kernel matrix</p><p>$$ \mathbf{K} \mathbf{u} = \lambda \mathbf{u} $$</p><p>with the restricted subsample of size $q$, where $\mathbf{u}$ is an eigenvector approximation. Then, one can obtain an approximation to the first eigenvectors of the matrix, which have the following expressions</p><p>$$ \phi&#95;i(\mathbf{x}) \approx \sqrt{q} \mathbf{u}&#95;i^ {(q)} \quad\quad \lambda&#95;i \approx \frac{\lambda&#95;i^ {(q)}}{q} $$</p><p>Another well-known approximation is the random features technique, this time only for translation invariant kernels (i.e., those which can be written $k(\mathbf{x}&#95;1,\mathbf{x}&#95;2)=k(\mathbf{x}&#95;1-\mathbf{x}&#95;2)$, abusing notation and writing $k$ for both functions) was developed by Rahimi and Rech. Bochner's theorem is a result from classical harmonic analysis and applies to the mentioned kernel types. A continuous function $k \in L^ 1(\mathbb{R}^ N)$ is positive definite if and only if it is the Fourier transform of a non-negative measure $\Lambda$.</p><p>$$ k(\mathbf{x}&#95;1-\mathbf{x}&#95;2)=\int&#95;{\mathbb{R}^ N}{e^ {i\mathbf{\omega}^ T (\mathbf{x}&#95;1-\mathbf{x}&#95;2)}d \Lambda(\mathbf{\omega})} $$</p><p>The method, then, consist on sampling (multivariate) frequencies $\mathbf{\omega}$ from the probability distribution $\Lambda$ related to the kernel $k$ and build feature vectors from the Fourier complex exponentials $e^ {-i\mathbf{\omega}^ T \mathbf{x}}$, pairs of sines and cosines at frequency $\mathbf{\omega}$, or using only a cosine at frequency $\mathbf{\omega}$ with phase $b$ sampled from a uniform distribution between zero and $2\pi$. The kernel approximation at a point is, then, the product of all the features at that point. Comparison between both methods have been made and it has been found that Nyström method has a number of advantages, such as approximating speed, stemming mainly from the dependence on the distribution of the data $P&#95;X$, whereas random features proceed independently of $P&#95;X$. This idea has also been used in Gaussian Processes with success.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Mathematics/">Mathematics</a>
+    
+    <a href="/tags-output/Machine Learning/">Machine Learning</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/">&laquo; Naive Bayes implemented with Map/Reduce operations</a>
+        
+        
+        <a class="right" href="/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/">Improve the performance of an SVM with differential geometry &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    
+                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/tags-output/Databases/">Databases</a></li>
+                        
+                        <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/tags-output/Biohacking/">Biohacking</a></li>
+                        
+                        <li><a href="/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/tags-output/MySQL/">MySQL</a></li>
+                        
+                        <li><a href="/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/tags-output/Git/">Git</a></li>
+                        
+                        <li><a href="/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/tags-output/Java/">Java</a></li>
+                        
+                        <li><a href="/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+
+                <script type="text/javascript" src="//rc.revolvermaps.com/0/0/6.js?i=2j1s8v947td&amp;m=7&amp;s=320&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

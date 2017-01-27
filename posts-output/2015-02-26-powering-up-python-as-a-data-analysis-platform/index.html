@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>The Analytic Bastard: Powering up python as a data analysis platform</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
+          type='text/css'>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+    <link href="/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">The Analytic Bastard</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li ><a href="/">Home</a></li>
+                <li
+                ><a href="/archives/">Archives</a></li>
+                
+                <li
+                >
+                <a href="/pages-output/about/">About</a>
+                </li>
+                
+                <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+
+
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-lg-9">
+            <div id="content">
+                
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">February 26, 2015</div>
+        
+    </div>
+    <h2>Powering up python as a data analysis platform</h2>
+</div>
+<div>
+    
+    <p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p><p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p><p>Cristoph Gohlke and collaborators have a MKL license and have taken the effort to compile a series of Python modules compiled agaist them. In particular, Numpy and Scipy include these powerful libraries. Add to this that he has already compiled the binaries for Windows 64 bits which are very rare on the internet.</p><p>The following are two tests with a positive definite matrix. We compute the eigenvalues in R and Python, using the symmetric eigenvalue solver in each case. The processor is a i5 3210M not plugged in to the socket (losing approx. half its performance). Note that this version of R is compiled against standard Atlas libraries.</p><pre><code class="r">B=read.csv&#40;&quot;B.csv&quot;,header=F&#41;
+st=proc.time&#40;&#41;; eigB=eigen&#40;B,symmetric=T&#41;; en=proc.time&#40;&#41;
+&gt; en-st
+   user  system elapsed
+   0.58    0.00    0.58 
+</code></pre><p>In Python:</p><pre><code class="python">from time import time
+import numpy
+B=numpy.loadtxt&#40;&quot;B.csv&quot;, delimiter=&quot;,&quot;&#41;
+st = time&#40;&#41;; U, E = numpy.linalg.eigh&#40;B&#41;; en = time&#40;&#41;
+&gt;&gt;&gt; en-st
+0.13400006294250488
+</code></pre><p>A final remark is that there exists an opensource alternative to high-performance CPU computing, and it is the OpenBLAS libraries. Their performance is comparable to MKL.</p><p>Link to the positive definite matrix used in the experiments <a href='https://www.dropbox.com/s/uxijs3jckckafra/B.7z'>here</a>. Link to Christoph Gohlke's page <a href='http://www.lfd.uci.edu/~gohlke/pythonlibs/'>here</a>.</p><p>Despite the fact that I've been aware of Scikits Learn (sklearn) for some time during my postgraduate years, I never got the chance to really use Python for data analysis and, instead, I had been a victim of my own inertia and limited myself to use R and especially Matlab.</p><p>I must say, in the beginning, Python looks awkward: it was inconceivable for me to use an invisible element (spaces or tabs) as a structural construction of a program (defining blocks), in a way much similar to Fortran, which I always considered weird (coming from the C world). This and the lack of the omnipresent, C-syntax end-of-line semicolon, prove to be a major boosting element when programming in Python. I must say that whatever lack in computer performance is overcome by the speed the programmer experiences when writing the software. This applies to general software, such as the App server that I am preparing, which is being written in Python using the Google App Engine, and I have to say that it just runs smoothly, no need for recompilations, clear syntax and one-line complex data-processing pieces of code.</p><p>Regarding data analysis, it is a little more complicated than Matlab's clear orientation towards numerical linear algebra (where everything is a Matrix). Good comparisons and reasons supporting my view are</p><ul><li><a href='https://sites.google.com/site/pythonforscientists/python-vs-matlab'>https://sites.google.com/site/pythonforscientists/python-vs-matlab</a></li><li><a href='http://www.stat.washington.edu/~hoytak/blog/whypython.html'>http://www.stat.washington.edu/~hoytak/blog/whypython.html</a></li><li><a href='http://stevetjoa.com/305/'>http://stevetjoa.com/305/</a></li></ul><p>Now, going to Machine Learning specifics, sklearn has everything you need for the majority of the work a machine learning practitioner will ever need.</p><ul><li>Data preprocessors, including text vectorizers and TF IDF preprocessors</li><li>SVM implementations</li><li>Stochastic Gradient Descent algorithms for fast regression and classification</li><li>Random Forest and other ensemble methods for robust regression and classification</li><li>Clustering algorithms</li><li>Data dimensionality reduction algorithms such as LLE, ISOMAP and spectral embeddings</li><li>Results presentation, including mean squared error for regression and precision/recall tables for classification. It even computes the area under the ROC curve.</li></ul><p>This, added to the clean, standardized and well-designed interface, which always has a .fit method for every object which performs the task of learning from samples, and then either a .transform method if the learning is unsupervised (such as LLE, ISOMAP, ICA, PCA, or the preprocessors, etc) or .predict if the learning is supervised (SVM, SGD, ensemble...). If enables a pipelining mechanism that allows us to build the whole pipeline from data reading to results output.</p><p>One of the lead programmers of the project, <a href='peekaboo-vision.blogspot.com.es'>Andreas Müller</a> has a very insightful blog.</p><p>I decided to be more active on Kaggle. For the moment I scored 13th on the Leaderboard of the Amazon employee access competition that recently opened.</p><p>Last but not least, just to comment that future work seems to be bent on using the GPU to perform all the linear algebra. Check out</p><ul><li><a href='http://www.cs.toronto.edu/~tijmen/gnumpy.html'>Gnumpy</a></li><li><a href='http://deeplearning.net/tutorial/DBN.html'>Deep Belief Networks</a></li><li><a href='http://documen.tician.de/pycuda/tutorial.html'>PyCUDA</a></li></ul>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Python/">Python</a>
+    
+    <a href="/tags-output/Tools/">Tools</a>
+    
+    <a href="/tags-output/Statistics/">Statistics</a>
+    
+    <a href="/tags-output/Machine Learning/">Machine Learning</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        <a href="/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">&laquo; The Monty Hall problem (my explanation)</a>
+        
+        
+        <a class="right" href="/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Image pan-sharpening with PCA &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
+</div>
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div id="sidebar">
+                <!-- <h3>Links</h3>
+                <ul id="links">
+                    
+                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    
+                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    
+                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    
+                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    
+                    <li><a href="/pages-output/experience/">experience</a></li>
+                    
+                    <li><a href="/pages-output/git/">Git</a></li>
+                    
+                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    
+                    <li><a href="/pages-output/java/">Java</a></li>
+                    
+                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    
+                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    
+                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    
+                    <li><a href="/pages-output/python/">Python</a></li>
+                    
+                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    
+                </ul> -->
+                
+                <div id="recent">
+                    <h3>Recent Posts</h3>
+                    <ul>
+                        
+                        <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
+                        
+                        <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
+                        
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
+                    </ul>
+                </div>
+                
+                
+                <div id="tags">
+                    <h3>Tags</h3>
+                    <ul>
+                        
+                        <li><a href="/tags-output/Matlab/">Matlab</a></li>
+                        
+                        <li><a href="/tags-output/Mathematics/">Mathematics</a></li>
+                        
+                        <li><a href="/tags-output/Python/">Python</a></li>
+                        
+                        <li><a href="/tags-output/Databases/">Databases</a></li>
+                        
+                        <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
+                        
+                        <li><a href="/tags-output/Biohacking/">Biohacking</a></li>
+                        
+                        <li><a href="/tags-output/Clojure/">Clojure</a></li>
+                        
+                        <li><a href="/tags-output/Brainteasers/">Brainteasers</a></li>
+                        
+                        <li><a href="/tags-output/MySQL/">MySQL</a></li>
+                        
+                        <li><a href="/tags-output/Tools/">Tools</a></li>
+                        
+                        <li><a href="/tags-output/Git/">Git</a></li>
+                        
+                        <li><a href="/tags-output/Statistics/">Statistics</a></li>
+                        
+                        <li><a href="/tags-output/Programming/">Programming</a></li>
+                        
+                        <li><a href="/tags-output/Java/">Java</a></li>
+                        
+                        <li><a href="/tags-output/Hackintosh/">Hackintosh</a></li>
+                        
+                        <li><a href="/tags-output/Software Development/">Software Development</a></li>
+                        
+                        <li><a href="/tags-output/Machine Learning/">Machine Learning</a></li>
+                        
+                    </ul>
+                </div>
+                
+
+                <script type="text/javascript" src="//rc.revolvermaps.com/0/0/6.js?i=2j1s8v947td&amp;m=7&amp;s=320&amp;c=e63100&amp;cr1=ffffff&amp;f=arial&amp;l=0&amp;bv=90&amp;lx=-420&amp;ly=420&amp;hi=20&amp;he=7&amp;hc=a8ddff&amp;rs=80" async="async"></script>
+            </div>
+        </div>
+    </div>
+    <footer>Copyright &copy;  The Analytic Bastard
+        <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
+</div>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="/js/highlight.pack.js" type="text/javascript"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  messageStyle: "none",
+  "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+});
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-80059282-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

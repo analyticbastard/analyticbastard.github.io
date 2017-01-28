@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: Posts Tagged &quot;MySQL&quot;</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/tags-output/MySQL/">
+    <title>The Analytic Bastard: Clojure good practices</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2017-01-17-clojure-good-practices/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,21 +51,70 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="posts-by-tag">
-    <div id="page-header">
-        <h2>Posts Tagged &quot;MySQL&quot;</h2>
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">January 17, 2017</div>
+        
     </div>
-    <ul>
+    <h2>Clojure good practices</h2>
+</div>
+<div>
     
-        <li>
-            <a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a>
-        </li>
+    <p>Reloadable code makes the developer's life easier, making it possible to change the code and hotload it on the fly into a running system, or reload it minimizing the impact on it.</p><p>In my experience working with Clojure, I have founds a couple of guidelines that allow me to follow this principle. I will summarize them next:</p><ol><li>Keep the logic out of records and other types of static structures   and put it into functions.   <br><br>   Since protocols are essentially like Java classes, they need to be   recompiled and then the objects referenced again. This forces us to   restart the system and relink everything until we use new instances   of the new versions.   <br><br>   On the other hand, calling a function is always done by name and   each call will use the most up-to-date version, this is, the symbol   redefines to point to the last version and each symbol evaluation   uses the last version.   <br><br>   Therefore, if we extract the login out of the record, the record   will only evaluate a function that can be redefined, and we will   need to restart a running system whenever we actually change   the definition of the record in question (adding/removing methods, etc)   <br><br>   Therefore, using the following record:   <br><br><pre><code class="clojure">   &#40;defprotocol P
+     &#40;meth1 &#91;this&#93;&#41;&#41;
+</code></pre>   <br><br>   Bad version:<pre><code class="clojure">   &#40;defrecord rec &#91;a b&#93;
+     P
+     &#40;meth1 &#91;this&#93;
+       &#40;assoc this :res &#40;&#42; a b&#41;&#41;&#41;&#41;
+</code></pre>   <br><br>   Good version:<pre><code class="clojure">   &#40;defn mult-R &#91;{:keys &#91;a b&#93; :as &#95;}&#93;
+     &#40;&#42; a b&#41;&#41;
+   &#40;defrecord R &#91;a b&#93;
+     P
+     &#40;meth1 &#91;this&#93;
+       &#40;assoc this :res &#40;mult-R this&#41;&#41;&#41;&#41;
+</code></pre></li><li>We face a similar problem with Compojure routes. When we change the   login inside the routes, we need to restart the system and even reload   the namespaces. This not only throws away any state we might hold, but   also forces the system to potentially open database connections and   other resources again.   <br><br>   The same principle as before applies here: by extracting the logic   out of the route and into a function, the route just makes an   evaluation of the function, which can easily be reloaded into the   REPL.   <br><br>   Bad version:<pre><code class="clojure">   &#40;GET &quot;/system-stuff&quot; &#91;&#93;
+       :query-params &#91;args :- String&#93;
+       &#40;fn &#91;system&#93;
+           &#40;perform-system-stuff system args&#41;&#41;&#41;
+</code></pre>   <br><br>   Good version:<pre><code class="clojure">   &#40;defn build-perform-system-stuff &#91;args&#93;
+       &#40;fn &#91;system&#93;
+           &#40;perform-system-stuff system args&#41;&#41;&#41;
+   &#40;GET &quot;/system-stuff&quot; &#91;&#93;
+       :query-params &#91;args :- String&#93;
+       &#40;build-perform-system-stuff args&#41;&#41;
+</code></pre></li></ol><p>Another good thing is that some debuggers simply won't place breakpoints on code within records or routes. By following the above points, we will be able to better debug our code.</p><p>The above strategies aim at improving developing times by reducing the reload times. The REPL avoids restarting a JVM, and reloadable code provides minimal restart of our systems, with the added benefit of always being able to debug the code.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
     
-        <li>
-            <a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a>
-        </li>
+    <a href="/tags-output/Clojure/">Clojure</a>
     
-    </ul>
+    <a href="/tags-output/Programming/">Programming</a>
+    
+</div>
+
+
+    <div id="prev-next">
+        
+        
+        <a class="right" href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure &raquo;</a>
+        
+    </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
             </div>

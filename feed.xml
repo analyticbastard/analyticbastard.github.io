@@ -12,11 +12,53 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Sat, 28 Jan 2017 00:15:32 +0100
+Sat, 28 Jan 2017 18:47:31 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/posts-output/2017-01-17-clojure-good-practices/
+</guid>
+<link>
+http://analyticbastard.github.io/posts-output/2017-01-17-clojure-good-practices/
+</link>
+<title>
+Clojure good practices
+</title>
+<description>
+&lt;p&gt;Reloadable code makes the developer's life easier, making it possible to change the code and hotload it on the fly into a running system, or reload it minimizing the impact on it.&lt;/p&gt;&lt;p&gt;In my experience working with Clojure, I have founds a couple of guidelines that allow me to follow this principle. I will summarize them next:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Keep the logic out of records and other types of static structures   and put it into functions.   &lt;br&gt;&lt;br&gt;   Since protocols are essentially like Java classes, they need to be   recompiled and then the objects referenced again. This forces us to   restart the system and relink everything until we use new instances   of the new versions.   &lt;br&gt;&lt;br&gt;   On the other hand, calling a function is always done by name and   each call will use the most up-to-date version, this is, the symbol   redefines to point to the last version and each symbol evaluation   uses the last version.   &lt;br&gt;&lt;br&gt;   Therefore, if we extract the login out of the record, the record   will only evaluate a function that can be redefined, and we will   need to restart a running system whenever we actually change   the definition of the record in question (adding/removing methods, etc)   &lt;br&gt;&lt;br&gt;   Therefore, using the following record:   &lt;br&gt;&lt;br&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;defprotocol P
+     &amp;#40;meth1 &amp;#91;this&amp;#93;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;   &lt;br&gt;&lt;br&gt;   Bad version:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;defrecord rec &amp;#91;a b&amp;#93;
+     P
+     &amp;#40;meth1 &amp;#91;this&amp;#93;
+       &amp;#40;assoc this :res &amp;#40;&amp;#42; a b&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;   &lt;br&gt;&lt;br&gt;   Good version:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;defn mult-R &amp;#91;{:keys &amp;#91;a b&amp;#93; :as &amp;#95;}&amp;#93;
+     &amp;#40;&amp;#42; a b&amp;#41;&amp;#41;
+   &amp;#40;defrecord R &amp;#91;a b&amp;#93;
+     P
+     &amp;#40;meth1 &amp;#91;this&amp;#93;
+       &amp;#40;assoc this :res &amp;#40;mult-R this&amp;#41;&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&lt;li&gt;We face a similar problem with Compojure routes. When we change the   login inside the routes, we need to restart the system and even reload   the namespaces. This not only throws away any state we might hold, but   also forces the system to potentially open database connections and   other resources again.   &lt;br&gt;&lt;br&gt;   The same principle as before applies here: by extracting the logic   out of the route and into a function, the route just makes an   evaluation of the function, which can easily be reloaded into the   REPL.   &lt;br&gt;&lt;br&gt;   Bad version:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;GET &amp;quot;/system-stuff&amp;quot; &amp;#91;&amp;#93;
+       :query-params &amp;#91;args :- String&amp;#93;
+       &amp;#40;fn &amp;#91;system&amp;#93;
+           &amp;#40;perform-system-stuff system args&amp;#41;&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;   &lt;br&gt;&lt;br&gt;   Good version:&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;defn build-perform-system-stuff &amp;#91;args&amp;#93;
+       &amp;#40;fn &amp;#91;system&amp;#93;
+           &amp;#40;perform-system-stuff system args&amp;#41;&amp;#41;&amp;#41;
+   &amp;#40;GET &amp;quot;/system-stuff&amp;quot; &amp;#91;&amp;#93;
+       :query-params &amp;#91;args :- String&amp;#93;
+       &amp;#40;build-perform-system-stuff args&amp;#41;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;Another good thing is that some debuggers simply won't place breakpoints on code within records or routes. By following the above points, we will be able to better debug our code.&lt;/p&gt;&lt;p&gt;The above strategies aim at improving developing times by reducing the reload times. The REPL avoids restarting a JVM, and reloadable code provides minimal restart of our systems, with the added benefit of always being able to debug the code.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Tue, 17 Jan 2017 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/posts-output/2017-01-10-monads/

@@ -12,11 +12,42 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Sat, 04 Feb 2017 14:20:51 +0100
+Sat, 04 Feb 2017 14:48:50 +0100
 </lastBuildDate>
 <generator>
 clj-rss
 </generator>
+<item>
+<guid>
+http://analyticbastard.github.io/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/
+</guid>
+<link>
+http://analyticbastard.github.io/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/
+</link>
+<title>
+Handling low level byte frames in Clojure with Gloss
+</title>
+<description>
+&lt;p&gt;Gloss is a (another) fine library by Zach Tellman which handles low level byte manipulation in Clojure. Sounds weird? It is!&lt;/p&gt;&lt;p&gt;How do we functionally handle system level byte frames that are otherwise naturally manipulated in assembler or C? Gloss comes to rescue.&lt;/p&gt;&lt;p&gt;Imagine that we are given a short integer (16 bit) ```(def intvalue 1)``` and need to invert the byte positions. How we proceed with Gloss is:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;Define a codec to handle&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;require '&amp;#91;gloss.core :as core :refer &amp;#91;defcodec&amp;#93;&amp;#93;&amp;#41;
+
+   &amp;#40;defcodec mycodec
+      &amp;#91;:uint16 :uint16&amp;#93;&amp;#41;
+   &lt;/code&gt;&lt;/pre&gt;&lt;ol&gt;&lt;li&gt;Encode the value into a frame, which is (elegantly) a vector of values.&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;require '&amp;#91;gloss.io :as io&amp;#93;&amp;#41;
+
+   &amp;#40;assert &amp;#40;= intvalue 0x1&amp;#41;&amp;#41;
+   &amp;#40;def frame &amp;#40;io/encode mycodec intvalue&amp;#41;&amp;#41;
+   &lt;/code&gt;&lt;/pre&gt;&lt;ol&gt;&lt;li&gt;Manually invert the bytes as treating any Clojure collection&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;def outframe &amp;#40;reverse frame&amp;#41;&amp;#41;
+   &lt;/code&gt;&lt;/pre&gt;&lt;ol&gt;&lt;li&gt;Decode the frame with the codec again, to get the integer value&lt;/li&gt;&lt;/ol&gt;&lt;pre&gt;&lt;code class=&quot;clojure&quot;&gt;   &amp;#40;def outvalue &amp;#40;io/decode mycodec outframe&amp;#41;&amp;#41;
+   &amp;#40;assert &amp;#40;= outvalue 0x256&amp;#41;&amp;#41;
+   &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is very basic but you get the idea. A very useful tutorial, more than the (unexistent) official documentation, is &lt;a href='http://derek.troywest.com/articles/by-example-gloss'&gt;Gloss by Example&lt;/a&gt;, where the author builds a basic RFC 5322 header-codec.&lt;/p&gt;
+</description>
+<enclosure>
+
+</enclosure>
+<pubDate>
+Fri, 27 Jan 2017 00:00:00 +0100
+</pubDate>
+</item>
 <item>
 <guid>
 http://analyticbastard.github.io/posts-output/2017-01-25-I-like-windows/

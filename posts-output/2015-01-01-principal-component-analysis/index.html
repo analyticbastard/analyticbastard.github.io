@@ -61,7 +61,7 @@
 </div>
 <div>
     
-    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p><p>$$ \max&#92;_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^ 2 &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average for example, the first <a href='http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html'>eigenface</a> .</p><p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p><p>Since the scalar product induces a norm, $ \mathbf{w}^ T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p><p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^ T \mathbf{X}$ be the covariance matrix.</p><p>$$ \max&#95;{\|\mathbf{w}\|=1}  \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the solution. This can be written as the optimization of a Rayleigh quotient.</p><p>$$ \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^ 2} &#92; \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^ T \mathbf{w}} &#92; $$</p><p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite).  Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^ 2 = \mathbf{w}^ T \mathbf{w} = 1$. The same result can be computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p><p>$$ \frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^ T \mathbf{w} - 1\right) \right) = 0 &#92; \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0 $$</p><p>We arrive at</p><p>$$ \mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w} $$</p><p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p><p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of $\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal, I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts to stacking up the vectors $\mathbf{w}$ in columns).</p><p>$$ \mathbf{W} = \mathbf{U} \mathbf{D}^ {\frac{1}{2}} $$</p><p>And the transformation of the data is</p><p>$$ \mathbf{Z} = \mathbf{X} \mathbf{W} $$</p><h3><a name="probabilistic&#95;derivation"></a>Probabilistic derivation</h3><p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following this approach. The seminal paper is <a href='http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf'>"Probabilistic Principal Component Analysis", by M. E. Tipping and C. M. Bishop</a>, published in The Journal of the Royal Statistical Society, Series B.</p><p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain transformations even in the presence of missing attributes. This, however, has been rarely implemented on software packages.  The <a href='http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&d=R_BC'>Probabilistic PCA R Package</a> supports incomplete data.</p><h3><a name="playground&#95;with&#95;sklearn&#95;and&#95;r"></a>Playground with Sklearn and R</h3><p>In IPython Notebook, open up a new sheet and import the necessary modules</p><pre><code class="python">import matplotlib
+    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p><p>$$ \max&#92;_{\|\mathbf{w}\|=1}  || \mathbf{X} \mathbf{w} ||^ 2 &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>Maximizing the square norm explains why the first component of non-centered data contains some kind of a data average for example, the first <a href='http://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html'>eigenface</a> .</p><p>where, in the case of the first principal component, there is no $i$ less than one and the constraint does not apply.</p><p>Since the scalar product induces a norm, $ \mathbf{w}^ T \mathbf{w}$ is the norm of $\mathbf{w} $ and the above becomes</p><p>Let $\mathbf{X}$ be the data matrix, let $\mathbf{\Sigma} = \mathbf{X}^ T \mathbf{X}$ be the covariance matrix.</p><p>$$ \max&#95;{\|\mathbf{w}\|=1}  \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} &#92; \mbox{s.t. }  \mathbf{w}^ T \mathbf{w&#95;i} = 0 $$</p><p>For the first principal component, this is an quadratical optimization problem constrained to unitary norm of the solution. This can be written as the optimization of a Rayleigh quotient.</p><p>$$ \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{||\mathbf{w}||^ 2} &#92; \max&#95;{\mathbf{w}} \frac{\mathbf{w}^ T \mathbf{\Sigma} \mathbf{w}}{\mathbf{w}^ T \mathbf{w}} &#92; $$</p><p>This is a Rayleigh quotient and it is well known from Matrix Analysis that the solution is in terms of the eigenvector corresponding to the largest (positive) eigenvalue for covariance matrices (positive definite).  Remember that $ ||\mathbf{w}|| = 1 \rightarrow  ||\mathbf{w}|| = ||\mathbf{w}||^ 2 = \mathbf{w}^ T \mathbf{w} = 1$. The same result can be computed from Lagrangian constrained optimization. Taking derivatives and equating to zero</p><p>$$ \frac{\partial}{\partial \mathbf{w}} \left( \mathbf{w}^ T \mathbf{\Sigma} \mathbf{w} - \lambda \left(\mathbf{w}^ T \mathbf{w} - 1\right) \right) = 0 &#92; \mathbf{\Sigma} \mathbf{w} - \lambda \mathbf{w} = 0 $$</p><p>We arrive at</p><p>$$ \mathbf{\Sigma} \mathbf{w}  = \lambda \mathbf{w} $$</p><p>Which is an eigenvalue problem (and given the nature of $\mathbf{\Sigma}$, a symmetric one, which benefits from efficient methods to arrive at solutions. The solution to the maximization problem is the eigenvector corresponding to the largest eigenvalue. Subsequent components, given orthogonality constraints, are computed with subsequent eigenvectors.</p><p>Let $\mathbf{U}$ and $\mathbf{D}$ the eigenvector matrix (where the eigenvectors of $\mathbf{\Sigma}$ are the columns of $\mathbf{U}$) and the eigenvalue matrix with the eigenvalues placed in the diagonal, I usually choose to add the eigenvalue information to the weight combination matrix $\mathbf{W}$ to account for component spread, but this is of no practical consequence (you can choose to take $\mathbf{W}=\mathbf{U}$, which amounts to stacking up the vectors $\mathbf{w}$ in columns).</p><p>$$ \mathbf{W} = \mathbf{U} \mathbf{D}^ {\frac{1}{2}} $$</p><p>And the transformation of the data is</p><p>$$ \mathbf{Z} = \mathbf{X} \mathbf{W} $$</p><h3 id="probabilistic&#95;derivation">Probabilistic derivation</h3><p>I consider the probabilistic derivation a landmark since a lot of methods have been derived afterwards following this approach. The seminal paper is <a href='http://research.microsoft.com/pubs/67218/bishop-ppca-jrss.pdf'>"Probabilistic Principal Component Analysis", by M. E. Tipping and C. M. Bishop</a>, published in The Journal of the Royal Statistical Society, Series B.</p><p>The probabilistic approach has several benefits, for example, a natural way of handling incomplete data and obtain transformations even in the presence of missing attributes. This, however, has been rarely implemented on software packages.  The <a href='http://rgm3.lab.nig.ac.jp/RGM/R_rdfile?f=pcaMethods/man/ppca.Rd&d=R_BC'>Probabilistic PCA R Package</a> supports incomplete data.</p><h3 id="playground&#95;with&#95;sklearn&#95;and&#95;r">Playground with Sklearn and R</h3><p>In IPython Notebook, open up a new sheet and import the necessary modules</p><pre><code class="python">import matplotlib
 import datetime
 from matplotlib.finance import quotes&#95;historical&#95;yahoo
 from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
@@ -124,37 +124,39 @@ cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -166,6 +168,8 @@ cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -173,6 +177,8 @@ cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -183,6 +189,8 @@ cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -218,7 +226,7 @@ cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

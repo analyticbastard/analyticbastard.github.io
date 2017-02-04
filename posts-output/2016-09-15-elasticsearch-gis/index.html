@@ -63,10 +63,10 @@
     
     <p>We saw that MySQL comfortably deals with GIS data. Now it is the turn of Elasticsearch.</p><p>We will upload the geospatial information from a shapefile to Elasticsearch. Shapefiles are a standard in the GIS world, and are normally accompanied by other files, including a DBF file. This DBF file can be opened in Excel or Libreoffice, and it normally specifies region data, including names. For this example, we will use the <a href='http://www.gadm.org/country'>Global Adminsitrative Area's Spain shapefile</a></p><p>I used my Hackintosh to do the whole thing, and the version maintained on Homebrew is too old to support the commands we need. So I needed to compile a new one and replace the sources from Homebrew with the official ones and then install them with the ```brew``` command.</p><p>You can get the sources using Subversion (as of the time of writing the latest tag was 2.1.1):</p><pre><code>svn co https://svn.osgeo.org/gdal/tags/2.1.1
 </code></pre><p>Then copy the sources to your previously installed Homebrew sources (search how to get sources with Hombrew, the package is gdal).</p><p>Once we've got the latest version in place, we issue the following command:</p><pre><code>ogr2ogr -progress --config WRITE&#95;MAPPING &quot;esmap.json&quot; -f &quot;ElasticSearch&quot; http://localhost:9200 es&#95;peninsula.shp
-</code></pre><p>The config value ```WRITE_MAPPING``` to write the map, it never produces the file, but it does produce the correct mapping in the index. The rest are Elasticsearch's URL and the shapefile.</p><p>We now check the existence of the index<pre><code>curl -X GET 'http://localhost:9200/&#95;cat/indices'
+</code></pre><p>The config value ```WRITE_MAPPING``` to write the map, it never produces the file, but it does produce the correct mapping in the index. The rest are Elasticsearch's URL and the shapefile.</p><p>We now check the existence of the index</p><pre><code>curl -X GET 'http://localhost:9200/&#95;cat/indices'
 
 yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
- </code></pre></p><p>And get the resulting mapping<pre><code>curl -X GET 'http://localhost:9200/es&#95;peninsula/&#95;mapping'
+</code></pre><p>And get the resulting mapping</p><pre><code>curl -X GET 'http://localhost:9200/es&#95;peninsula/&#95;mapping'
 {
   &quot;es&#95;peninsula&quot;: {
     &quot;mappings&quot;: {
@@ -153,7 +153,7 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
     }
   }
 }
- </code></pre></p><p>Notice the "geometry" property of type "geo_shape". This is the basic geographical type we use.</p><p>We now post a search on the type, and request all available data for the Madrid region.</p><pre><code>curl -X POST 'http://localhost:9200/es&#95;peninsula/FeatureCollection/&#95;search' -d '{
+</code></pre><p>Notice the "geometry" property of type "geo_shape". This is the basic geographical type we use.</p><p>We now post a search on the type, and request all available data for the Madrid region.</p><pre><code>curl -X POST 'http://localhost:9200/es&#95;peninsula/FeatureCollection/&#95;search' -d '{
     &quot;query&quot;: {
         &quot;match&quot; : {
             &quot;properties.NAME&#95;1&quot; : &quot;Madrid&quot;
@@ -273,37 +273,39 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -315,6 +317,8 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -322,6 +326,8 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -332,6 +338,8 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -367,7 +375,7 @@ yellow open es&#95;peninsula 5 1   54 0 4.4mb 4.4mb
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

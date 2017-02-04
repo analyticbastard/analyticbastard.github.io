@@ -76,7 +76,7 @@
 
         &#41;&#41;
     &#41;&#41;
-</code></pre><p>This was the basic recursion skeleton. Now we need to return and process the interesting information about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be negative because they would otherwise increase the sum). For example, the sequence ```[-1 -1 3 4 -2]``` would produce a best subsequence ```[3 4]```, a discarded left sequence ```[-1 -1]``` and a discarded right sequence [-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that we don't need to recompute at the upper-levels (when returning from the call). The information retrieved from the lower levels is a map with this structure (using the previous example):</p><pre><code class="clojure">{:l -2 :sum 7 :r &#91;-2&#93; :sl &#91;-1 -1&#93; :seq &#91;3 4&#93; :sr &#91;-2&#93;}
+`</code></pre><p>This was the basic recursion skeleton. Now we need to return and process the interesting information about the sequence at each stage. We need the maximum-sum sub-sequence at each stage in the binary search, the discarded sequence at the left, and the discarded sequence at the right (both of which must be negative because they would otherwise increase the sum). For example, the sequence ```[-1 -1 3 4 -2]``` would produce a best subsequence ```[3 4]```, a discarded left sequence ```[-1 -1]``` and a discarded right sequence [-2]. Optionally and for the sake of performance, we also return the sums of these sequences, so that we don't need to recompute at the upper-levels (when returning from the call). The information retrieved from the lower levels is a map with this structure (using the previous example):</p><pre><code class="clojure">{:l -2 :sum 7 :r &#91;-2&#93; :sl &#91;-1 -1&#93; :seq &#91;3 4&#93; :sr &#91;-2&#93;}
 </code></pre><p>where the first three keys are the sums, and the last three keys are the proper sequences. We now build the information according to the sequence we recieve as input. When there is only one element, it is easy to see that we need to return empty discarded sequences, and the input number as the best sequence. If we get two elements, we need to check whether both are positive, in which case, we return both as the best sequence (and empty discarded left and right sequences). Otherwise, get the maximum, return it as the best sequence, and return the other as either the left or right discarded sequence depending on whether it was the first or second in the sequence. Note, at this point, that the discarded sequences mean how large the penalization is to get to the best sequence for a given subsequence from the left or the right. In the recursion stage, when we have two subsequences, we need to check if the total sum of both best subsequences and everything in the middle (the right discarded sequence from the left half and the left discarded sequence from the right half) is larger than the maximum of the best subsequence of either half. We concatenate the sequences to compose the left and right discarded sequences, and the best sequences up to this stage. This is the result:</p><pre><code class="clojure">&#40;defn best &#91;myseq&#93;
   &#40;let &#91;N &#40;count myseq&#41;&#93;
     &#40;case N
@@ -158,37 +158,39 @@
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -200,6 +202,8 @@
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -207,6 +211,8 @@
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -217,6 +223,8 @@
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -252,7 +260,7 @@
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

@@ -61,7 +61,7 @@
 </div>
 <div>
     
-    <p>From my former team lead at Erudine I learnt the value of low turnaround JVM code execution for high throughput, and productive interactive development.</p><p>What I mean by this is:</p><ul><li>Running one and only one JVM almost all the time</li><li>Recompiling and reload your classes, hotswapping new versions for old ones.</li><li>Creating instances of your classes interactively using a REPL orinteractive console</li></ul><p>This enables a very fast development lifecycle and lowers new libraries learning curves by interactively exploring them.</p><h2><a name="my&#95;setup"></a>My setup</h2><p>In my opinion, the best IDE for this task is IntelliJ IDEA. Not only it provides fast development by being heavily keyboard shortcut biased, but it also includes running configurations that can be adapted to any possible setup you might need.</p><p>In my case, I normally use Cursive with Clojure. But if I only need Java, a Scala REPL (the Scala plugin is totally free, albeit it lacks smoothness, especially on Windows) suffices.</p><p>I usually switch the Oracle VM to <a href='https://dcevm.github.io/'>DCEVM</a>, a JVM runtime that installs on top of it (or OpenJDK). Next, I get the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a>, a Java agent that watches file changes (in this case bytecode class changes due to new compilations) and performs the hotswapping on the DCEVM. This agent must be used from the running configuration on IntelliJ (the Scala console running configuration).</p><p>If you want to install the DCEVEM as the alternative JVM in your JDK, you need to specifically use it from the command line, along with the use of the agent:</p><pre><code>-XXaltjvm=dcevm -javaagent:PATH&#95;TO&#95;AGENT\hotswap-agent.jar</code></pre><p>This must also be included in the running configuration from IntelliJ in the JVM parameters section.</p><h2><a name="summary"></a>Summary</h2><ul><li>Get IntelliJ IDEA</li><li>Get <a href='https://dcevm.github.io/'>DCEVM</a></li><li>Get the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a></li><li>Add the Scala SDK to your Java project and create a runningconfiguration using the Hotswap agent and specifying the use ofthe Hotswap agent and, potentially, DCEVM as the altjvm.</li><li>Click on debug to start the Scala REPL with Hotswap capabilities</li></ul><p>You can now create Java objects of any class on your classpath, including classes from your libraries or classes from your project. In the latter case, you can now change their code, recompile with Ctrl+F9, and you will be able to see a green box telling you the number of reloaded classes (you did something wrong otherwise and the setup is not complete).</p><p>You will need to accommodate a minimal Scala syntax such as val or var to create variables.</p>
+    <p>From my former team lead at Erudine I learnt the value of low turnaround JVM code execution for high throughput, and productive interactive development.</p><p>What I mean by this is:</p><ul><li>Running one and only one JVM almost all the time</li><li>Recompiling and reload your classes, hotswapping new versions for old ones.</li><li>Creating instances of your classes interactively using a REPL orinteractive console</li></ul><p>This enables a very fast development lifecycle and lowers new libraries learning curves by interactively exploring them.</p><h2 id="my&#95;setup">My setup</h2><p>In my opinion, the best IDE for this task is IntelliJ IDEA. Not only it provides fast development by being heavily keyboard shortcut biased, but it also includes running configurations that can be adapted to any possible setup you might need.</p><p>In my case, I normally use Cursive with Clojure. But if I only need Java, a Scala REPL (the Scala plugin is totally free, albeit it lacks smoothness, especially on Windows) suffices.</p><p>I usually switch the Oracle VM to <a href='https://dcevm.github.io/'>DCEVM</a>, a JVM runtime that installs on top of it (or OpenJDK). Next, I get the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a>, a Java agent that watches file changes (in this case bytecode class changes due to new compilations) and performs the hotswapping on the DCEVM. This agent must be used from the running configuration on IntelliJ (the Scala console running configuration).</p><p>If you want to install the DCEVEM as the alternative JVM in your JDK, you need to specifically use it from the command line, along with the use of the agent:</p><pre><code>-XXaltjvm=dcevm -javaagent:PATH&#95;TO&#95;AGENT\hotswap-agent.jar</code></pre><p>This must also be included in the running configuration from IntelliJ in the JVM parameters section.</p><h2 id="summary">Summary</h2><ul><li>Get IntelliJ IDEA</li><li>Get <a href='https://dcevm.github.io/'>DCEVM</a></li><li>Get the <a href='http://www.hotswapagent.org/'>Hotswap Agent</a></li><li>Add the Scala SDK to your Java project and create a runningconfiguration using the Hotswap agent and specifying the use ofthe Hotswap agent and, potentially, DCEVM as the altjvm.</li><li>Click on debug to start the Scala REPL with Hotswap capabilities</li></ul><p>You can now create Java objects of any class on your classpath, including classes from your libraries or classes from your project. In the latter case, you can now change their code, recompile with Ctrl+F9, and you will be able to see a green box telling you the number of reloaded classes (you did something wrong otherwise and the setup is not complete).</p><p>You will need to accommodate a minimal Scala syntax such as val or var to create variables.</p>
 </div>
 
 <div id="post-tags">
@@ -109,37 +109,39 @@
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -151,6 +153,8 @@
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -158,6 +162,8 @@
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -168,6 +174,8 @@
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -203,7 +211,7 @@
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

@@ -61,7 +61,7 @@
 </div>
 <div>
     
-    <p>Following the previous post on MySQL GIS capabilities, this post is devoted to using MySQL as a text search engine like Apache Solr or Elasticsearch, but with no need for those systems.</p><h2><a name="table&#95;creation"></a>Table creation</h2><p>First, we define the table schema</p><pre><code class="sql">USE `gis`;
+    <p>Following the previous post on MySQL GIS capabilities, this post is devoted to using MySQL as a text search engine like Apache Solr or Elasticsearch, but with no need for those systems.</p><h2 id="table&#95;creation">Table creation</h2><p>First, we define the table schema</p><pre><code class="sql">USE `gis`;
 
 DROP TABLE IF EXISTS `deal`;
 
@@ -73,13 +73,13 @@ CREATE TABLE `deal` &#40;
     UNIQUE KEY `id`&#40;`id`&#41;,
     FULLTEXT&#40;`titulo`, `desc`&#41;
 &#41; ENGINE=MyISAM DEFAULT CHARSET=latin1;
-</code></pre><p>With this, we have declared two text fields and a fulltext index including both.</p><h2><a name="sample&#95;data&#95;insertion"></a>Sample data insertion</h2><p>Insert some values into the fields, there is nothing of significance here</p><pre><code class="sql">INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Pregnant baby doll','A baby doll that is pregnant, the baby\'s baby is pregnant too'&#41;;
+</code></pre><p>With this, we have declared two text fields and a fulltext index including both.</p><h2 id="sample&#95;data&#95;insertion">Sample data insertion</h2><p>Insert some values into the fields, there is nothing of significance here</p><pre><code class="sql">INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Pregnant baby doll','A baby doll that is pregnant, the baby\'s baby is pregnant too'&#41;;
 INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Liquour from Malta', 'Delicious blend of fruity blueberry liquour. Alcoholic drink'&#41;;
 INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Scotch Whiskey', 'Fine whiskey from Scotland. The best in the world'&#41;;
 INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Toyota Yaris', 'Diesel affordable car'&#41;;
 INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Mercedes Class C4', 'Diesel car only for those who can afford it'&#41;;
 INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Wine El Yantar', 'Affordable alcoholic drink. Cheap red wine.'&#41;;
-</code></pre><h2><a name="data&#95;querying"></a>Data querying</h2><p>We now use a <em>match against</em> query in the following way</p><pre><code class="sql">SELECT `titulo`, `desc` FROM `deal`
+</code></pre><h2 id="data&#95;querying">Data querying</h2><p>We now use a <em>match against</em> query in the following way</p><pre><code class="sql">SELECT `titulo`, `desc` FROM `deal`
 	WHERE MATCH&#40;`titulo`, `desc`&#41; AGAINST &#40;'affordable'&#41; ;
 </code></pre><p>In the following result, we notice that only the full word <code>affordable</code> has been searched, but that we obtain no result involving any type of variation such as the Mercedes row, which has the root <code>afford</code>.</p><pre><code>+ ----------- + --------- +
 | titulo      | desc      |
@@ -92,7 +92,7 @@ INSERT INTO `deal` &#40;`titulo`, `desc`&#41; VALUES&#40;'Wine El Yantar', 'Affo
 + ----------- + --------- +
 | Mercedes Class C4 | Diesel car only for those who can afford it |
 + ----------- + --------- +
-1 rows</code></pre><h2><a name="ngram&#95;search"></a>NGram search</h2><p>If we want to get result in a fashion similar to the use of Google (or other text search engines), the final step will be to use an NGram parser. We redefine our table schema like this:</p><pre><code class="sql">USE `gis`;
+1 rows</code></pre><h2 id="ngram&#95;search">NGram search</h2><p>If we want to get result in a fashion similar to the use of Google (or other text search engines), the final step will be to use an NGram parser. We redefine our table schema like this:</p><pre><code class="sql">USE `gis`;
 
 DROP TABLE IF EXISTS `deal`;
 
@@ -150,37 +150,39 @@ CREATE TABLE `deal` &#40;
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -192,6 +194,8 @@ CREATE TABLE `deal` &#40;
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -199,6 +203,8 @@ CREATE TABLE `deal` &#40;
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -209,6 +215,8 @@ CREATE TABLE `deal` &#40;
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -244,7 +252,7 @@ CREATE TABLE `deal` &#40;
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

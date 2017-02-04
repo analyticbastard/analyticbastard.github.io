@@ -54,6 +54,17 @@
 <div id="post">
     
     <div class="post-header">
+        <h2>The Monty Hall problem (my explanation)</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 8, 2015</div>
+        </div>
+    </div>
+    <p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p><p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R "right choice" V "visible incorrect wallet" and S "your choice". We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).</p>
+    <a href="/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
         <h2>Powering up python as a data analysis platform</h2>
         <div id="post-meta">
             
@@ -93,19 +104,8 @@
             <div class="date">January 10, 2015</div>
         </div>
     </div>
-    <p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.</p><h3><a name="concepts" shape="rect"></a>Concepts</h3>
+    <p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.</p><h3 id="concepts">Concepts</h3>
     <a href="/posts-output/2015-01-10-my-git-workflow/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Hackintosh up my Asus K55V</h2>
-        <div id="post-meta">
-            
-            <div class="date">January 6, 2015</div>
-        </div>
-    </div>
-    <p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p><p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.</p>
-    <a href="/posts-output/2015-01-06-hackintosh/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -127,37 +127,39 @@
                 <!-- <h3>Links</h3>
                 <ul id="links">
                     
-                    <li><a href="/pages-output/c/">C, C++ and others</a></li>
+                    <li><a href="/pages-output/experience/c/c/">C, C++ and others</a></li>
                     
-                    <li><a href="/pages-output/clojure/">Clojure</a></li>
+                    <li><a href="/pages-output/experience/clojure/clojure/">Clojure</a></li>
                     
-                    <li><a href="/pages-output/courses/">Courses</a></li>
+                    <li><a href="/pages-output/experience/courses/courses/">Courses</a></li>
                     
-                    <li><a href="/pages-output/databases/">Databases</a></li>
+                    <li><a href="/pages-output/experience/databases/databases/">Databases</a></li>
                     
-                    <li><a href="/pages-output/experience/">experience</a></li>
+                    <li><a href="/pages-output/experience/experience/">experience</a></li>
                     
-                    <li><a href="/pages-output/git/">Git</a></li>
+                    <li><a href="/pages-output/experience/git/git/">Git</a></li>
                     
-                    <li><a href="/pages-output/intellij/">IntelliJ</a></li>
+                    <li><a href="/pages-output/experience/intellij/intellij/">IntelliJ</a></li>
                     
-                    <li><a href="/pages-output/java/">Java</a></li>
+                    <li><a href="/pages-output/experience/java/java/">Java</a></li>
                     
-                    <li><a href="/pages-output/lein/">Leiningen and Maven</a></li>
+                    <li><a href="/pages-output/experience/lein/lein/">Leiningen and Maven</a></li>
                     
-                    <li><a href="/pages-output/matlab/">Matlab and R</a></li>
+                    <li><a href="/pages-output/experience/matlab-r/matlab/">Matlab and R</a></li>
                     
-                    <li><a href="/pages-output/mobile/">Mobile</a></li>
+                    <li><a href="/pages-output/experience/mobile/mobile/">Mobile</a></li>
                     
-                    <li><a href="/pages-output/python/">Python</a></li>
+                    <li><a href="/pages-output/experience/python/python/">Python</a></li>
                     
-                    <li><a href="/pages-output/scientific/">Scientific Libraries</a></li>
+                    <li><a href="/pages-output/experience/scientific/scientific/">Scientific Libraries</a></li>
                     
                 </ul> -->
                 
                 <div id="recent">
                     <h3>Recent Posts</h3>
                     <ul>
+                        
+                        <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
                         
                         <li><a href="/posts-output/2017-01-17-clojure-good-practices/">Clojure good practices</a></li>
                         
@@ -169,6 +171,8 @@
                         
                         <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
+                        <li><a href="/posts-output/2016-07-03-cant-wait-for-java-repl/">Interactive, high throughput, low turnaround development in the JVM: my setup</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -176,6 +180,8 @@
                 <div id="tags">
                     <h3>Tags</h3>
                     <ul>
+                        
+                        <li><a href="/tags-output/Computers/">Computers</a></li>
                         
                         <li><a href="/tags-output/Matlab/">Matlab</a></li>
                         
@@ -186,6 +192,8 @@
                         <li><a href="/tags-output/Databases/">Databases</a></li>
                         
                         <li><a href="/tags-output/Scala/">Scala</a></li>
+                        
+                        <li><a href="/tags-output/Windows/">Windows</a></li>
                         
                         <li><a href="/tags-output/Elasticsearch/">Elasticsearch</a></li>
                         
@@ -221,7 +229,7 @@
             </div>
         </div>
     </div>
-    <footer>Copyright &copy;  The Analytic Bastard
+    <footer>Copyright &copy; 2017 The Analytic Bastard
         <p style="text-align: center;">Powered by <a href="http://cryogenweb.org">Cryogen</a></p></footer>
 </div>
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>

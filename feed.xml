@@ -12,7 +12,7 @@ http://analyticbastard.github.io
 Programming, Computers, Machine Learning, Maths, Self-hacking, Economy...
 </description>
 <lastBuildDate>
-Mon, 06 Feb 2017 00:33:32 +0100
+Mon, 06 Feb 2017 00:41:59 +0100
 </lastBuildDate>
 <generator>
 clj-rss
@@ -1075,11 +1075,11 @@ msft = quotes&amp;#95;historical&amp;#95;yahoo&amp;#40;&amp;quot;MSFT&amp;quot;,
 cmsft = np.array&amp;#40;&amp;#91;q&amp;#91;2&amp;#93; for q in msft&amp;#93;&amp;#41;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Build a data matrix to be fed to the PCA implementation in a suitable format&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;X = np.vstack&amp;#40;&amp;#40;cintc,cmsft&amp;#41;&amp;#41;.T
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Plot both closing prices so that we can visually compare them with the transforms&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;plot&amp;#40;X&amp;#41;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{% img /images/pca&lt;i&gt;intc&lt;/i&gt;msft_stocks.png %}&lt;/p&gt;&lt;p&gt;Build the object&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;pca = PCA&amp;#40;&amp;#41;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/img/pca_intc_msft_stocks.png&quot; alt=&quot;Comparison&quot; /&gt;&lt;/p&gt;&lt;p&gt;Build the object&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;pca = PCA&amp;#40;&amp;#41;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Transform the data&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;T = pca.fit&amp;#95;transform&amp;#40;X&amp;#41;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Let's examine the variance ratio explained by each of the components. Notice that the first component explains a lot of the price movement of both stocks.&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;pca.explained&amp;#95;variance&amp;#95;ratio&amp;#95;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation&lt;/p&gt;&lt;pre&gt;&lt;code class=&quot;python&quot;&gt;plot&amp;#40;T&amp;#41;
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;{% img /images/pca&lt;i&gt;intc&lt;/i&gt;msft_transform.png %}&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&quot;/img/pca_intc_msft_transform.png&quot; alt=&quot;Transofmration&quot; /&gt;&lt;/p&gt;
 </description>
 <enclosure>
 

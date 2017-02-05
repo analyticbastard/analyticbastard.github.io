@@ -76,11 +76,11 @@ msft = quotes&#95;historical&#95;yahoo&#40;&quot;MSFT&quot;, date1, date2&#41;
 cmsft = np.array&#40;&#91;q&#91;2&#93; for q in msft&#93;&#41;
 </code></pre><p>Build a data matrix to be fed to the PCA implementation in a suitable format</p><pre><code class="python">X = np.vstack&#40;&#40;cintc,cmsft&#41;&#41;.T
 </code></pre><p>Plot both closing prices so that we can visually compare them with the transforms</p><pre><code class="python">plot&#40;X&#41;
-</code></pre><p>{% img /images/pca<i>intc</i>msft_stocks.png %}</p><p>Build the object</p><pre><code class="python">pca = PCA&#40;&#41;
+</code></pre><p><img src="/img/pca_intc_msft_stocks.png" alt="Comparison" /></p><p>Build the object</p><pre><code class="python">pca = PCA&#40;&#41;
 </code></pre><p>Transform the data</p><pre><code class="python">T = pca.fit&#95;transform&#40;X&#41;
 </code></pre><p>Let's examine the variance ratio explained by each of the components. Notice that the first component explains a lot of the price movement of both stocks.</p><pre><code class="python">pca.explained&#95;variance&#95;ratio&#95;
 </code></pre><p>with 0.8132162 and 0.1867838 of the variance explained by the components. Now we can print out the PCA transformation</p><pre><code class="python">plot&#40;T&#41;
-</code></pre><p>{% img /images/pca<i>intc</i>msft_transform.png %}</p>
+</code></pre><p><img src="/img/pca_intc_msft_transform.png" alt="Transofmration" /></p>
 </div>
 
 <div id="post-tags">

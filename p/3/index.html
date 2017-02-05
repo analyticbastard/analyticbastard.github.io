@@ -54,52 +54,6 @@
 <div id="post">
     
     <div class="post-header">
-        <h2>JFF: a reactive web application with reagent, re-frame and datascript</h2>
-        <div id="post-meta">
-            
-            <div class="date">May 29, 2016</div>
-        </div>
-    </div>
-    <p>Essensys, the last company I worked for in London, use to do something called Junk Food Friday, which, as you can guess, implies that each friday, one of us would order food for everybody else, be it pizza, burgers, Mexican, you name it. The process used to be a mess, with the organizer receiving emails with the requests, having an Excel sheet to organize him/herself, etc. That is why I developed the JFF app, which was an update from the coffee app (which was aimed at getting coffee from the local coffee shop, essentially the same use case).</p><p>I decided to give the new cool Clojure(Script) technologies a go and I was quite impressed (coming from working only with Reagent, Figwheel and a little bit of Datascript). Re-frame really adds value by providing a controller and a better model than just bare reagent atoms.</p>
-    <a href="/posts-output/2016-05-29-JFF-a-reactive-web-application-with-reagent/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>New blog using Cryogen</h2>
-        <div id="post-meta">
-            
-            <div class="date">March 30, 2016</div>
-        </div>
-    </div>
-    <p>Octopress was getting the worst out of me. It does not allow a natural git workflow and it is very difficult to manage in the long run. I sincerely believe Octopress is to blame for my inactivity in the past months.</p><p>Well, I have been looking for a replacement for a while and, since I am a Clojure enthusiast, what could then be better than a Clojure-written static web page generator?</p>
-    <a href="/posts-output/2016-03-30-new-blog-with-cryogen/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
-        <h2>Clojure parallel thread flows: pth library</h2>
-        <div id="post-meta">
-            
-            <div class="date">September 13, 2015</div>
-        </div>
-    </div>
-    <p>I developed a new library that solves the problem of the need to disrupt a Clojure thread flow because two quantities need to be computed from the current value of the thread flow, for example, using the current value as the index to two arrays which need to be merged.</p><pre><code class="clojure">(use 'pth)
-
-(let [map1 {:1 :a :2 :b :3 :c}
-        map2 {:1 1 :2 2 :3 3}
-        combine (partial apply interleave)
-        into-map (partial apply array-map)
-        ]
-    (-&gt; [:1 :2]
-        (-&lt;&lt; (map map1)
-             (map map2))
-        combine
-        into-map
-        ))
-</code></pre>
-    <a href="/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Continue reading &#8594;</a>
-    <hr>
-    
-    <div class="post-header">
         <h2>Max subsequence problem</h2>
         <div id="post-meta">
             
@@ -119,6 +73,61 @@
     </div>
     <p>SVG files are vector images based on a XML specification for describing geometric shapes (vector images). The fact that the image itself is an XML element makes it an ideal candidate to be manipulated from our client-side code. Unfortunately, SVG elements are not entirely treated in the same way that HTML elements are. In particular, they hold an internal DOM.</p><p>I am working on a project that involves dealing with a chart produced by the D3.js library, which produces SVG images.</p>
     <a href="/posts-output/2015-04-09-manipulating-svg-images-from-browser-javascript/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Installing Theano on Windows</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 25, 2015</div>
+        </div>
+    </div>
+    <p>Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.</p><p>In this post I assume you are going with <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Gohlke's packages</a> (for reasons, read <a href="blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">here</a>)</p>
+    <a href="/posts-output/2015-03-25-installing-theano-on-windows/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>The Monty Hall problem (my explanation)</h2>
+        <div id="post-meta">
+            
+            <div class="date">March 8, 2015</div>
+        </div>
+    </div>
+    <p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p><p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R "right choice" V "visible incorrect wallet" and S "your choice". We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).</p>
+    <a href="/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Powering up python as a data analysis platform</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 26, 2015</div>
+        </div>
+    </div>
+    <p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p><p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
+    <a href="/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Image pan-sharpening with PCA</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 20, 2015</div>
+        </div>
+    </div>
+    <p>There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.</p><p>This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.</p>
+    <a href="/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Google&#39;s original Page Rank implementation</h2>
+        <div id="post-meta">
+            
+            <div class="date">February 8, 2015</div>
+        </div>
+    </div>
+    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n_i}$, where $n_i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p>
+    <a href="/posts-output/2015-02-08-google-original-page-rank/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -172,6 +181,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
+                        
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
                         
                         <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
@@ -183,8 +194,6 @@
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
                         
                         <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
                     </ul>
                 </div>

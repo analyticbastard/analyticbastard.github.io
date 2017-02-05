@@ -54,58 +54,80 @@
 <div id="post">
     
     <div class="post-header">
-        <h2>Installing Theano on Windows</h2>
+        <h2>My Git workflow</h2>
         <div id="post-meta">
             
-            <div class="date">March 25, 2015</div>
+            <div class="date">January 10, 2015</div>
         </div>
     </div>
-    <p>Since Theano team works under Linux, a non-trivial amount of hacking is required to get it working on Windows.</p><p>In this post I assume you are going with <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Cristoph Gohlke's packages</a> (for reasons, read <a href="blog/2015/02/26/powering-up-python-as-a-data-analysis-platform/">here</a>)</p>
-    <a href="/posts-output/2015-03-25-installing-theano-on-windows/">Continue reading &#8594;</a>
+    <p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.</p><h3 id="concepts">Concepts</h3>
+    <a href="/posts-output/2015-01-10-my-git-workflow/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>The Monty Hall problem (my explanation)</h2>
+        <h2>Hackintosh up my Asus K55V</h2>
         <div id="post-meta">
             
-            <div class="date">March 8, 2015</div>
+            <div class="date">January 6, 2015</div>
         </div>
     </div>
-    <p>If I tell you: There are 1K bitcoins 1 wallet that will be yours if you guess which wallet out of three  is the right one, the rest containing an amount of zero bitcoins, and ask you to point out an initial  selection, then showed you that, effectively, one of the remaining wallets contains zero bitcoins...  and finally giving you the opportunity to change wallet. Would you change? The awnser is yes.</p><p>This is so because there is new evidence now that supports a higher probability that the remaining unseen wallet is the right choice, whereas there is none about your current choice. The fact that you selected wallet 1, and given that choice, I showed you wallet 2, that leaves wallet 3 with a posterior probability of 2/3. This does not happen for our current wallet 1, since choosing 1 influenced my decision to show you 2. More precisely: You chose wrongly with probability 2/3. With that probability, I show you the only possible door that I can, leaving the 2/3 for the remaining unseen and unchosen door. On the contrary, you choose well with 1/3 probability, but then I can choose among 2 doors to show you, each with a probability of 1/2. This is how we include my decision (or necessity) to show you 2 into the math (this is the best explanation you are gonna get from all over the internet): Let's call R "right choice" V "visible incorrect wallet" and S "your choice". We need to compute $P(R=3|V=2,S=1)$, the probability of 3 being the right wallet, after you selected 1 and I showed you that 2 was not right (remember that all priors are 1/3).</p>
-    <a href="/posts-output/2015-03-08-the-monty-hall-problem-my-explanation/">Continue reading &#8594;</a>
+    <p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p><p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.</p>
+    <a href="/posts-output/2015-01-06-hackintosh/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Powering up python as a data analysis platform</h2>
+        <h2>Principal Component Analysis</h2>
         <div id="post-meta">
             
-            <div class="date">February 26, 2015</div>
+            <div class="date">January 1, 2015</div>
         </div>
     </div>
-    <p>When working with Machine Learning algorithms we face large data movement, but in many algorithms the most important part is a heavy use of linear algebra operations and other mathematical/vectorial computations.</p><p>Intel has a math library that is optimized for the latest processors (MKL), including programmer-made optimizations for multiple core counts, wider vector units and more varied architectures which yield a performance that could not be achieved only with compiler automated optimization for routines such as highly vectorized and threaded linear algebra, fast Fourier transforms, and vector math and Statistics. These functions are royalty-free, so including them statically in the program comes at no cost.</p>
-    <a href="/posts-output/2015-02-26-powering-up-python-as-a-data-analysis-platform/">Continue reading &#8594;</a>
+    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p>
+    <a href="/posts-output/2015-01-01-principal-component-analysis/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Image pan-sharpening with PCA</h2>
+        <h2>Equality of means statistical test made easy</h2>
         <div id="post-meta">
             
-            <div class="date">February 20, 2015</div>
+            <div class="date">December 30, 2014</div>
         </div>
     </div>
-    <p>There is a collection of methods that are denominated image pan-sharpening, since they use information available in multiple bands to create an image output that enjoys properties from all sources, while minimizing drawbacks. The sources combined will contain several frequency bands, maybe hundreds or thousands. In this case, we are interested in combining a source with a high resolution but in gray scale, and a RGB image.</p><p>This is especially important in satellite imagery, since satellites often incorporate a multispectral camera with limited resolution and a high-resolution, low-band/grayscale camera among their equipment.</p>
-    <a href="/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
+    <p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe, stating the null hypothesis, performing the computations and stating the results in the correct statistical language. I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of its difficulty.</p><p>My little sister could not understand the meaning of (talking about box plots):</p>
+    <a href="/posts-output/2014-12-30-equality-of-means-statistical-test/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Google&#39;s original Page Rank implementation</h2>
+        <h2>Current computer language market</h2>
         <div id="post-meta">
             
-            <div class="date">February 8, 2015</div>
+            <div class="date">December 14, 2014</div>
         </div>
     </div>
-    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n_i}$, where $n_i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p>
-    <a href="/posts-output/2015-02-08-google-original-page-rank/">Continue reading &#8594;</a>
+    <p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages, each of one contains data input lines in Python and their corresponding beautified output, which can include images and charts generated by <em>Matplotlib</em> or any other library that produces graphical output.</p><p>In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to  implement your in-house algorithms for data munging, or at least turn you too lazy to look for them  (in the spirit of "that'll only take me half an hour and then I'll devote my time to productive coding").</p>
+    <a href="/posts-output/2014-12-14-ipython-notebook-for-data-analysis/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>The future of data analysis tools: Python, web technologies</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 27, 2014</div>
+        </div>
+    </div>
+    <p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines involving data handling or processing. An easy example is this blog, which is made with  <a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control, modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p><p>We find this shift to be a real convergence in the case of data analysis and software development, specifically, web software development and scripting with Python. This is almost self evident and has been noted previously, in fact, a blog entry talking about <a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist's data toolkit</a> and thinking about my own data analysis toolkit got me writing about this.</p>
+    <a href="/posts-output/2014-11-27-the-future-of-data-analysis-tools/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>Current computer language market</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 8, 2014</div>
+        </div>
+    </div>
+    <p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb's</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief's article.</p><p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
+    <a href="/posts-output/2014-11-08-current-computer-language-market/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -159,6 +181,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
+                        
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
                         
                         <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
@@ -170,8 +194,6 @@
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
                         
                         <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
                     </ul>
                 </div>

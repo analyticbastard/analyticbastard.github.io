@@ -54,58 +54,69 @@
 <div id="post">
     
     <div class="post-header">
-        <h2>My Git workflow</h2>
+        <h2>Pythagorean theorem</h2>
         <div id="post-meta">
             
-            <div class="date">January 10, 2015</div>
+            <div class="date">November 6, 2014</div>
         </div>
     </div>
-    <p>In the past I had used CVS as most of the people. Git is much powerful, in so many levels. For starters, you never, NEVER lose files. You can <strong>always</strong> go back to a previous version, the soft ware, or the hard. But Git requires a little more attention on the part of the user than other control version systems. This starts by fixing the basic concepts clearly.</p><h3 id="concepts">Concepts</h3>
-    <a href="/posts-output/2015-01-10-my-git-workflow/">Continue reading &#8594;</a>
+    <p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove it. Here is a proof that I consider to be the easiest one. It's very analytic and avoids any geometric complications  such as triangle similarity considerations.</p><p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right triangles.</p>
+    <a href="/posts-output/2014-11-06-pythagorean-theorem/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Hackintosh up my Asus K55V</h2>
+        <h2>Naive Bayes implemented with Map/Reduce operations</h2>
         <div id="post-meta">
             
-            <div class="date">January 6, 2015</div>
+            <div class="date">November 5, 2014</div>
         </div>
     </div>
-    <p>I got an ASUS K55VD laptop nearly two years ago and the motherboard broke down without possibility of repair. Not being able to repair it (I had several technical service shops working on it) was a sting on my heart. Then I recently spotted an ASUS K55A motherboard (essentially the same except the NVidia 610M chip and no 2 GB external video RAM soldered into the motherboard) on eBay. That was good enough for me, and I got the item for a very good price.</p><p>I managed to assemble the thing and I was lucky enough to get it working. So I ended up with two similar configurations. I have a decent Ubuntu virtual machine on my Windows laptop, and I use it to play some games from time to time, so I wanted this spare laptop to be useful in some other meaningful sense. It occurred to me that I could install Mac OSX and have access to Apple's tools to compile iOS apps for the iPhone.</p>
-    <a href="/posts-output/2015-01-06-hackintosh/">Continue reading &#8594;</a>
+    <p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p><p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
+    <a href="/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Principal Component Analysis</h2>
+        <h2>A gentle introduction to RKHS and Kernel Methods</h2>
         <div id="post-meta">
             
-            <div class="date">January 1, 2015</div>
+            <div class="date">November 4, 2014</div>
         </div>
     </div>
-    <p>Principal Component Analysis is a classical statistical technique that aims at finding a transformation of the input or measured variables so that the transformed variables offer a view of the data that maximizes the presented "information" about the dataset. This allows for dimensionality reduction, since we can select a number of dimensions which provide most of the "information" and be sure that each of the rest of the discarded dimensions contain less information than each of the dimensions we have retained.</p><p>We start by requesting something as simple as our solution to be a constrained linear combination (so that the coefficient vector is of norm one) so that it is of maximum square norm.</p>
-    <a href="/posts-output/2015-01-01-principal-component-analysis/">Continue reading &#8594;</a>
+    <p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,</p><p>$$\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta\delta_x(g)$$</p>
+    <a href="/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Equality of means statistical test made easy</h2>
+        <h2>Improve the performance of an SVM with differential geometry</h2>
         <div id="post-meta">
             
-            <div class="date">December 30, 2014</div>
+            <div class="date">November 3, 2014</div>
         </div>
     </div>
-    <p>I never realized how difficult it was to understand a simple statistical concept such as the test for equality of means until I had to explain it to my little sister. And I found out that this difficulty stemmed from poor explanations of my professors and even worse from the textbooks I used to study it. I always ended up using the cookbook recipe, stating the null hypothesis, performing the computations and stating the results in the correct statistical language. I never had to explain it in my academic life so I never confronted this particular piece of knowledge and the root of its difficulty.</p><p>My little sister could not understand the meaning of (talking about box plots):</p>
-    <a href="/posts-output/2014-12-30-equality-of-means-statistical-test/">Continue reading &#8594;</a>
+    <p>Though I am not very wise concerning differential geometry (others aren't either, but they claim to be researching on the field), I find it amusing to read a little bit of it when it is used along with kernel methods, and especially when you can improve the behavior of a SVM with it.</p><p><a href="http://www.dcs.warwick.ac.uk/~feng/papers/Scaling%20the%20Kernel%20Function.pdf">Amari and Wu</a> are responsible for the following method: The idea is that, in order to increase class separability, we need to enlarge the spatial resolution around the boundary in the feature space. Take, for instance, the Riemannian distance along the manifold</p>
+    <a href="/posts-output/2014-11-03-improve-the-performance-of-an-svm-with-differential-geometry/">Continue reading &#8594;</a>
     <hr>
     
     <div class="post-header">
-        <h2>Current computer language market</h2>
+        <h2>The Gaussian kernel maps data onto the sphere</h2>
         <div id="post-meta">
             
-            <div class="date">December 14, 2014</div>
+            <div class="date">November 2, 2014</div>
         </div>
     </div>
-    <p>A nice tool for both exploratory analysis and teaching is IPython Notebook. It consists of a web server executing Python commands on an IPython interpreter and a set of Javascript files and CSS style sheets to layout the input and output correctly and nicely. By connecting to the URL where the server is listening, you access to a book of pages, each of one contains data input lines in Python and their corresponding beautified output, which can include images and charts generated by <em>Matplotlib</em> or any other library that produces graphical output.</p><p>In the following, I wanted to face a recurrent problem that I have been facing in the past, derived from using general tools such as Matlab for data analysis tasks. The problem with general tools is that they are easy to grasp and feel confident with them, maybe too confident. In the case of Matlab, I became too comfortable with the flexibility of matrices, which allow you to get started quickly since you can easily move data blocks around, but then force you to  implement your in-house algorithms for data munging, or at least turn you too lazy to look for them  (in the spirit of "that'll only take me half an hour and then I'll devote my time to productive coding").</p>
-    <a href="/posts-output/2014-12-14-ipython-notebook-for-data-analysis/">Continue reading &#8594;</a>
+    <p>It is a fact as surprising as trivial that the Gaussian kernel maps your data onto the infinite-dimensional sphere. No computation regarding the RKHS basis are required, since, given the kernel</p><p>$$k(x,y)=\exp(-\gamma \| x-y\|^ 2)$$</p>
+    <a href="/posts-output/2014-11-02-the-gaussian-kernel-maps-data-onto-the-sphere/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
+        <h2>My new blog in Github Pages + Octopress</h2>
+        <div id="post-meta">
+            
+            <div class="date">November 1, 2014</div>
+        </div>
+    </div>
+    <p>Well, welcome to my shiny new blog. It is long since I have been wanting to set up a professional blog, something that others call a <em>blog for hackers</em>. It is called like that, I believe, because no online, fancy wysiwyg editor is used and instead you use professional tools such as Git and a bunch of well crafted Ruby scripts, although you only need to  follow a cookbook (from which a small deviation may break everything down and you need to hack around a little bit, for real).</p><p>Well, I want to test its features now. I am editing with IntelliJ and Markdown. Nothing spectacular, it might be my personal set up, because the plugin at my job is definitely more functional.</p>
+    <a href="/posts-output/2014-11-01-my-new-blog/">Continue reading &#8594;</a>
     <hr>
     
 
@@ -113,8 +124,6 @@
         
         <a class="left" href="/p/4/">&laquo; Prev</a>
         
-        
-        <a class="right" href="/p/6/">Next &raquo;</a>
         
     </div>
 </div>
@@ -159,6 +168,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
+                        
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
                         
                         <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
@@ -170,8 +181,6 @@
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
                         
                         <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
                     </ul>
                 </div>

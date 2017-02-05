@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard</title>
-    <link rel="canonical" href="http://analyticbastard.github.io">
+    <title>The Analytic Bastard: Towards a statistical software engineering and control</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2017-02-03-statistical-software-engineering/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -52,71 +52,49 @@
             <div id="content">
                 
 <div id="post">
-    
     <div class="post-header">
-        <h2>The future of data analysis tools: Python, web technologies</h2>
-        <div id="post-meta">
-            
-            <div class="date">November 27, 2014</div>
-        </div>
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">February 3, 2017</div>
+        
     </div>
-    <p>For the past years I have observed a shift, or convergence one might say, in the tools used in several disciplines involving data handling or processing. An easy example is this blog, which is made with  <a href="http://octopress.org/">Octopress</a>, a tool heavily based on <em>nerdy</em> concepts such as compilation, version control, modular building and Markdown syntax, and tools such as Git and the Ruby toolkit. This makes blogging more similar to software development, as I hinted <a href="/blog/2014/11/01/my-new-blog/">on my first post on this blog</a>.</p><p>We find this shift to be a real convergence in the case of data analysis and software development, specifically, web software development and scripting with Python. This is almost self evident and has been noted previously, in fact, a blog entry talking about <a href="http://www.talyarkoni.org/blog/2013/11/18/the-homogenization-of-scientific-computing-or-why-python-is-steadily-eating-other-languages-lunch/">pythonification of a scientist's data toolkit</a> and thinking about my own data analysis toolkit got me writing about this.</p>
-    <a href="/posts-output/2014-11-27-the-future-of-data-analysis-tools/">Continue reading &#8594;</a>
-    <hr>
+    <h2>Towards a statistical software engineering and control</h2>
+</div>
+<div>
     
-    <div class="post-header">
-        <h2>Current computer language market</h2>
-        <div id="post-meta">
-            
-            <div class="date">November 8, 2014</div>
-        </div>
-    </div>
-    <p>There is an interesting series of articles on <a href="http://www.drdobbs.com/open-source/the-rise-and-fall-of-languages-in-2013/240165192">Dr. Dobb's</a> essentially about what we can call the computer languages market, where they analyze trends and caracteristics, especially in the Editor in chief's article.</p><p>They analyze the trends in language usage, which ordinally had not change since the year before (C, Java, Objective-C, C++, C#, PHP, Visual Basic, Python and Javascript), but that show a number of developments. For instance, Perl is leaving room in favor of Python. Perl seems to be dying and with signs of becoming history. They also mentioned a strong resurgence of Javascript but I would like to add that a large number of developments in the web scripting world have been carried out, starting with CoffeeScript, a tiny language that translates 1-to-1 to JavaScript. See their web page for some use of the language. ClojureScript is another compiler, this time to translate Clojure into JavaScript.</p>
-    <a href="/posts-output/2014-11-08-current-computer-language-market/">Continue reading &#8594;</a>
-    <hr>
+    <p>With statistical software engineering and control I mean actually driving development towards the optimization of statistical measures of the software and using tools to control these measures.</p><p>This post is more about my internal rants than about reality or anything usable, but I have been thinking about this quite a lot lately and have decided to embark in the implementation journey.</p><p>Imagine that we had a non-intrusive means of given a function (or method) visualize and compute how it is called within the system, the parameter values multivariate distribution and its result or failure, such as exceptions with stack traces so that the problem can be traced to other functions or methods to perform another analysis, possibly a conditional probability analysis, or perhaps some kind of machine learning algorithm to find frequency peaks in the unstructured data space where the function input is defined, or even perform a outlier analysis to examine edge cases or possibly hacking attempts.</p><p>If we had such an information in a visual or otherwise non-trivially queryable system we could make decisions about how to better fill or invalidate our caches thus multiplying the speed of our systems by orders of magnitude, or radically redefine our way of debugging and fixing errors.</p><p>Some degree of analysis is currently crudely being done with log analysis and the well-known ELK stack, but I feel a steep forward needs to be taken and actually analyze information in real time with live and actual program data and disciplined statistical approach which takes the analysis further than mere standard visualization and limited querying on logs.</p><p>The first step is, obviously, to gather data and to this end I have started a Cojure library which non-intrusively captures function call data and sends them to the Riemann monitoring system. The library is called <a href='https://github.com/analyticbastard/robert.riemann'>robert.riemann</a> since it uses <a href='https://github.com/technomancy/robert-hooke'>robert.hooke</a> to capture function calls and <a href='https://github.com/riemann/riemann-clojure-client'>riemann-clojure-client</a> as the data gathering system.</p><p>As usual, feel free to improve.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
     
-    <div class="post-header">
-        <h2>Pythagorean theorem</h2>
-        <div id="post-meta">
-            
-            <div class="date">November 6, 2014</div>
-        </div>
-    </div>
-    <p>The Pythagorean Theorem is almost mainstream, everybody knows what it is about, yet not so many people know how to prove it. Here is a proof that I consider to be the easiest one. It's very analytic and avoids any geometric complications  such as triangle similarity considerations.</p><p>Now, for this proof, you need to know basic geometrical notions such as the area of a square and the area of right triangles.</p>
-    <a href="/posts-output/2014-11-06-pythagorean-theorem/">Continue reading &#8594;</a>
-    <hr>
+    <a href="/tags-output/Clojure/">Clojure</a>
     
-    <div class="post-header">
-        <h2>Naive Bayes implemented with Map/Reduce operations</h2>
-        <div id="post-meta">
-            
-            <div class="date">November 5, 2014</div>
-        </div>
-    </div>
-    <p>I made a fairly straightforward implementation of the Naive Bayes classifier for discrete data is using Map Reduce. This is especially useful if you have a bunch of characteristic or naturally discrete data that you can exploit, such as presence/absence, amount of clicks, page/item visited or not, etc.</p><p>This can be achieved by first using the data attributes as the key, and the labels as the values on the mapper, in which we need to process the keys and values in this way:</p>
-    <a href="/posts-output/2014-11-05-naive-bayes-implemented-with-map-slash-reduce-operations/">Continue reading &#8594;</a>
-    <hr>
+    <a href="/tags-output/Statistics/">Statistics</a>
     
-    <div class="post-header">
-        <h2>A gentle introduction to RKHS and Kernel Methods</h2>
-        <div id="post-meta">
-            
-            <div class="date">November 4, 2014</div>
-        </div>
-    </div>
-    <p>A (real or complex) Reproducing kernel Hilbert spaces (RKHS), is a Hilbert space of point-defined functions where the evaluation functional is linear and bounded (equivalently continuous). That the functions are point-wise defined is almost self explanatory, and means that the objects in the space, the functions, are built from defining them at locations within a domain (a compact domain). The way of associating the function to its value at a location is done via the evaluation functional. Think of the evaluation functional <em>at a location</em> as a black box (not so black box in the RKHS) that, given a function as an argument, spits the function value at that location. The fact that the evaluation functionals are linear and bounded roughly means that if an evaluation functional evaluates the sum of two functions (the sum in their vector space), then the results amounts to summing the two evaluations of both functions by the linear functional, i.e.,</p><p>$$\delta_x(\alpha f + \beta g) = \alpha \delta_x(f) + \beta\delta_x(g)$$</p>
-    <a href="/posts-output/2014-11-04-a-gentle-introduction-to-rkhs/">Continue reading &#8594;</a>
-    <hr>
+    <a href="/tags-output/Software Development/">Software Development</a>
     
+</div>
+
 
     <div id="prev-next">
         
-        <a class="left" href="/p/5/">&laquo; Prev</a>
         
-        
-        <a class="right" href="/p/7/">Next &raquo;</a>
+        <a class="right" href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss &raquo;</a>
         
     </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
             </div>
@@ -159,6 +137,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
+                        
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
                         
                         <li><a href="/posts-output/2017-01-25-I-like-windows/">I like Windows 10 and the new Microsoft (despite their past)</a></li>
@@ -170,8 +150,6 @@
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
                         
                         <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-05-mysql-gis/">MySQL GIS capabilities: query geographical locations simple example</a></li>
                         
                     </ul>
                 </div>

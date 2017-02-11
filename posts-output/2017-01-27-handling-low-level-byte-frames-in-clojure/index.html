@@ -61,16 +61,14 @@
 </div>
 <div>
     
-    <p>Gloss is a (another) fine library by Zach Tellman which handles low level byte manipulation in Clojure. Sounds weird? It is!</p><p>How do we functionally handle system level byte frames that are otherwise naturally manipulated in assembler or C? Gloss comes to rescue.</p><p>Imagine that we are given a short integer (16 bit) ```(def intvalue 1)``` and need to invert the byte positions. How we proceed with Gloss is:</p><ol><li>Define a codec to handle</li></ol><pre><code class="clojure">   &#40;require '&#91;gloss.core :as core :refer &#91;defcodec&#93;&#93;&#41;
-
-   &#40;defcodec mycodec
-      &#91;:uint16 :uint16&#93;&#41;
-   </code></pre><ol><li>Encode the value into a frame, which is (elegantly) a vector of values.</li></ol><pre><code class="clojure">   &#40;require '&#91;gloss.io :as io&#93;&#41;
+    <p>Gloss is a (another) fine library by Zach Tellman which handles low level byte manipulation in Clojure. Sounds weird? It is!</p><p>How do we functionally handle system level byte frames that are otherwise naturally manipulated in assembler or C? Gloss comes to rescue.</p><p>Imagine that we are given a short integer (16 bit) <code>&#40;def intvalue 1&#41;</code> and need to invert the byte positions. How we proceed with Gloss is:</p><ul><li>Define a codec to handle</li></ul><pre><code class="clojure">    &#40;require '&#91;gloss.core :as core :refer &#91;defcodec&#93;&#93;&#41;
+    &#40;defcodec mycodec
+        &#91;:uint16 :uint16&#93;&#41;</code></pre><ul><li>Encode the value into a frame, which is (elegantly) a vector of values.</li></ul><pre><code class="clojure">   &#40;require '&#91;gloss.io :as io&#93;&#41;
 
    &#40;assert &#40;= intvalue 0x1&#41;&#41;
    &#40;def frame &#40;io/encode mycodec intvalue&#41;&#41;
-   </code></pre><ol><li>Manually invert the bytes as treating any Clojure collection</li></ol><pre><code class="clojure">   &#40;def outframe &#40;reverse frame&#41;&#41;
-   </code></pre><ol><li>Decode the frame with the codec again, to get the integer value</li></ol><pre><code class="clojure">   &#40;def outvalue &#40;io/decode mycodec outframe&#41;&#41;
+   </code></pre><ul><li>Manually invert the bytes as treating any Clojure collection</li></ul><pre><code class="clojure">   &#40;def outframe &#40;reverse frame&#41;&#41;
+   </code></pre><ul><li>Decode the frame with the codec again, to get the integer value</li></ul><pre><code class="clojure">   &#40;def outvalue &#40;io/decode mycodec outframe&#41;&#41;
    &#40;assert &#40;= outvalue 0x256&#41;&#41;
    </code></pre><p>This is very basic but you get the idea. A very useful tutorial, more than the (unexistent) official documentation, is <a href='http://derek.troywest.com/articles/by-example-gloss'>Gloss by Example</a>, where the author builds a basic RFC 5322 header-codec.</p>
 </div>
@@ -148,6 +146,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-11-transducers/">Use transducers to improve Clojure code readability</a></li>
+                        
                         <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
                         
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
@@ -159,8 +159,6 @@
                         <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
                         
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
                         
                     </ul>
                 </div>

@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>The Analytic Bastard: Git</title>
-    <link rel="canonical" href="http://analyticbastard.github.io/pages-output/experience/git/git/">
+    <title>The Analytic Bastard: Use transducers to improve Clojure code readability</title>
+    <link rel="canonical" href="http://analyticbastard.github.io/posts-output/2017-02-11-transducers/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,700italic,400,700' rel='stylesheet'
           type='text/css'>
@@ -51,24 +51,59 @@
         <div class="col-lg-9">
             <div id="content">
                 
-<div id="custom-page">
-    <div id="page-header">
-        <h2>Git</h2>
+<div id="post">
+    <div class="post-header">
+    <div id="post-meta" class="row">
+        <div class="col-lg-6">February 11, 2017</div>
+        
     </div>
+    <h2>Use transducers to improve Clojure code readability</h2>
+</div>
+<div>
     
-    <p>I've known Git for years but working in a collaborative environment such as Erudine's core team (since 2014) offered me the opportunity to really understand Git's core concepts and to develop a fully functional workflow that allows me to work seamlessly and to avoid hustle. I use command line Git because I have a quicker access to the console and more control of certain advanced options. Before working with Git, I had used CVS in my college years and in Critical Path (Dublin, Ireland).</p><ul><li>Core concepts such as local and remote repository and working copy.</li><li>Commiting, pusing, pulling, merging and conflict resolution. Making pull requests.</li><li>Modifying history to keep the shared branches clean with Git rebase squash, autosquash and    commit fixup.</li><li>Quickly set the state of the local working copy to a commit, tag or top of a branch.</li><li>Advanced recovery of "lost" commits with the reflog.</li></ul><p>See more on this <a href='http://analyticbastard.github.io/blog/2015/01/10/my-git-workflow/'>blog entry</a>.</p><p>On top of that, I've worked with both Github and Bitbucket, personally and professionally.</p>
+    <p>One of the uses of transducers can be applied to the <code>-&gt;&gt;</code> threading macro, to compose several processes through a list into one single pass while keeping the code intent clear and readable. For example, the follwing code loops through the list twice</p><pre><code class="clojure">&#40;-&gt;&gt; &#91;1 2 3&#93;
+     &#40;map #&#40;&#42; 2 %&#41;&#41;
+     &#40;map inc&#41;&#41;
+</code></pre><p>The naive way of processing each element once is to complicate the predicate:</p><pre><code class="clojure">&#40;-&gt;&gt; &#91;1 2 3&#93;
+     &#40;map #&#40;-&gt; %
+               &#40;&#42; 2 %&#41;
+               inc&#41;&#41;&#41;
+</code></pre><p>But we need not do this. Composing two transducers and letting the compiler know we want to apply the resulting composed transducer to get a list, the code is much more readable and its intention more clear</p><pre><code class="clojure">&#40;-&gt;&gt; &#91;1 2 3&#93;
+     &#40;sequence
+         &#40;comp &#40;map #&#40;&#42; 2 %&#41;&#41;
+               &#40;map inc&#41;&#41;&#41;&#41;
+</code></pre><p>The clarity arises from the fact that the last piece of code hints processing the container in the same way the two-pass inefficient code does, while the in second piece of code the container elements are explicitly processed.</p>
+</div>
+
+<div id="post-tags">
+    <b>Tags: </b>
+    
+    <a href="/tags-output/Clojure/">Clojure</a>
+    
+    <a href="/tags-output/Software Development/">Software Development</a>
+    
+</div>
+
 
     <div id="prev-next">
         
-        <a href="/pages-output/experience/experience/">&laquo; experience</a>
         
-        
-        ||
-        
-        
-        <a href="/pages-output/experience/intellij/intellij/">IntelliJ &raquo;</a>
+        <a class="right" href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control &raquo;</a>
         
     </div>
+
+    
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//theanalyticbastard.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    
+
+
 </div>
 
             </div>

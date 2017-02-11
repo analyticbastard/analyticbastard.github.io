@@ -54,6 +54,30 @@
 <div id="post">
     
     <div class="post-header">
+        <h2>Clojure parallel thread flows: pth library</h2>
+        <div id="post-meta">
+            
+            <div class="date">September 13, 2015</div>
+        </div>
+    </div>
+    <p>I developed a new library that solves the problem of the need to disrupt a Clojure thread flow because two quantities need to be computed from the current value of the thread flow, for example, using the current value as the index to two arrays which need to be merged.</p><pre><code class="clojure">(use 'pth)
+
+(let [map1 {:1 :a :2 :b :3 :c}
+        map2 {:1 1 :2 2 :3 3}
+        combine (partial apply interleave)
+        into-map (partial apply array-map)
+        ]
+    (-&gt; [:1 :2]
+        (-&lt;&lt; (map map1)
+             (map map2))
+        combine
+        into-map
+        ))
+</code></pre>
+    <a href="/posts-output/2015-09-13-clojure-parallel-thread-flows-pth-library/">Continue reading &#8594;</a>
+    <hr>
+    
+    <div class="post-header">
         <h2>Max subsequence problem</h2>
         <div id="post-meta">
             
@@ -119,17 +143,6 @@
     <a href="/posts-output/2015-02-20-image-pan-sharpening-with-pca/">Continue reading &#8594;</a>
     <hr>
     
-    <div class="post-header">
-        <h2>Google&#39;s original Page Rank implementation</h2>
-        <div id="post-meta">
-            
-            <div class="date">February 8, 2015</div>
-        </div>
-    </div>
-    <p>Ever since I took a good course on Matrix Analysis, I have been curious about how Google's Page Rank algorithm was related to Matrix theory, because I never got a chance to have a look at it when I studied computer systems.</p><p>Imagine the graph of web pages visited by Google crawlers, where $\mathbf{M}$ is the adjacency matrix with the outgoing links in the columns, where each edge in the web page $i$ pointing to a web page $j$ (which can be the same) has a score of $\frac{1}{n_i}$, where $n_i$ is the number of outgoing links in the webpage $i$. This matrix might present a number of problems with actual graphs, so what Google did was to include page self references and random jumps between pages with a small pfrobability given by a parameter $\beta$.</p>
-    <a href="/posts-output/2015-02-08-google-original-page-rank/">Continue reading &#8594;</a>
-    <hr>
-    
 
     <div id="prev-next">
         
@@ -181,6 +194,8 @@
                     <h3>Recent Posts</h3>
                     <ul>
                         
+                        <li><a href="/posts-output/2017-02-11-transducers/">Use transducers to improve Clojure code readability</a></li>
+                        
                         <li><a href="/posts-output/2017-02-03-statistical-software-engineering/">Towards a statistical software engineering and control</a></li>
                         
                         <li><a href="/posts-output/2017-01-27-handling-low-level-byte-frames-in-clojure/">Handling low level byte frames in Clojure with Gloss</a></li>
@@ -192,8 +207,6 @@
                         <li><a href="/posts-output/2017-01-10-monads/">Monads: Scala vs. Clojure</a></li>
                         
                         <li><a href="/posts-output/2016-09-15-elasticsearch-gis/">Elasticsearch and GIS</a></li>
-                        
-                        <li><a href="/posts-output/2016-07-08-mysql-fulltext/">MySQL full text search: a simple example</a></li>
                         
                     </ul>
                 </div>
